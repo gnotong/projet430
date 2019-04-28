@@ -26,8 +26,8 @@ if(!empty($taskInfo))
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                <i class="fa fa-users"></i> Görev Yönetimi
-                <small>Görev Ekle / Düzenle</small>
+                <i class="fa fa-users"></i> Gestion des tâches
+                <small>Ajouter / Modifier une tâche</small>
             </h1>
         </section>
         <section class="content">
@@ -37,7 +37,7 @@ if(!empty($taskInfo))
                     <!-- general form elements -->
                     <div class="box box-primary">
                         <div class="box-header">
-                            <h3 class="box-title">Görev bilgilerini giriniz</h3>
+                            <h3 class="box-title">Entrez les informations de la tâche</h3>
                         </div>
                         <!-- /.box-header -->
                         <!-- form start -->
@@ -47,7 +47,7 @@ if(!empty($taskInfo))
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="fname">Görev Başlığı</label>
+                                            <label for="fname">Titre de la tâche</label>
                                             <input type="hidden" name="taskId" id="taskId" value="<?php echo $id; ?>">
                                             <input type="text" class="form-control required" value="<?php echo $title; ?>" id="fname" name="fname">
                                         </div>
@@ -55,9 +55,9 @@ if(!empty($taskInfo))
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="role">Öncelik</label>
+                                            <label for="role">Priorité</label>
                                             <select class="form-control required" id="priority" name="priority">
-                                                <option value="0">Öncelik seçiniz</option>
+                                                <option value="0">Choisissez la priorité/option>
                                                 <?php
                                             if(!empty($tasks_prioritys))
                                             {
@@ -78,7 +78,7 @@ if(!empty($taskInfo))
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <label for="comment">Görev Açıklama</label>
+                                            <label for="comment">Description de la tâche</label>
                                             <textarea class="form-control" id="comment" name="comment" rows="4">
                                                 <?php echo $comment; ?>
                                             </textarea>
@@ -112,8 +112,8 @@ if(!empty($taskInfo))
                                             <!-- /.box-body -->
 
                                             <div class="box-footer">
-                                                <input type="submit" class="btn btn-primary" value="Gönder" />
-                                                <input type="reset" class="btn btn-default" value="Sıfırla" />
+                                                <input type="submit" class="btn btn-primary" value="Valider" />
+                                                <input type="reset" class="btn btn-default" value="Annuler" />
                                             </div>
                                         </div>
                                     </div>

@@ -2,15 +2,16 @@
   <!-- Content Header (Page header) -->
   <section class="content-header">
     <h1>
-      <i class="fa fa-users"></i> Tüm Görevler
-      <small>Panelimizdeki Tüm Görevler</small>
+      <i class="fa fa-users"></i>
+        Toutes les tâches
+      <small>Toutes les tâches de notre panel</small>
     </h1>
   </section>
   <section class="content">
     <div class="col-xs-12">
       <div class="text-right">
         <a class="btn btn-primary" href="<?php echo base_url(); ?>addNewTask">
-          <i class="fa fa-plus"></i> Görev Ekle</a>
+          <i class="fa fa-plus"></i> Ajouter une tâche</a>
       </div>
       <div class="box">
         <div class="box-header">
@@ -45,12 +46,12 @@
                 <thead>
                   <tr>
                     <th>ID</th>
-                    <th>Görev Başlığı</th>
+                    <th>Titre de la tâche</th>
                     <th>Açıklama</th>
                     <th>Durumu</th>
-                    <th>Öncelik</th>
+                    <th>Priorité</th>
                     <th>Oluşturan Kullanıcı</th>
-                    <th>Oluşturan Kullanıcı Yetki</th>
+                    <th>Rôle utilisateur</th>
                     <th>Oluşturulma Tarihi</th>
                     <th>Bitiş Tarihi</th>
                     <th>İşlemler</th>

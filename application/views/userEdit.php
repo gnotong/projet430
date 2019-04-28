@@ -23,8 +23,8 @@ if(!empty($userInfo))
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            Hesap Ayarları
-            <small>Bilgilerinizi düzenleyin</small>
+            Paramètres du compte
+            <small>Modifier vos informations</small>
         </h1>
     </section>
     <section class="content">
@@ -33,7 +33,7 @@ if(!empty($userInfo))
                 <!-- general form elements -->
                 <div class="box box-primary">
                     <div class="box-header">
-                        <h3 class="box-title">Bilgilerinizi Giriniz</h3>
+                        <h3 class="box-title">Entrez vos informations</h3>
                     </div>
                     <!-- /.box-header -->
                     <!-- form start -->
@@ -43,7 +43,7 @@ if(!empty($userInfo))
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="fname">Ad Soyad</label>
+                                        <label for="fname">Nom</label>
                                         <input type="text" class="form-control required" value="<?php echo $name; ?>" id="fname" name="fname" maxlength="128">
                                         <input type="hidden" value="<?php echo $userId; ?>" name="userId" id="userId" />
                                     </div>
@@ -51,7 +51,7 @@ if(!empty($userInfo))
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="email">Email adresi</label>
+                                        <label for="email">Email</label>
                                         <input type="text" class="form-control required email" id="email" value="<?php echo $email; ?>" name="email"
                                             maxlength="128">
                                     </div>
@@ -60,27 +60,27 @@ if(!empty($userInfo))
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="oldpassword">Eski Şifre</label>
-                                        <input type="password" class="form-control required" placeholder="Eski Şifre" id="oldpassword" name="oldpassword" maxlength="20">
+                                        <label for="oldpassword">Ancien mot de passe</label>
+                                        <input type="password" class="form-control required" placeholder="Ancien mot de passe" id="oldpassword" name="oldpassword" maxlength="20">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="cpassword">Yeni Şifre</label>
-                                        <input type="password" class="form-control required equalTo" placeholder="Yeni Şifre" id="cpassword" name="cpassword" maxlength="20">
+                                        <label for="cpassword">Nouveau mot de passe</label>
+                                        <input type="password" class="form-control required equalTo" placeholder="Nouveau mot de passe" id="cpassword" name="cpassword" maxlength="20">
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                             <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="cpassword2">Yeni Şifre Doğrula</label>
-                                        <input type="password" class="form-control required equalTo" placeholder="Yeni Şifre Tekrar" id="cpassword2" name="cpassword2" maxlength="20">
+                                        <label for="cpassword2">Vérifier le nouveau mot de passe</label>
+                                        <input type="password" class="form-control required equalTo" placeholder="Vérifier le nouveau mot de passe" id="cpassword2" name="cpassword2" maxlength="20">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="mobile">Telefon Numarası</label>
+                                        <label for="mobile">Numéro de téléphone</label>
                                         <input type="text" class="form-control required digits" id="mobile" value="<?php echo $mobile; ?>" name="mobile"
                                             maxlength="10">
                                     </div>
@@ -90,8 +90,8 @@ if(!empty($userInfo))
                         <!-- /.box-body -->
 
                         <div class="box-footer">
-                            <input type="submit" class="btn btn-primary" value="Gönder" />
-                            <input type="reset" class="btn btn-default" value="Sıfırla" />
+                            <input type="submit" class="btn btn-primary" value="Valider" />
+                            <input type="reset" class="btn btn-default" value="Annuler" />
                         </div>
                     </form>
                 </div>

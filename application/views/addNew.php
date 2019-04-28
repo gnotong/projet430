@@ -2,8 +2,8 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            <i class="fa fa-users"></i> Kullanıcı Yönetimi
-            <small>Ekle / Düzenle</small>
+            <i class="fa fa-users"></i> Gestion des utilisateurs
+            <small>Ajouter / Modifier</small>
         </h1>
     </section>
 
@@ -18,7 +18,7 @@
 
                 <div class="box box-primary">
                     <div class="box-header">
-                        <h3 class="box-title">Kullanıcı bilgilerini giriniz</h3>
+                        <h3 class="box-title">Entrez les informations de l'utilisateur</h3>
                     </div>
                     <!-- /.box-header -->
                     <!-- form start -->
@@ -28,14 +28,14 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="fname">Ad Soyad</label>
+                                        <label for="fname">Nom</label>
                                         <input type="text" class="form-control required" value="<?php echo set_value('fname'); ?>" id="fname" name="fname" maxlength="128">
                                     </div>
 
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="email">Email adresi</label>
+                                        <label for="email">Email</label>
                                         <input type="text" class="form-control required email" id="email" value="<?php echo set_value('email'); ?>" name="email"
                                             maxlength="128">
                                     </div>
@@ -44,13 +44,13 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="password">Şifre</label>
+                                        <label for="password">Mot de passe</label>
                                         <input type="password" class="form-control required" id="password" name="password" maxlength="20">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="cpassword">Şifre Doğrula</label>
+                                        <label for="cpassword">Vérifier le mot de passe</label>
                                         <input type="password" class="form-control required equalTo" id="cpassword" name="cpassword" maxlength="20">
                                     </div>
                                 </div>
@@ -58,16 +58,16 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="mobile">Telefon Numarası</label>
+                                        <label for="mobile">Numéro de téléphone</label>
                                         <input type="text" class="form-control required digits" id="mobile" value="<?php echo set_value('mobile'); ?>" name="mobile"
                                             maxlength="10">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="role">Yetki</label>
+                                        <label for="role">Rôle</label>
                                         <select class="form-control required" id="role" name="role">
-                                            <option value="0">Yetki seçiniz</option>
+                                            <option value="0">Sélectionner un rôle</option>
                                             <?php
                                             if(!empty($roles))
                                             {
@@ -89,8 +89,8 @@
                         <!-- /.box-body -->
 
                         <div class="box-footer">
-                            <input type="submit" class="btn btn-primary" value="Gönder" />
-                            <input type="reset" class="btn btn-default" value="Sıfırla" />
+                            <input type="submit" class="btn btn-primary" value="Valider" />
+                            <input type="reset" class="btn btn-default" value="Annuler" />
                         </div>
                     </form>
                 </div>

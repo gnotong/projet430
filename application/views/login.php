@@ -3,12 +3,12 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>BSEU | Yönetim Paneli Giriş</title>
+  <title>UY1 | Panneau d'administration</title>
   <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
-  <link href="<?php echo base_url(); ?>assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+  <link href="<?= base_url(); ?>assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"
   />
-  <link href="<?php echo base_url(); ?>assets/dist/css/AdminLTE.min.css" rel="stylesheet" type="text/css" />
+  <link href="<?= base_url(); ?>assets/dist/css/AdminLTE.min.css" rel="stylesheet" type="text/css" />
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -22,16 +22,17 @@
   <div class="login-box">
     <div class="login-logo">
       <a href="#">
-        <b>BSEU</b>
-        <br>Yönetim Paneli</a>
+        <b>PROJET 430</b>
+      </a> <br>
+        <h3 class="text-primary text-bold">Université de Yaoundé 1</h3>
     </div>
     <!-- /.login-logo -->
     <div class="login-box-body">
-      <p class="login-box-msg">Giriş Yap</p>
+      <p class="login-box-msg">Gession des ressources</p>
       <?php $this->load->helper('form'); ?>
       <div class="row">
         <div class="col-md-12">
-          <?php echo validation_errors('<div class="alert alert-danger alert-dismissable">', ' <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button></div>'); ?>
+          <?= validation_errors('<div class="alert alert-danger alert-dismissable">', ' <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button></div>'); ?>
         </div>
       </div>
       <?php
@@ -42,7 +43,7 @@
             ?>
         <div class="alert alert-danger alert-dismissable">
           <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-          <?php echo $error; ?>
+          <?= $error; ?>
         </div>
         <?php }
         $success = $this->session->flashdata('success');
@@ -51,17 +52,17 @@
             ?>
         <div class="alert alert-success alert-dismissable">
           <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-          <?php echo $success; ?>
+          <?= $success; ?>
         </div>
         <?php } ?>
 
-        <form action="<?php echo base_url(); ?>loginMe" method="post">
+        <form action="<?= base_url(); ?>loginMe" method="post">
           <div class="form-group has-feedback">
             <input type="email" class="form-control" placeholder="Email" name="email" required />
             <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
           </div>
           <div class="form-group has-feedback">
-            <input type="password" class="form-control" placeholder="Şifre" name="password" required />
+            <input type="password" class="form-control" placeholder="mot de passe" name="password" required />
             <span class="glyphicon glyphicon-lock form-control-feedback"></span>
           </div>
           <div class="row">
@@ -72,24 +73,21 @@
                 </label>
               </div>  -->
             </div>
-            <!-- /.col -->
             <div class="col-xs-4">
-              <input type="submit" class="btn btn-primary btn-block btn-flat" value="Giriş Yap" />
+              <input type="submit" class="btn btn-primary btn-block btn-flat" value="Connexion" />
             </div>
-            <!-- /.col -->
           </div>
         </form>
 
-        <a href="<?php echo base_url() ?>forgotPassword">Şifremi Unuttum</a>
+        <a href="<?= base_url() ?>forgotPassword">Mot de passe oublié</a>
         <br>
 
     </div>
-    <!-- /.login-box-body -->
   </div>
-  <!-- /.login-box -->
 
-  <script src="<?php echo base_url(); ?>assets/js/jQuery-2.1.4.min.js"></script>
-  <script src="<?php echo base_url(); ?>assets/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+
+  <script src="<?= base_url(); ?>assets/js/jQuery-2.1.4.min.js"></script>
+  <script src="<?= base_url(); ?>assets/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
 </body>
 
 </html>

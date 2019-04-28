@@ -26,16 +26,15 @@ class User extends BaseController
      */
     public function index()
     {
-        $this->global['pageTitle'] = 'BSEU : Anasayfa';
+        $this->global['pageTitle'] = 'UY1 : Acceuil';
 
         $data['tasksCount'] = $this->user_model->tasksCount();
         $data['finishedTasksCount'] = $this->user_model->finishedTasksCount();
-        $data['logsCount'] = $this->user_model->logsCount();
         $data['usersCount'] = $this->user_model->usersCount();
 
         if ($this->getUserStatus() == TRUE)
         {
-            $this->session->set_flashdata('error', 'Lütfen güvenliğiniz için öncelikle şifrenizi değiştiriniz.');
+            $this->session->set_flashdata('error', 'Veuillez d\'abord changer votre mot de passe pour votre sécurité.');
             redirect('loadChangePass');
         }
 
@@ -65,7 +64,7 @@ class User extends BaseController
      */
     function loadUserEdit()
     {
-        $this->global['pageTitle'] = 'BSEU : Hesap Ayarları';
+        $this->global['pageTitle'] = 'UY1 : Paramètres du compte';
         
         $data['userInfo'] = $this->user_model->getUserInfo($this->vendorId);
 
@@ -113,7 +112,7 @@ class User extends BaseController
             
                 if(empty($resultPas))
                 {
-                $this->session->set_flashdata('nomatch', 'Eski şifreniz doğru değil');
+                $this->session->set_flashdata('nomatch', 'Votre ancien mot de passe n\'est pas correct');
                 redirect('userEdit');
                 }
                 else
@@ -150,7 +149,7 @@ class User extends BaseController
      */
     function loadChangePass()
     {
-        $this->global['pageTitle'] = 'BSEU : Şifre Değiştir';
+        $this->global['pageTitle'] = 'UY1 : Changer le mot de passe';
         
         $this->loadViews("changePassword", $this->global, NULL, NULL);
     }
@@ -180,7 +179,7 @@ class User extends BaseController
             
             if(empty($resultPas))
             {
-                $this->session->set_flashdata('nomatch', 'Eski şifreniz doğru değil');
+                $this->session->set_flashdata('nomatch', 'Votre ancien mot de passe n\'est pas correct');
                 redirect('loadChangePass');
             }
             else
@@ -192,14 +191,14 @@ class User extends BaseController
                 
                 if($result > 0) {
 
-                    $process = 'Şifre Değiştirme';
+                    $process = 'Changement de mot de passe';
                     $processFunction = 'User/changePassword';
                     $this->logrecord($process,$processFunction);
 
-                     $this->session->set_flashdata('success', 'Şifre değiştirme başarılı');
+                     $this->session->set_flashdata('success', 'Mot de passe mis à jour avec succès');
                      }
                 else {
-                     $this->session->set_flashdata('error', 'Şifre değiştirme başarısız'); 
+                     $this->session->set_flashdata('error', 'Le changement de mot de passe a échoué');
                     }
                 
                 redirect('loadChangePass');
@@ -212,7 +211,7 @@ class User extends BaseController
      */
     function pageNotFound()
     {
-        $this->global['pageTitle'] = 'BSEU : 404 - Sayfa Bulunamadı';
+        $this->global['pageTitle'] = 'UY1 : 404 - Page non trouvée';
         
         $this->loadViews("404", $this->global, NULL, NULL);
     }
@@ -256,11 +255,11 @@ class User extends BaseController
     {
             $data['taskRecords'] = $this->user_model->getTasks();
 
-            $process = 'Kullanıcı Tüm görevler';
+            $process = 'Toutes les tâches utilisateur';
             $processFunction = 'User/etasks';
             $this->logrecord($process,$processFunction);
 
-            $this->global['pageTitle'] = 'BSEU : Tüm Görevler';
+            $this->global['pageTitle'] = 'UY1: Toutes les tâches';
             
             $this->loadViews("etasks", $this->global, $data, NULL);
     }

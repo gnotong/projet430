@@ -3,7 +3,7 @@
   <section class="content-header">
     <h1>
       <i class="fa fa-users"></i> Yedek Log Geçmişi
-      <small>Kullanıcıların Log Geçmişi</small>
+      <small>Historique des utilisateurs</small>
     </h1>
   </section>
   <section class="content">

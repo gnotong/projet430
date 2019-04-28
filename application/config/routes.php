@@ -22,14 +22,6 @@ $route['editOld'] = "admin/editOld";
 $route['editOld/(:num)'] = "admin/editOld/$1";
 $route['editUser'] = "admin/editUser";
 $route['deleteUser'] = "admin/deleteUser";
-$route['log-history'] = "admin/logHistory";
-$route['log-history-backup'] = "admin/logHistoryBackup";
-$route['log-history/(:num)'] = "admin/logHistorysingle/$1";
-$route['log-history/(:num)/(:num)'] = "admin/logHistorysingle/$1/$2";
-$route['backupLogTable'] = "admin/backupLogTable";
-$route['backupLogTableDelete'] = "admin/backupLogTableDelete";
-$route['log-history-upload'] = "admin/logHistoryUpload";
-$route['logHistoryUploadFile'] = "admin/logHistoryUploadFile";
 
 /*********** MANAGER CONTROLLER ROUTES *******************/
 $route['tasks'] = "manager/tasks";

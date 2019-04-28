@@ -1,12 +1,10 @@
 <?php if(!defined('BASEPATH')) exit('No direct script access allowed');
 
 require APPPATH . '/libraries/BaseController.php';
+
 /**
  * Class : Manager (ManagerController)
  * Manager class to control to authenticate manager credentials and include manager functions.
- * @author : Samet Aydın / sametay153@gmail.com
- * @version : 1.0
- * @since : 27.02.2018
  */
 class Manager extends BaseController
 {
@@ -42,11 +40,11 @@ class Manager extends BaseController
     {
             $data['taskRecords'] = $this->user_model->getTasks();
 
-            $process = 'Tüm görevler';
+            $process = 'Toutes les tâches';
             $processFunction = 'Manager/tasks';
             $this->logrecord($process,$processFunction);
 
-            $this->global['pageTitle'] = 'BSEU : Tüm Görevler';
+            $this->global['pageTitle'] = 'UY1: Toutes les tâches';
             
             $this->loadViews("tasks", $this->global, $data, NULL);
     }
@@ -58,7 +56,7 @@ class Manager extends BaseController
     {
             $data['tasks_prioritys'] = $this->user_model->getTasksPrioritys();
 
-            $this->global['pageTitle'] = 'BSEU : Görev Ekle';
+            $this->global['pageTitle'] = 'UY1: Ajouter une tâche';
 
             $this->loadViews("addNewTask", $this->global, $data, NULL);
     }
@@ -70,8 +68,8 @@ class Manager extends BaseController
     {
             $this->load->library('form_validation');
             
-            $this->form_validation->set_rules('fname','Görev Başlığı','required');
-            $this->form_validation->set_rules('priority','Öncelik','required');
+            $this->form_validation->set_rules('fname','Titre de la tâche','required');
+            $this->form_validation->set_rules('priority','Priorité','required');
             
             if($this->form_validation->run() == FALSE)
             {
@@ -92,15 +90,15 @@ class Manager extends BaseController
                 
                 if($result > 0)
                 {
-                    $process = 'Görev Ekleme';
+                    $process = 'Ajouter une tâche';
                     $processFunction = 'Manager/addNewTasks';
                     $this->logrecord($process,$processFunction);
 
-                    $this->session->set_flashdata('success', 'Görev başarıyla oluşturuldu');
+                    $this->session->set_flashdata('success', 'Tâche créée avec succès');
                 }
                 else
                 {
-                    $this->session->set_flashdata('error', 'Görev oluşturma başarısız');
+                    $this->session->set_flashdata('error', '    Vérifier le mot de passeRôle La création de la tâche a échoué');
                 }
                 
                 redirect('addNewTask');
@@ -121,7 +119,7 @@ class Manager extends BaseController
             $data['tasks_prioritys'] = $this->user_model->getTasksPrioritys();
             $data['tasks_situations'] = $this->user_model->getTasksSituations();
             
-            $this->global['pageTitle'] = 'BSEU : Görev Düzenle';
+            $this->global['pageTitle'] = 'UY1 : Modifier la tâche';
             
             $this->loadViews("editOldTask", $this->global, $data, NULL);
     }
@@ -133,8 +131,8 @@ class Manager extends BaseController
     {            
         $this->load->library('form_validation');
 
-        $this->form_validation->set_rules('fname','Görev Başlığı','required');
-        $this->form_validation->set_rules('priority','Öncelik','required');
+        $this->form_validation->set_rules('fname','Titre de la tâche','required');
+        $this->form_validation->set_rules('priority','Priorité','required');
         
         $taskId = $this->input->post('taskId');
 

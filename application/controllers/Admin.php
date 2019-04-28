@@ -1,12 +1,10 @@
 <?php if(!defined('BASEPATH')) exit('No direct script access allowed');
 
 require APPPATH . '/libraries/BaseController.php';
+
 /**
  * Class : Admin (AdminController)
  * Admin class to control to authenticate admin credentials and include admin functions.
- * @author : Samet Aydın / sametay153@gmail.com
- * @version : 1.0
- * @since : 27.02.2018
  */
 class Admin extends BaseController
 {
@@ -53,11 +51,11 @@ class Admin extends BaseController
             
             $data['userRecords'] = $this->user_model->userListing($searchText, $returns["page"], $returns["segment"]);
             
-            $process = 'Kullanıcı Listeleme';
+            $process = 'Liste d\'utilisateurs';
             $processFunction = 'Admin/userListing';
             $this->logrecord($process,$processFunction);
 
-            $this->global['pageTitle'] = 'BSEU : Kullanıcı Listesi';
+            $this->global['pageTitle'] = 'UY1 : liste d\'utilisateurs';
             
             $this->loadViews("users", $this->global, $data, NULL);
     }
@@ -69,7 +67,7 @@ class Admin extends BaseController
     {
             $data['roles'] = $this->user_model->getUserRoles();
 
-            $this->global['pageTitle'] = 'BSEU : Kullanıcı Ekle';
+            $this->global['pageTitle'] = 'UY1 : Ajouter un utilisateur';
 
             $this->loadViews("addNew", $this->global, $data, NULL);
     }
@@ -108,15 +106,15 @@ class Admin extends BaseController
                 
                 if($result > 0)
                 {
-                    $process = 'Kullanıcı Ekleme';
+                    $process = 'Ajout d\'utilisateurs';
                     $processFunction = 'Admin/addNewUser';
                     $this->logrecord($process,$processFunction);
 
-                    $this->session->set_flashdata('success', 'Kullanıcı başarıyla oluşturuldu');
+                    $this->session->set_flashdata('success', 'Utilisateur créé avec succès');
                 }
                 else
                 {
-                    $this->session->set_flashdata('error', 'Kullanıcı oluşturma başarısız');
+                    $this->session->set_flashdata('error', 'La création de l\'utilisateur a échoué');
                 }
                 
                 redirect('userListing');
@@ -137,7 +135,7 @@ class Admin extends BaseController
             $data['roles'] = $this->user_model->getUserRoles();
             $data['userInfo'] = $this->user_model->getUserInfo($userId);
 
-            $this->global['pageTitle'] = 'BSEU : Kullanıcı Düzenle';
+            $this->global['pageTitle'] = 'UY1 : Modification d\'un utilisateur';
             
             $this->loadViews("editOld", $this->global, $data, NULL);
     }
@@ -189,15 +187,15 @@ class Admin extends BaseController
                 
                 if($result == true)
                 {
-                    $process = 'Kullanıcı Güncelleme';
+                    $process = 'Mise à jour de l\'utilisateur';
                     $processFunction = 'Admin/editUser';
                     $this->logrecord($process,$processFunction);
 
-                    $this->session->set_flashdata('success', 'Kullanıcı başarıyla güncellendi');
+                    $this->session->set_flashdata('success', 'Utilisateur mis à jour avec succès');
                 }
                 else
                 {
-                    $this->session->set_flashdata('error', 'Kullanıcı güncelleme başarısız');
+                    $this->session->set_flashdata('error', 'La mise à jour de l\'utilisateur a échoué');
                 }
                 
                 redirect('userListing');
@@ -218,235 +216,11 @@ class Admin extends BaseController
             if ($result > 0) {
                  echo(json_encode(array('status'=>TRUE)));
 
-                 $process = 'Kullanıcı Silme';
+                 $process = 'Supprimer l\'utilisateur';
                  $processFunction = 'Admin/deleteUser';
                  $this->logrecord($process,$processFunction);
 
                 }
             else { echo(json_encode(array('status'=>FALSE))); }
-    }
-
-     /**
-     * This function used to show log history
-     * @param number $userId : This is user id
-     */
-    function logHistory($userId = NULL)
-    {
-            $data['dbinfo'] = $this->user_model->gettablemb('tbl_log','cias');
-            if(isset($data['dbinfo']->total_size))
-            {
-                if(($data['dbinfo']->total_size)>1000){
-                    $this->backupLogTable();
-                }
-            }
-            $data['userRecords'] = $this->user_model->logHistory($userId);
-
-            $process = 'Log Görüntüleme';
-            $processFunction = 'Admin/logHistory';
-            $this->logrecord($process,$processFunction);
-
-            $this->global['pageTitle'] = 'BSEU : Kullanıcı Giriş Geçmişi';
-            
-            $this->loadViews("logHistory", $this->global, $data, NULL);
-    }
-
-    /**
-     * This function used to show specific user log history
-     * @param number $userId : This is user id
-     */
-    function logHistorysingle($userId = NULL)
-    {       
-            $userId = ($userId == NULL ? $this->session->userdata("userId") : $userId);
-            $data["userInfo"] = $this->user_model->getUserInfoById($userId);
-            $data['userRecords'] = $this->user_model->logHistory($userId);
-            
-            $process = 'Tekil Log Görüntüleme';
-            $processFunction = 'Admin/logHistorysingle';
-            $this->logrecord($process,$processFunction);
-
-            $this->global['pageTitle'] = 'BSEU : Kullanıcı Giriş Geçmişi';
-            
-            $this->loadViews("logHistorysingle", $this->global, $data, NULL);      
-    }
-    
-    /**
-     * This function used to backup and delete log table
-     */
-    function backupLogTable()
-    {
-        $this->load->dbutil();
-        $prefs = array(
-            'tables'=>array('tbl_log')
-        );
-        $backup=$this->dbutil->backup($prefs) ;
-
-        date_default_timezone_set('Europe/Istanbul');
-        $date = date('d-m-Y H-i');
-
-        $filename = './backup/'.$date.'.sql.gz';
-        $this->load->helper('file');
-        write_file($filename,$backup);
-
-        $this->user_model->clearlogtbl();
-
-        if($backup)
-        {
-            $this->session->set_flashdata('success', 'Yedekleme ve Tablo temizleme işlemi başarılı');
-            redirect('log-history');
-        }
-        else
-        {
-            $this->session->set_flashdata('error', 'Yedekleme ve Tablo temizleme işlemi başarısız');
-            redirect('log-history');
-        }
-    }
-
-    /**
-     * This function used to open the logHistoryBackup page
-     */
-    function logHistoryBackup()
-    {
-            $data['dbinfo'] = $this->user_model->gettablemb('tbl_log_backup','cias');
-            if(isset($data['dbinfo']->total_size))
-            {
-            if(($data['dbinfo']->total_size)>1000){
-                $this->backupLogTable();
-            }
-            }
-            $data['userRecords'] = $this->user_model->logHistoryBackup();
-
-            $process = 'Yedek Log Görüntüleme';
-            $processFunction = 'Admin/logHistoryBackup';
-            $this->logrecord($process,$processFunction);
-
-            $this->global['pageTitle'] = 'BSEU : Kullanıcı Yedek Giriş Geçmişi';
-            
-            $this->loadViews("logHistoryBackup", $this->global, $data, NULL);
-    }
-
-    /**
-     * This function used to delete backup_log table
-     */
-    function backupLogTableDelete()
-    {
-        $backup=$this->user_model->clearlogBackuptbl();
-
-        if($backup)
-        {
-            $this->session->set_flashdata('success', 'Tablo temizleme işlemi başarılı');
-            redirect('log-history-backup');
-        }
-        else
-        {
-            $this->session->set_flashdata('error', 'Tablo temizleme işlemi başarısız');
-            redirect('log-history-backup');
-        }
-    }
-
-    /**
-     * This function used to open the logHistoryUpload page
-     */
-    function logHistoryUpload()
-    {       
-            $this->load->helper('directory');
-            $map = directory_map('./backup/', FALSE, TRUE);
-        
-            $data['backups']=$map;
-
-            $process = 'Yedek Log Yükleme';
-            $processFunction = 'Admin/logHistoryUpload';
-            $this->logrecord($process,$processFunction);
-
-            $this->global['pageTitle'] = 'BSEU : Kullanıcı Log Yükleme';
-            
-            $this->loadViews("logHistoryUpload", $this->global, $data, NULL);      
-    }
-
-    /**
-     * This function used to upload backup for backup_log table
-     */
-    function logHistoryUploadFile()
-    {
-        $optioninput = $this->input->post('optionfilebackup');
-
-        if ($optioninput == '0' && $_FILES['filebackup']['name'] != '')
-        {
-            $config = array(
-            'upload_path' => "./uploads/",
-            'allowed_types' => "gz|sql|gzip",
-            'overwrite' => TRUE,
-            'max_size' => "20048000", // Can be set to particular file size , here it is 20 MB(20048 Kb)
-            );
-
-            $this->load->library('upload', $config);
-            $upload= $this->upload->do_upload('filebackup');
-                $data = $this->upload->data();
-                $filepath = $data['full_path'];
-                $path_parts = pathinfo($filepath);
-                $filetype = $path_parts['extension'];
-                if ($filetype == 'gz')
-                {
-                    // Read entire gz file
-                    $lines = gzfile($filepath);
-                    $lines = str_replace('tbl_log','tbl_log_backup', $lines);
-                }
-                else
-                {
-                    // Read in entire file
-                    $lines = file($filepath);
-                    $lines = str_replace('tbl_log','tbl_log_backup', $lines);
-                }
-        }
-
-        else if ($optioninput != '0' && $_FILES['filebackup']['name'] == '')
-        {
-            $filepath = './backup/'.$optioninput;
-            $path_parts = pathinfo($filepath);
-            $filetype = $path_parts['extension'];
-            if ($filetype == 'gz')
-            {
-                // Read entire gz file
-                $lines = gzfile($filepath);
-                $lines = str_replace('tbl_log','tbl_log_backup', $lines);
-            }
-            else
-            {
-                // Read in entire file
-                $lines = file($filepath);
-                $lines = str_replace('tbl_log','tbl_log_backup', $lines);
-            }
-        }
-                // Set line to collect lines that wrap
-                $templine = '';
-                
-                // Loop through each line
-                foreach ($lines as $line)
-                {
-                    // Skip it if it's a comment
-                    if (substr($line, 0, 2) == '--' || $line == '')
-                    continue;
-                    // Add this line to the current templine we are creating
-                    $templine .= $line;
-
-                    // If it has a semicolon at the end, it's the end of the query so can process this templine
-                    if (substr(trim($line), -1, 1) == ';')
-                    {
-                        // Perform the query
-                        $this->db->query($templine);
-
-                        // Reset temp variable to empty
-                        $templine = '';
-                    }
-                }
-            if (empty($lines) || !isset($lines))
-            {
-                $this->session->set_flashdata('error', 'Yedek yükleme işlemi başarısız');
-                redirect('log-history-upload');
-            }
-            else
-            {
-                $this->session->set_flashdata('success', 'Yedek yükleme işlemi başarılı');
-                redirect('log-history-upload');
-            }
     }
 }

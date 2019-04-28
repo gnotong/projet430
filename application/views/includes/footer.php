@@ -1,10 +1,10 @@
 <footer class="main-footer">
     <div class="pull-right hidden-xs">
-        <b>BSEU</b> Yönetim Paneli | V1.0
+        <b>Université de Yaoundé 1</b> Informatique
     </div>
     <strong>Copyright &copy; 2018-2019
-        <a href="<?php echo base_url(); ?>">BSEU</a>
-    </strong> Tüm hakları saklıdır.
+        <a href="<?php echo base_url(); ?>">UY1</a>
+    </strong> Projet430: Gestion des ressources
 </footer>
 
 <!-- jQuery UI 1.11.2 -->

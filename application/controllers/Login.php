@@ -1,12 +1,10 @@
 <?php if(!defined('BASEPATH')) exit('No direct script access allowed');
 
 require APPPATH . '/libraries/BaseController.php';
+
 /**
  * Class : Login (LoginController)
  * Admin class to control to authenticate admin credentials and include admin functions.
- * @author : Samet Aydın / sametay153@gmail.com
- * @version : 1.0
- * @since : 27.02.2018
  */
 class Login extends BaseController
 {
@@ -40,7 +38,7 @@ class Login extends BaseController
         }
         else
         {
-            $process = 'Hata';
+            $process = 'Erreur';
             $processFunction = 'Login/error';
             $this->logrecord($process,$processFunction);
             redirect('pageNotFound');
@@ -52,7 +50,7 @@ class Login extends BaseController
      */
     public function noaccess() {
         
-        $this->global['pageTitle'] = 'BSEU : Erişim Reddedildi';
+        $this->global['pageTitle'] = 'UY1 : accès refusé';
         $this->datas();
 
         $this->load->view ( 'includes/header', $this->global );
@@ -128,7 +126,7 @@ class Login extends BaseController
             }
             else
             {
-                $this->session->set_flashdata('error', 'Email adresi veya şifre yanlış');
+                $this->session->set_flashdata('error', 'L\'adresse email ou le mot de passe est incorrect');
                 
                 redirect('/login');
             }
@@ -192,33 +190,33 @@ class Login extends BaseController
                     if(!empty($userInfo)){
                         $data1["name"] = $userInfo[0]->name;
                         $data1["email"] = $userInfo[0]->email;
-                        $data1["message"] = "Şifrenizi Sıfırlayın";
+                        $data1["message"] = "Réinitialiser le mot de passe";
                     }
 
                     $sendStatus = resetPasswordEmail($data1);
 
-                    $process = 'Şifre Sıfırlama İsteği';
+                    $process = 'Demande de réinitialisation de mot de passe';
                     $processFunction = 'Login/resetPasswordUser';
                     $this->logrecord($process,$processFunction);
 
                     if($sendStatus){
                         $status = "send";
-                        setFlashData($status, "Şifre sıfırlama linkiniz başarıyla gönderildi, mailinizi kontrol ediniz.");
+                        setFlashData($status, "Le lien de réinitialisation de votre mot de passe a été envoyé avec succès. Veuillez vérifier votre courrier.");
                     } else {
                         $status = "notsend";
-                        setFlashData($status, "Email gönderme işlemi başarısız, tekrar deneyin.");
+                        setFlashData($status, "L'envoi d'email a échoué, essayez à nouveau.");
                     }
                 }
                 else
                 {
                     $status = 'unable';
-                    setFlashData($status, "Bilgilerinizi gönderirken bir hata oluştu, tekrar deneyin.");
+                    setFlashData($status, "Une erreur s'est produite lors de l'envoi de vos informations, essayez à nouveau.");
                 }
             }
             else
             {
                 $status = 'invalid';
-                setFlashData($status, "Email adresiniz sistemde kayıtlı değil.");
+                setFlashData($status, "Votre adresse email n'est pas enregistrée dans le système.");
             }
             redirect('/forgotPassword');
         }
@@ -281,17 +279,17 @@ class Login extends BaseController
             {               
                 $this->login_model->createPasswordUser($email, $password);
                 
-                $process = 'Şifre Sıfırlama';
+                $process = 'Réinitialisation du mot de passe';
                 $processFunction = 'Login/createPasswordUser';
                 $this->logrecord($process,$processFunction);
 
                 $status = 'success';
-                $message = 'Şifre başarıyla değiştirildi';
+                $message = 'Mot de passe changé avec succès';
             }
             else
             {
                 $status = 'error';
-                $message = 'Şifre değiştirilemedi';
+                $message = 'Impossible de changer le mot de passe';
             }
             
             setFlashData($status, $message);

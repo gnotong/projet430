@@ -2,8 +2,8 @@
   <!-- Content Header (Page header) -->
   <section class="content-header">
     <h1>
-      <i class="fa fa-users"></i> Log Geçmişi
-      <small>Kullanıcıların Log Geçmişi</small>
+      <i class="fa fa-users"></i> Historique du journal
+      <small>Historique des utilisateurs</small>
     </h1>
   </section>
   <section class="content">

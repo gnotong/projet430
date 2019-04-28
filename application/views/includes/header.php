@@ -49,10 +49,10 @@
       <a href="<?php echo base_url(); ?>" class="logo">
         <!-- mini logo for sidebar mini 50x50 pixels -->
         <span class="logo-mini">
-          <b>BSE</b>U</span>
+          <b>UY</b>1</span>
         <!-- logo for regular state and mobile devices -->
         <span class="logo-lg">
-          <b>BSEU</b>YONETIM</span>
+          <b>UY1</b>PROJET430</span>
       </a>
       <!-- Header Navbar: style can be found in header.less -->
       <nav class="navbar navbar-static-top" role="navigation">
@@ -67,7 +67,7 @@
                 <i class="fa fa-history"></i>
               </a>
               <ul class="dropdown-menu">
-                <li class="header"> Son Giriş :
+                <li class="header"> Dernière connexion :
                   <i class="fa fa-clock-o"></i>
                   <?= empty($last_login) ? "İlk Giriş" : $last_login; ?>
                 </li>
@@ -76,7 +76,7 @@
             <!-- User Account: style can be found in dropdown.less -->
             <li class="dropdown user user-menu">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                <img src="<?php echo base_url(); ?>assets/dist/img/avatar.png" class="user-image" alt="User Image" />
+                <i class="fa fa-user text-yellow"></i>
                 <span class="hidden-xs">
                   <?php echo $name; ?>
                 </span>
@@ -84,7 +84,7 @@
               <ul class="dropdown-menu">
                 <!-- User image -->
                 <li class="user-header">
-                  <img src="<?php echo base_url(); ?>assets/dist/img/avatar.png" class="img-circle" alt="User Image" />
+                    <i class="fa fa-user fa-4x text-yellow"></i>
                   <p>
                     <?php echo $name; ?>
                     <small>
@@ -96,11 +96,11 @@
                 <li class="user-footer">
                   <div class="pull-left">
                     <a href="<?php echo base_url(); ?>userEdit" class="btn btn-default btn-flat">
-                      <i class="fa fa-key"></i> Hesap Ayarları </a>
+                      <i class="fa fa-key"></i> Paramètres</a>
                   </div>
                   <div class="pull-right">
-                    <a href="<?php echo base_url(); ?>logout" class="btn btn-default btn-flat">
-                      <i class="fa fa-sign-out"></i> Çıkış Yap</a>
+                    <a href="<?php echo base_url(); ?>logout" class="btn btn-danger btn-flat">
+                      <i class="fa fa-sign-out"></i> Déconnexion</a>
                   </div>
                 </li>
               </ul>
@@ -120,7 +120,7 @@
           <li class="treeview">
             <a href="<?php echo base_url(); ?>dashboard">
               <i class="fa fa-dashboard"></i>
-              <span>Anasayfa</span>
+              <span>Accueil</span>
               </i>
             </a>
           </li>
@@ -132,13 +132,13 @@
             <li class="treeview">
               <a href="<?php echo base_url(); ?>tasks">
                 <i class="fa fa-tasks"></i>
-                <span>Görevler</span>
+                <span>Tâches</span>
               </a>
             </li>
             <li class="treeview">
               <a href="<?php echo base_url(); ?>addNewTask">
                 <i class="fa fa-plus-circle"></i>
-                <span>Görev Ekle</span>
+                <span>Ajouter une tâche</span>
               </a>
             </li>
             <?php
@@ -149,31 +149,13 @@
               <li class="treeview">
                 <a href="<?php echo base_url(); ?>userListing">
                   <i class="fa fa-users"></i>
-                  <span>Kullanıcılar</span>
+                  <span>Les utilisateurs</span>
                 </a>
               </li>
               <li class="treeview">
                 <a href="<?php echo base_url(); ?>addNew">
                   <i class="fa fa-plus-circle"></i>
-                  <span>Kullanıcı Ekle</span>
-                </a>
-              </li>
-              <li class="treeview">
-                <a href="<?php echo base_url(); ?>log-history">
-                  <i class="fa fa-archive"></i>
-                  <span>Log Kayıtları</span>
-                </a>
-              </li>
-              <li class="treeview">
-                <a href="<?php echo base_url(); ?>log-history-upload">
-                  <i class="fa fa-upload"></i>
-                  <span>Yedek Yükle</span>
-                </a>
-              </li>
-              <li class="treeview">
-                <a href="<?php echo base_url(); ?>log-history-backup">
-                  <i class="fa fa-archive"></i>
-                  <span>Log Kayıtları Yedek</span>
+                  <span>Ajouter un utilisateur</span>
                 </a>
               </li>
               <?php
@@ -184,7 +166,7 @@
                 <li class="treeview">
                   <a href="<?php echo base_url(); ?>etasks">
                     <i class="fa fa-tasks"></i>
-                    <span>Görevler</span>
+                    <span>Tâches</span>
                   </a>
                   <?php
             }

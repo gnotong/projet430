@@ -2,8 +2,9 @@
   <!-- Content Header (Page header) -->
   <section class="content-header">
     <h1>
-      <i class="fa fa-users"></i> Tüm Görevler
-      <small>Panelimizdeki Tüm Görevler</small>
+      <i class="fa fa-users"></i>
+        Toutes les tâches
+      <small>Toutes les tâches de notre panel</small>
     </h1>
   </section>
   <section class="content">
@@ -41,12 +42,12 @@
                 <thead>
                   <tr>
                     <th>ID</th>
-                    <th>Görev Başlığı</th>
+                    <th>Titre de la tâche</th>
                     <th>Açıklama</th>
                     <th>Durumu</th>
-                    <th>Öncelik</th>
-                    <th>Oluşturan Kullanıcı</th>
-                    <th>Oluşturan Kullanıcı Yetki</th>
+                    <th>Priorité</th>
+                    <th>Utilisateur ayant créé</th>
+                    <th>Rôle utilisateur ayant créé</th>
                     <th>Oluşturulma Tarihi</th>
                     <th>Bitiş Tarihi</th>
                     <th>Görev Bitir</th>

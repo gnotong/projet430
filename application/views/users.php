@@ -2,8 +2,8 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            <i class="fa fa-users"></i> Kullanıcı Yönetimi
-            <small>Ekle, Düzenle, Sil</small>
+            <i class="fa fa-users"></i> Gestion des utilisateurs
+            <small>Ajouter, modifier, supprimer</small>
         </h1>
     </section>
     <section class="content">
@@ -11,7 +11,7 @@
             <div class="col-xs-12 text-right">
                 <div class="form-group">
                     <a class="btn btn-primary" href="<?php echo base_url(); ?>addNew">
-                        <i class="fa fa-plus"></i> Kullanıcı Ekle</a>
+                        <i class="fa fa-plus"></i> Ajouter un utilisateur</a>
                 </div>
             </div>
         </div>
@@ -19,7 +19,7 @@
             <div class="col-xs-12">
                 <div class="box">
                     <div class="box-header">
-                        <h3 class="box-title">Kullanıcı Listesi</h3>
+                        <h3 class="box-title">Liste d'utilisateurs</h3>
                                     </div>
                       <!-- /.box-header -->
           <div class="box-body table-responsive no-padding">
@@ -51,8 +51,8 @@
                                 <th>ID</th>
                                 <th>Ad</th>
                                 <th>Email</th>
-                                <th>Telefon Numarası</th>
-                                <th>Yetki</th>
+                                <th>Numéro de téléphone</th>
+                                <th>Rôle</th>
                                 <th>İşlemler</th>
                             </tr>
                   </thead>
@@ -80,7 +80,7 @@
                                         <?php echo $record->role ?>
                                     </td>
                                     <td class="text-center">
-                                        <a class="btn btn-sm btn-primary" href="<?= base_url().'log-history/'.$record->userId; ?>" title="Log geçmişi">
+                                        <a class="btn btn-sm btn-primary" href="<?= base_url().'log-history/'.$record->userId; ?>" title="Historique du journal">
                                             <i class="fa fa-history"></i>
                                         </a> |
                                         <a class="btn btn-sm btn-info" href="<?php echo base_url().'editOld/'.$record->userId; ?>" title="Düzenle">
