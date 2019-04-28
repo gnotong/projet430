@@ -184,8 +184,11 @@ class User extends BaseController
             }
             else
             {
-                $usersData = array('password'=>getHashedPassword($newPassword),'status'=>1, 'updatedBy'=>$this->vendorId,
-                                'updatedDtm'=>date('Y-m-d H:i:s'));
+                $usersData = array(
+                    'password'=>getHashedPassword($newPassword),
+                    'status'=>1,
+                    'updatedBy'=>$this->vendorId,
+                    'updatedDtm'=>date('Y-m-d H:i:s'));
                 
                 $result = $this->user_model->changePassword($this->vendorId, $usersData);
                 
