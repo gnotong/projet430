@@ -232,7 +232,7 @@ class User extends BaseController
                  $process = 'Görev Bitirme';
                  $processFunction = 'User/endTask';
                  $this->logrecord($process,$processFunction);
-                 $this->session->set_flashdata('success', 'Görev başarıyla tamamlandı');
+                 $this->session->set_flashdata('success', 'Tâche terminée avec succès');
                  if ($this->role != ROLE_EMPLOYEE){
                     redirect('tasks');
                  }
@@ -241,7 +241,7 @@ class User extends BaseController
                  }
                 }
             else {
-                $this->session->set_flashdata('error', 'Görev tamamlama başarısız');
+                $this->session->set_flashdata('error', 'La clôture de la tâche a échoué');
                 if ($this->role != ROLE_EMPLOYEE){
                     redirect('tasks');
                  }
@@ -266,8 +266,5 @@ class User extends BaseController
             
             $this->loadViews("etasks", $this->global, $data, NULL);
     }
-
-
 }
-
 ?>

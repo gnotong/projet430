@@ -1,5 +1,10 @@
+<?php
+    $this->load->helper('form');
+    $error = $this->session->flashdata('error');
+    $success = $this->session->flashdata('success');
+?>
+
 <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
             <i class="fa fa-users"></i> Gestion des utilisateurs
@@ -20,88 +25,75 @@
                 <div class="box">
                     <div class="box-header">
                         <h3 class="box-title">Liste d'utilisateurs</h3>
-                                    </div>
-                      <!-- /.box-header -->
-          <div class="box-body table-responsive no-padding">
-            <?php
-                    $this->load->helper('form');
-                    $error = $this->session->flashdata('error');
-                    if($error)
-                    {
-                ?>
-              <div class="alert alert-danger alert-dismissable">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                <?php echo $this->session->flashdata('error'); ?>
-                                </div>
-              <?php } ?>
-              <?php  
-                    $success = $this->session->flashdata('success');
-                    if($success)
-                    {
-                ?>
-              <div class="alert alert-success alert-dismissable">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                <?php echo $this->session->flashdata('success'); ?>
-                        </div>
-              <?php } ?>
-              <div class="panel-body">
-                <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
-                  <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Ad</th>
-                                <th>Email</th>
-                                <th>Numéro de téléphone</th>
-                                <th>Rôle</th>
-                                <th>İşlemler</th>
-                            </tr>
-                  </thead>
-                  <tbody>
-                            <?php
-                    if(!empty($userRecords))
-                    {
-                        foreach($userRecords as $record)
-                        {
-                    ?>
-                                <tr>
-                                    <td>
-                                        <?php echo $record->userId ?>
-                                    </td>
-                                    <td>
-                                        <?php echo $record->name ?>
-                                    </td>
-                                    <td>
-                                        <?php echo $record->email ?>
-                                    </td>
-                                    <td>
-                                        <?php echo $record->mobile ?>
-                                    </td>
-                                    <td>
-                                        <?php echo $record->role ?>
-                                    </td>
-                                    <td class="text-center">
-                                        <a class="btn btn-sm btn-primary" href="<?= base_url().'log-history/'.$record->userId; ?>" title="Historique du journal">
-                                            <i class="fa fa-history"></i>
-                                        </a> |
-                                        <a class="btn btn-sm btn-info" href="<?php echo base_url().'editOld/'.$record->userId; ?>" title="Düzenle">
-                                            <i class="fa fa-pencil"></i>
-                                        </a>
-                                        <a class="btn btn-sm btn-danger deleteUser" href="#" data-userid="<?php echo $record->userId; ?>" title="Sil">
-                                            <i class="fa fa-trash"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                                <?php
-                        }
-                    }
-                    ?>
-                  </tbody>
-                        </table>
-              </div>
                     </div>
-                    <!-- /.box-body -->
+                    <!-- /.box-header -->
+                    <div class="box-body table-responsive no-padding">
+                        <?php if ($error): ?>
+                            <div class="alert alert-danger alert-dismissable">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                <?php echo $this->session->flashdata('error'); ?>
+                            </div>
+                        <?php endif; ?>
+
+                        <?php if ($success): ?>
+                            <div class="alert alert-success alert-dismissable">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                <?php echo $this->session->flashdata('success'); ?>
+                            </div>
+                        <?php endif; ?>
+
+                        <div class="panel-body">
+                            <table width="100%" class="table table-striped table-bordered table-hover"
+                                   id="dataTables-example">
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nom</th>
+                                    <th>Email</th>
+                                    <th>Numéro de téléphone</th>
+                                    <th>Rôle</th>
+                                    <th>Actions</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                <?php if (!empty($userRecords)): ?>
+                                    <?php foreach ($userRecords as $record): ?>
+                                        <tr>
+                                            <td>
+                                                <?php echo $record->userId ?>
+                                            </td>
+                                            <td>
+                                                <?php echo $record->name ?>
+                                            </td>
+                                            <td>
+                                                <?php echo $record->email ?>
+                                            </td>
+                                            <td>
+                                                <?php echo $record->mobile ?>
+                                            </td>
+                                            <td>
+                                                <?php echo $record->role ?>
+                                            </td>
+                                            <td class="text-center">
+                                                <a class="btn btn-sm btn-info"
+                                                   href="<?php echo base_url() . 'editOld/' . $record->userId; ?>"
+                                                   title="Modifier">
+                                                    <i class="fa fa-pencil"></i>
+                                                </a>
+                                                <a class="btn btn-sm btn-danger deleteUser" href="#"
+                                                   data-userid="<?php echo $record->userId; ?>" title="Supprimer">
+                                                    <i class="fa fa-trash"></i>
+                                                </a>
+                                            </td
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
-                <!-- /.box -->
             </div>
         </div>
     </section>
