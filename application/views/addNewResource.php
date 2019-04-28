@@ -13,57 +13,54 @@
                 <!-- general form elements -->
                 <div class="box box-primary">
                     <div class="box-header">
-                        <h3 class="box-title">Entrez les informations de la tâche</h3>
+                        <h3 class="box-title">Entrez les informations de la ressource</h3>
                     </div>
-                    <!-- /.box-header -->
                     <!-- form start -->
                     <?php $this->load->helper("form"); ?>
-                    <form role="form" id="addNewResource" action="<?php echo base_url() ?>addNewResource" method="post" role="form">
+
+                    <form role="form" id="addNewResource" action="<?php echo base_url() ?>add_resource" method="post" role="form">
                         <div class="box-body">
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="fname">Titre de la tâche</label>
-                                        <input type="text" class="form-control required" value="<?php echo set_value('fname'); ?>" id="fname" name="fname">
+                                        <label for="label">Libellé</label>
+                                        <input type="text" class="form-control required" value="<?php echo set_value('label'); ?>" id="label" name="label">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="role">Priorité</label>
-                                        <select class="form-control required" id="priority" name="priority">
-                                            <option value="0">Choisissez la priorité</option>
-                                            <?php
-                                            if(!empty($resources_prioritys))
-                                            {
-                                                foreach ($resources_prioritys as $rl)
-                                                {
-                                                    ?>
-                                                <option value="<?php echo $rl->priorityId ?>" <?php if($rl->priorityId == set_value('priority')) {echo "selected=selected";} ?>>
-                                                    <?php echo $rl->priority ?>
-                                                </option>
-                                                <?php
-                                                }
-                                            }
-                                            ?>
+                                        <label for="role">Categorie</label>
+                                        <select class="form-control required" id="category" name="category">
+                                            <option value="0">Choisissez la Categorie</option>
+                                            <?php if (!empty($resourcesCategories)): ?>
+                                                <?php foreach ($resourcesCategories as $rl): ?>
+                                                    <option
+                                                            value="<?php echo $rl->id ?>"
+                                                        <?php if($rl->id == set_value('id')) {echo "selected=selected";} ?>
+                                                    >
+                                                        <?php echo $rl->label ?>
+                                                    </option>
+                                                <?php endforeach; ?>
+                                            <?php endif; ?>
                                         </select>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-12">
+                                <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="comment">Description de la tâche</label>
-                                        <textarea class="form-control" id="comment" name="comment" rows="4">
-                                            <?php echo set_value('comment'); ?>
-                                        </textarea>
+                                        <label for="description">Description</label>
+                                        <textarea class="form-control" id="description" name="description" rows="4"
+                                        ><?php echo set_value('comment'); ?></textarea>
                                     </div>
                                 </div>
-
-                                <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="brand">Marque</label>
+                                        <input type="text" class="form-control" value="<?php echo set_value('brand'); ?>" id="brand" name="brand">
+                                    </div>
                                 </div>
                             </div>
-                            <!-- /.box-body -->
-
                             <div class="box-footer">
                                 <input type="submit" class="btn btn-primary" value="Valider" />
                                 <input type="reset" class="btn btn-default" value="Annuler" />

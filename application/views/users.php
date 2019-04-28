@@ -15,7 +15,7 @@
         <div class="row">
             <div class="col-xs-12 text-right">
                 <div class="form-group">
-                    <a class="btn btn-primary" href="<?php echo base_url(); ?>addNew">
+                    <a class="btn btn-primary" href="<?php echo base_url(); ?>create">
                         <i class="fa fa-plus"></i> Ajouter un utilisateur</a>
                 </div>
             </div>

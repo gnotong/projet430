@@ -134,7 +134,7 @@
                             </a>
                         </li>
                         <li class="treeview">
-                            <a href="<?php echo base_url(); ?>addNewResource">
+                            <a href="<?php echo base_url(); ?>add_resource">
                                 <i class="fa fa-plus-circle"></i>
                                 <span>Ajouter une ressource</span>
                             </a>
@@ -149,7 +149,7 @@
                             </a>
                         </li>
                         <li class="treeview">
-                            <a href="<?php echo base_url(); ?>addNew">
+                            <a href="<?php echo base_url(); ?>create">
                                 <i class="fa fa-plus-circle"></i>
                                 <span>Ajouter un utilisateur</span>
                             </a>

@@ -15,7 +15,7 @@
     <section class="content">
         <div class="col-xs-12">
             <div class="text-right">
-                <a class="btn btn-primary" href="<?php echo base_url(); ?>addNewResource">
+                <a class="btn btn-primary" href="<?php echo base_url(); ?>add_resource">
                     <i class="fa fa-plus"></i> Ajouter une ressource</a>
             </div>
             <div class="box">
@@ -47,7 +47,7 @@
                                 <th>ID</th>
                                 <th>Libellé</th>
                                 <th>Description</th>
-                                <th>Durumu</th>
+                                <th>Marque</th>
                                 <th>Catégorie</th>
                                 <th>Créateur</th>
                                 <th>Rôle créateur</th>
@@ -56,49 +56,32 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <?php if (!empty($taskRecords)): ?>
-                                <?php foreach ($taskRecords as $record): ?>
+                            <?php if (!empty($resourcesRecords)): ?>
+                                <?php foreach ($resourcesRecords as $record): ?>
                                     <tr>
                                         <td>
                                             <?php echo $record->id ?>
                                         </td>
                                         <td>
-                                            <?php echo $record->title ?>
+                                            <?php echo $record->label ?>
                                         </td>
                                         <td>
-                                            <?php echo $record->comment ?>
+                                            <?php echo $record->description ?>
                                         </td>
                                         <td>
-                                            <div class="label label-<?php
-                                            if ($record->statusId == '1')
-                                                echo 'danger';
-                                            else if ($record->statusId == '2')
-                                                echo 'success';
-                                            ?>">
-                                                <?php echo $record->status ?>
-                                            </div>
-                                        </td>
-
-                                        <td>
-                                            <div class="label label-<?php
-                                            if ($record->priorityId == '1')
-                                                echo 'danger';
-                                            else if ($record->priorityId == '2')
-                                                echo 'warning';
-                                            else if ($record->priorityId == '3')
-                                                echo 'info'
-                                            ?>">
-                                                <?php echo $record->priority ?>
-                                            </div>
+                                            <?php echo $record->brand ?>
                                         </td>
                                         <td>
-                                            <?php echo $record->name ?>
+                                            <?php echo $record->categoryId ?>
+                                        </td>
+                                        <td>
+                                            <?php echo $record->createdBy ?>
                                         </td>
                                         <td>
                                             <?php echo $record->role ?>
                                         </td>
                                         <td>
-                                            <?php echo $record->createdDtm ?>
+                                            <?php echo $record->created ?>
                                         </td>
                                         <td class="text-center">
                                             <a class="btn btn-sm btn-info"

@@ -14,10 +14,9 @@ class Manager extends BaseController
     public function __construct()
     {
         parent::__construct();
-        $this->load->model('user_model');
+        $this->load->model('resource_model');
         // Datas -> libraries ->BaseController / This function used load user sessions
         $this->datas();
-        // isLoggedIn / Login control function /  This function used login control
         $isLoggedIn = $this->session->userdata('isLoggedIn');
         if(!isset($isLoggedIn) || $isLoggedIn != TRUE)
         {
@@ -25,20 +24,19 @@ class Manager extends BaseController
         }
         else
         {
-            // isManagerOrAdmin / Admin or manager role control function / This function used admin or manager role control
             if($this->isManagerOrAdmin() == TRUE)
             {
                 $this->accesslogincontrol();
             }
         }
     }
-        
+
      /**
      * This function used to show resources
      */
     function resources()
     {
-            $data['taskRecords'] = $this->user_model->getTasks();
+            $data['resourcesRecords'] = $this->resource_model->getResources();
 
             $process = 'Toutes les Ressources';
             $processFunction = 'Manager/resources';
@@ -54,7 +52,7 @@ class Manager extends BaseController
      */
     function loadNewResource()
     {
-            $data['resources_prioritys'] = $this->user_model->getTasksPrioritys();
+            $data['resourcesCategories'] = $this->resource_model->getResourcesCategories();
 
             $this->global['pageTitle'] = 'UY1: Ajouter une ressource';
 
@@ -66,44 +64,49 @@ class Manager extends BaseController
      */
     function addNewResource()
     {
-            $this->load->library('form_validation');
-            
-            $this->form_validation->set_rules('fname','Titre de la tâche','required');
-            $this->form_validation->set_rules('priority','Priorité','required');
-            
-            if($this->form_validation->run() == FALSE)
+        $this->load->library('form_validation');
+
+        $this->form_validation->set_rules('label','Libellé','required');
+        $this->form_validation->set_rules('category','Catégorie','required');
+
+        if($this->form_validation->run() == FALSE)
+        {
+            $this->loadNewResource();
+        }
+        else
+        {
+            $label = $this->input->post('label');
+            $description = $this->input->post('description');
+            $categoryId = $this->input->post('category');
+            $brand = $this->input->post('brand');
+
+            $resourceInfo = [
+                'label'=>$label,
+                'description'=>$description,
+                'brand'=>$brand,
+                'categoryId'=>$categoryId,
+                'createdBy'=>$this->vendorId,
+                'created'=>date('Y-m-d H:i:s')
+            ];
+
+            $result = $this->resource_model->addNewResource($resourceInfo);
+
+            if($result > 0)
             {
-                $this->loadNewResource();
+                $process = 'Ajouter une ressource';
+                $processFunction = 'Manager/addNewResource';
+                $this->logrecord($process,$processFunction);
+
+                $this->session->set_flashdata('success', 'Ressource créée avec succès');
             }
             else
             {
-                $title = $this->input->post('fname');
-                $comment = $this->input->post('comment');
-                $priorityId = $this->input->post('priority');
-                $statusId = 1;
-                $permalink = sef($title);
-                
-                $resourceInfo = array('title'=>$title, 'comment'=>$comment, 'priorityId'=>$priorityId, 'statusId'=> $statusId,
-                                    'permalink'=>$permalink, 'createdBy'=>$this->vendorId, 'createdDtm'=>date('Y-m-d H:i:s'));
-                                    
-                $result = $this->user_model->addNewResource($resourceInfo);
-                
-                if($result > 0)
-                {
-                    $process = 'Ajouter une ressource';
-                    $processFunction = 'Manager/addNewResource';
-                    $this->logrecord($process,$processFunction);
-
-                    $this->session->set_flashdata('success', 'Tâche créée avec succès');
-                }
-                else
-                {
-                    $this->session->set_flashdata('error', '    Vérifier le mot de passeRôle La création de la tâche a échoué');
-                }
-                
-                redirect('addNewResource');
+                $this->session->set_flashdata('error', '    Vérifier le mot de passeRôle La création de la tâche a échoué');
             }
+
+            redirect('add_resource');
         }
+    }
 
     /**
      * This function is used to open edit resources view
@@ -115,9 +118,9 @@ class Manager extends BaseController
                 redirect('resources');
             }
             
-            $data['resourceInfo'] = $this->user_model->getResourceInfo($resourceId);
-            $data['resources_prioritys'] = $this->user_model->getTasksPrioritys();
-            $data['resources_situations'] = $this->user_model->getTasksSituations();
+            $data['resourceInfo'] = $this->resource_model->getResourceInfo($resourceId);
+            $data['resourcesCategories'] = $this->resource_model->getResourcesCategories();
+            $data['resources_situations'] = $this->resource_model->getResourcesSituations();
             
             $this->global['pageTitle'] = 'UY1 : Modifier la tâche';
             
@@ -131,10 +134,10 @@ class Manager extends BaseController
     {
         $this->load->library('form_validation');
 
-        $this->form_validation->set_rules('fname','Titre de la tâche','required');
-        $this->form_validation->set_rules('priority','Priorité','required');
+        $this->form_validation->set_rules('label','Libellé','required');
+        $this->form_validation->set_rules('category','Catégorie','required');
 
-        $resourceId = $this->input->post('taskId');
+        $resourceId = $this->input->post('resourceId');
 
         if($this->form_validation->run() == FALSE)
         {
@@ -142,17 +145,20 @@ class Manager extends BaseController
         }
         else
         {
-            $resourceId = $this->input->post('taskId');
-            $title = $this->input->post('fname');
-            $comment = $this->input->post('comment');
-            $priorityId = $this->input->post('priority');
-            $statusId = $this->input->post('status');
-            $permalink = sef($title);
+            $resourceId = $this->input->post('resourceId');
+            $label = $this->input->post('label');
+            $description = $this->input->post('description');
+            $category = $this->input->post('category');
+            $brand = $this->input->post('brand');
 
-            $resourceInfo = array('title'=>$title, 'comment'=>$comment, 'priorityId'=>$priorityId, 'statusId'=> $statusId,
-                                'permalink'=>$permalink);
-                                
-            $result = $this->user_model->editResource($resourceInfo,$resourceId);
+            $resourceInfo = [
+                'label'=>$label,
+                'description'=>$description,
+                'categoryId'=>$category,
+                'brand'=> $brand
+            ];
+
+            $result = $this->resource_model->editResource($resourceInfo,$resourceId);
 
             if($result > 0)
             {
@@ -181,18 +187,18 @@ class Manager extends BaseController
                 redirect('resources');
             }
 
-            $result = $this->user_model->deleteResource($resourceId);
+            $result = $this->resource_model->deleteResource($resourceId);
             
             if ($result == TRUE) {
-                 $process = 'Görev Silme';
+                 $process = 'Suprpession de ressources';
                  $processFunction = 'Manager/deleteResource';
                  $this->logrecord($process,$processFunction);
 
-                 $this->session->set_flashdata('success', 'Görev silme başarılı');
+                 $this->session->set_flashdata('success', 'Ressources supprimées avec succès');
                 }
             else
             {
-                $this->session->set_flashdata('error', 'Görev silme başarısız');
+                $this->session->set_flashdata('error', 'Erreur de suppression de la ressource');
             }
             redirect('resources');
     }

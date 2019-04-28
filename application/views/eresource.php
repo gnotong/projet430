@@ -40,75 +40,54 @@
                             <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Titre de la tâche</th>
-                                <th>Açıklama</th>
-                                <th>Durumu</th>
-                                <th>Priorité</th>
+                                <th>Libellé</th>
+                                <th>Marque</th>
+                                <th>Description</th>
+                                <th>Catégorie</th>
                                 <th>Utilisateur ayant créé</th>
                                 <th>Rôle utilisateur ayant créé</th>
-                                <th>Oluşturulma Tarihi</th>
-                                <th>Bitiş Tarihi</th>
-                                <th>Görev Bitir</th>
+                                <th>Date création</th>
+                                <th>Action</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <?php if (!empty($taskRecords)): ?>
-                                <?php foreach ($taskRecords as $record): ?>
-                                    <tr>
-                                        <td>
-                                            <?php echo $record->id ?>
-                                        </td>
-                                        <td>
-                                            <?php echo $record->title ?>
-                                        </td>
-                                        <td>
-                                            <?php echo $record->comment ?>
-                                        </td>
-                                        <td>
-                                            <div class="label label-<?php
-                                            if ($record->statusId == '1')
-                                                echo 'danger';
-                                            else if ($record->statusId == '2')
-                                                echo 'success';
-                                            ?>">
-                                                <?php echo $record->status ?>
-                                            </div>
-                                        </td>
-
-                                        <td>
-                                            <div class="label label-<?php
-                                            if ($record->priorityId == '1')
-                                                echo 'danger';
-                                            else if ($record->priorityId == '2')
-                                                echo 'warning';
-                                            else if ($record->priorityId == '3')
-                                                echo 'info'
-                                            ?>">
-                                                <?php echo $record->priority ?>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <?php echo $record->name ?>
-                                        </td>
-                                        <td>
-                                            <?php echo $record->role ?>
-                                        </td>
-                                        <td>
-                                            <?php echo $record->createdDtm ?>
-                                        </td>
-                                        <td>
-                                            <?php echo $record->endDtm ?>
-                                        </td>
-                                        <td class="text-center">
-                                            <a class="btn btn-sm btn-primary"
-                                               href="<?= base_url() . 'endResource/' . $record->id; ?>"
-                                               title="Görevi Bitir">
-                                                <i class="fa fa-check-circle"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
+                                <?php if (!empty($resourcesRecords)): ?>
+                                    <?php foreach ($resourcesRecords as $record): ?>
+                                        <tr>
+                                            <td>
+                                                <?php echo $record->id ?>
+                                            </td>
+                                            <td>
+                                                <?php echo $record->label ?>
+                                            </td>
+                                            <td>
+                                                <?php echo $record->brand ?>
+                                            </td>
+                                            <td>
+                                                <?php echo $record->description ?>
+                                            </td>
+                                            <td>
+                                                <?php echo $record->categoryId ?>
+                                            </td>
+                                            <td>
+                                                <?php echo $record->createdBy ?>
+                                            </td>
+                                            <td>
+                                                <?php echo $record->role ?>
+                                            </td>
+                                            <td>
+                                                <?php echo $record->created ?>
+                                            </td>
+                                            <td class="text-center">
+                                                <a class="btn btn-sm btn-primary"
+                                                   href="<?= base_url() . 'endResource/' . $record->id; ?>"
+                                                   title="Görevi Bitir">
+                                                    <i class="fa fa-check-circle"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
                             </tbody>
                         </table>
                     </div>

@@ -16,7 +16,7 @@ $route['logout'] = 'user/logout';
 $route['noaccess'] = 'login/noaccess';
 $route['user_list'] = 'admin/userListing';
 $route['user_list/(:num)'] = "admin/userListing/$1";
-$route['addNew'] = "admin/addNew";
+$route['create'] = "admin/addNew";
 $route['addNewUser'] = "admin/addNewUser";
 $route['edit_old_user'] = "admin/editOld";
 $route['edit_old_user/(:num)'] = "admin/editOld/$1";
@@ -25,8 +25,7 @@ $route['deleteUser'] = "admin/deleteUser";
 
 /*********** MANAGER CONTROLLER ROUTES *******************/
 $route['resources'] = "manager/resources";
-$route['addNewResource'] = "manager/addNewResource";
-$route['addNewResource'] = "manager/addNewResource";
+$route['add_resource'] = "manager/addNewResource";
 $route['edit_old_resource/(:num)'] = "manager/editOldResource/$1";
 $route['editResource'] = "manager/editResource";
 $route['deleteResource/(:num)'] = "manager/deleteResource/$1";

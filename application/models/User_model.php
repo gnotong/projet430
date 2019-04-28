@@ -254,27 +254,26 @@ class User_model extends CI_Model
     /**
      * This function is used to get resources
      */
-    function getTasks()
+    function getResources()
     {
         $this->db->select('*');
         $this->db->from('tasks as TaskTbl');
         $this->db->join('users as Users','Users.userId = TaskTbl.createdBy');
         $this->db->join('roles as Roles','Roles.roleId = Users.roleId');
-        $this->db->join('tbl_tasks_situations as Situations','Situations.statusId = TaskTbl.statusId');
-        $this->db->join('tbl_tasks_prioritys as Prioritys','Prioritys.priorityId = TaskTbl.priorityId');
-        $this->db->order_by('TaskTbl.statusId ASC, TaskTbl.priorityId');
+        $this->db->join('categories as cat','cat.id = TaskTbl.categoryId');
+        $this->db->order_by('TaskTbl.created DESC');
         $query = $this->db->get();
         $result = $query->result();        
         return $result;
     }
 
     /**
-     * This function is used to get task prioritys
+     * This function is used to get resource categories
      */
-    function getTasksPrioritys()
+    function getResourcesCategories()
     {
         $this->db->select('*');
-        $this->db->from('tbl_tasks_prioritys');
+        $this->db->from('categories');
         $query = $this->db->get();
         
         return $query->result();
@@ -283,7 +282,7 @@ class User_model extends CI_Model
     /**
      * This function is used to get task situations
      */
-    function getTasksSituations()
+    function getResourcesSituations()
     {
         $this->db->select('*');
         $this->db->from('tbl_tasks_situations');
@@ -316,8 +315,7 @@ class User_model extends CI_Model
     {
         $this->db->select('*');
         $this->db->from('tasks');
-        $this->db->join('tbl_tasks_situations as Situations','Situations.statusId = tasks.statusId');
-        $this->db->join('tbl_tasks_prioritys as Prioritys','Prioritys.priorityId = tasks.priorityId');
+        $this->db->join('categories as cat','cat.id = tasks.categoryId');
         $this->db->where('id', $resourceId);
         $query = $this->db->get();
         
@@ -401,8 +399,7 @@ class User_model extends CI_Model
     function finishedResourcesCount()
     {
         $this->db->select('*');
-        $this->db->from('tasks as BaseTbl');
-        $this->db->where('BaseTbl.statusId', 2);
+        $this->db->from('tasks');
         $query = $this->db->get();
         return $query->num_rows();
     }
