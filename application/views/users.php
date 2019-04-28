@@ -77,7 +77,7 @@
                                             </td>
                                             <td class="text-center">
                                                 <a class="btn btn-sm btn-info"
-                                                   href="<?php echo base_url() . 'editOld/' . $record->userId; ?>"
+                                                   href="<?php echo base_url() . 'edit_old_user/' . $record->userId; ?>"
                                                    title="Modifier">
                                                     <i class="fa fa-pencil"></i>
                                                 </a>

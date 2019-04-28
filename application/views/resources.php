@@ -102,7 +102,7 @@
                                         </td>
                                         <td class="text-center">
                                             <a class="btn btn-sm btn-info"
-                                               href="<?php echo base_url() . 'editOldResource/' . $record->id; ?>"
+                                               href="<?php echo base_url() . 'edit_old_resource/' . $record->id; ?>"
                                                title="Düzenle">
                                                 <i class="fa fa-pencil"></i>
                                             </a>

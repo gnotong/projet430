@@ -18,8 +18,8 @@ $route['user_list'] = 'admin/userListing';
 $route['user_list/(:num)'] = "admin/userListing/$1";
 $route['addNew'] = "admin/addNew";
 $route['addNewUser'] = "admin/addNewUser";
-$route['editOld'] = "admin/editOld";
-$route['editOld/(:num)'] = "admin/editOld/$1";
+$route['edit_old_user'] = "admin/editOld";
+$route['edit_old_user/(:num)'] = "admin/editOld/$1";
 $route['editUser'] = "admin/editUser";
 $route['deleteUser'] = "admin/deleteUser";
 
@@ -27,7 +27,7 @@ $route['deleteUser'] = "admin/deleteUser";
 $route['resources'] = "manager/resources";
 $route['addNewResource'] = "manager/addNewResource";
 $route['addNewResource'] = "manager/addNewResource";
-$route['editOldResource/(:num)'] = "manager/editOldResource/$1";
+$route['edit_old_resource/(:num)'] = "manager/editOldResource/$1";
 $route['editResource'] = "manager/editResource";
 $route['deleteResource/(:num)'] = "manager/deleteResource/$1";
 
