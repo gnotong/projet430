@@ -53,7 +53,6 @@ class Admin extends BaseController
             
             $process = 'Liste d\'utilisateurs';
             $processFunction = 'Admin/userListing';
-            $this->logrecord($process,$processFunction);
 
             $this->global['pageTitle'] = 'UY1 : liste d\'utilisateurs';
             
@@ -108,7 +107,6 @@ class Admin extends BaseController
                 {
                     $process = 'Ajout d\'utilisateurs';
                     $processFunction = 'Admin/addNewUser';
-                    $this->logrecord($process,$processFunction);
 
                     $this->session->set_flashdata('success', 'Utilisateur créé avec succès');
                 }
@@ -189,7 +187,6 @@ class Admin extends BaseController
                 {
                     $process = 'Mise à jour de l\'utilisateur';
                     $processFunction = 'Admin/editUser';
-                    $this->logrecord($process,$processFunction);
 
                     $this->session->set_flashdata('success', 'Utilisateur mis à jour avec succès');
                 }
@@ -218,7 +215,6 @@ class Admin extends BaseController
 
                  $process = 'Supprimer l\'utilisateur';
                  $processFunction = 'Admin/deleteUser';
-                 $this->logrecord($process,$processFunction);
 
                 }
             else { echo(json_encode(array('status'=>FALSE))); }

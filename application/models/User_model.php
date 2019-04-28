@@ -184,6 +184,57 @@ class User_model extends CI_Model
         return $this->db->affected_rows();
     }
 
+
+    /**
+     * This function is used to get user log history count
+     * @param number $userId : This is user id
+     */
+
+    function logHistoryCount($userId)
+    {
+        $this->db->select('*');
+        $this->db->from('tbl_log as BaseTbl');
+
+        if ($userId == NULL)
+        {
+            $query = $this->db->get();
+            return $query->num_rows();
+        }
+        else
+        {
+            $this->db->where('BaseTbl.userId', $userId);
+            $query = $this->db->get();
+            return $query->num_rows();
+        }
+    }
+
+    /**
+     * This function is used to get user log history
+     * @param number $userId : This is user id
+     * @return array $result : This is result
+     */
+    function logHistory($userId)
+    {
+        $this->db->select('*');
+        $this->db->from('tbl_log as BaseTbl');
+
+        if ($userId == NULL)
+        {
+            $this->db->order_by('BaseTbl.createdDtm', 'DESC');
+            $query = $this->db->get();
+            $result = $query->result();
+            return $result;
+        }
+        else
+        {
+            $this->db->where('BaseTbl.userId', $userId);
+            $this->db->order_by('BaseTbl.createdDtm', 'DESC');
+            $query = $this->db->get();
+            $result = $query->result();
+            return $result;
+        }
+    }
+
     /**
      * This function used to get user information by id
      * @param number $userId : This is user id
@@ -312,6 +363,15 @@ class User_model extends CI_Model
     }
 
     /**
+     * This function is used to delete tbl_log table records
+     */
+    function clearlogtbl()
+    {
+        $this->db->truncate('tbl_log');
+        return TRUE;
+    }
+
+    /**
      * This function is used to complete tasks
      */
     function endTask($taskId, $taskInfo)
@@ -343,6 +403,18 @@ class User_model extends CI_Model
         $this->db->select('*');
         $this->db->from('tbl_task as BaseTbl');
         $this->db->where('BaseTbl.statusId', 2);
+        $query = $this->db->get();
+        return $query->num_rows();
+    }
+
+    /**
+     * This function is used to get the logs count
+     * @return array $result : This is result
+     */
+    function logsCount()
+    {
+        $this->db->select('*');
+        $this->db->from('tbl_log as BaseTbl');
         $query = $this->db->get();
         return $query->num_rows();
     }
