@@ -11,8 +11,8 @@ class Login_model extends CI_Model
     function loginMe($email, $password)
     {
         $this->db->select('BaseTbl.userId, BaseTbl.password, BaseTbl.name,BaseTbl.status,BaseTbl.roleId, Roles.role');
-        $this->db->from('tbl_users as BaseTbl');
-        $this->db->join('tbl_roles as Roles','Roles.roleId = BaseTbl.roleId');
+        $this->db->from('users as BaseTbl');
+        $this->db->join('roles as Roles','Roles.roleId = BaseTbl.roleId');
         $this->db->where('BaseTbl.email', $email);
         $this->db->where('BaseTbl.isDeleted', 0);
         $query = $this->db->get();
@@ -40,7 +40,7 @@ class Login_model extends CI_Model
         $this->db->select('userId');
         $this->db->where('email', $email);
         $this->db->where('isDeleted', 0);
-        $query = $this->db->get('tbl_users');
+        $query = $this->db->get('users');
 
         if ($query->num_rows() > 0){
             return true;
@@ -74,7 +74,7 @@ class Login_model extends CI_Model
     function getCustomerInfoByEmail($email)
     {
         $this->db->select('userId, email, name');
-        $this->db->from('tbl_users');
+        $this->db->from('users');
         $this->db->where('isDeleted', 0);
         $this->db->where('email', $email);
         $query = $this->db->get();
@@ -102,7 +102,7 @@ class Login_model extends CI_Model
     {
         $this->db->where('email', $email);
         $this->db->where('isDeleted', 0);
-        $this->db->update('tbl_users', array('password'=>getHashedPassword($password)));
+        $this->db->update('users', array('password'=>getHashedPassword($password)));
         $this->db->delete('tbl_reset_password', array('email'=>$email));
     }
 
@@ -113,7 +113,7 @@ class Login_model extends CI_Model
     function loginsert($logInfo)
     {
         $this->db->trans_start();
-        $this->db->insert('tbl_log', $logInfo);
+        $this->db->insert('logs', $logInfo);
         $this->db->trans_complete();
     }
 
@@ -128,7 +128,7 @@ class Login_model extends CI_Model
         $this->db->where('BaseTbl.userId', $userId);
         $this->db->order_by('BaseTbl.id', 'DESC');
         $this->db->limit(1);
-        $query = $this->db->get('tbl_log as BaseTbl');
+        $query = $this->db->get('logs as BaseTbl');
 
         return $query->row();
     }

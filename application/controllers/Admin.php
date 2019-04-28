@@ -47,12 +47,12 @@ class Admin extends BaseController
             
             $count = $this->user_model->userListingCount($searchText);
 
-			$returns = $this->paginationCompress ( "userListing/", $count, 10 );
+			$returns = $this->paginationCompress ( "user_list/", $count, 10 );
             
             $data['userRecords'] = $this->user_model->userListing($searchText, $returns["page"], $returns["segment"]);
             
             $process = 'Liste d\'utilisateurs';
-            $processFunction = 'Admin/userListing';
+            $processFunction = 'Admin/user_list';
 
             $this->global['pageTitle'] = 'UY1 : liste d\'utilisateurs';
             
@@ -115,7 +115,7 @@ class Admin extends BaseController
                     $this->session->set_flashdata('error', 'La création de l\'utilisateur a échoué');
                 }
                 
-                redirect('userListing');
+                redirect('user_list');
             }
         }
 
@@ -127,7 +127,7 @@ class Admin extends BaseController
     {
             if($userId == null)
             {
-                redirect('userListing');
+                redirect('user_list');
             }
             
             $data['roles'] = $this->user_model->getUserRoles();
@@ -195,7 +195,7 @@ class Admin extends BaseController
                     $this->session->set_flashdata('error', 'La mise à jour de l\'utilisateur a échoué');
                 }
                 
-                redirect('userListing');
+                redirect('user_list');
             }
     }
 

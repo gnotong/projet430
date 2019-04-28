@@ -8,17 +8,22 @@
     <section class="content-header">
         <h1>
             <i class="fa fa-users"></i>
-            Toutes les tâches
-            <small>Toutes les tâches de notre panel</small>
+            Toutes les Ressources
+            <small>Toutes les Ressources de notre panel</small>
         </h1>
     </section>
     <section class="content">
         <div class="col-xs-12">
+            <div class="text-right">
+                <a class="btn btn-primary" href="<?php echo base_url(); ?>addNewResource">
+                    <i class="fa fa-plus"></i> Ajouter une ressource</a>
+            </div>
             <div class="box">
                 <div class="box-header">
                     <div class="box-tools">
                     </div>
                 </div>
+                <!-- /.box-header -->
                 <div class="box-body table-responsive no-padding">
                     <?php if ($error): ?>
                         <div class="alert alert-danger alert-dismissable">
@@ -40,15 +45,14 @@
                             <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Titre de la tâche</th>
-                                <th>Açıklama</th>
+                                <th>Libellé</th>
+                                <th>Description</th>
                                 <th>Durumu</th>
-                                <th>Priorité</th>
-                                <th>Utilisateur ayant créé</th>
-                                <th>Rôle utilisateur ayant créé</th>
-                                <th>Oluşturulma Tarihi</th>
-                                <th>Bitiş Tarihi</th>
-                                <th>Görev Bitir</th>
+                                <th>Catégorie</th>
+                                <th>Créateur</th>
+                                <th>Rôle créateur</th>
+                                <th>Date de création</th>
+                                <th>Actions</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -96,19 +100,22 @@
                                         <td>
                                             <?php echo $record->createdDtm ?>
                                         </td>
-                                        <td>
-                                            <?php echo $record->endDtm ?>
-                                        </td>
                                         <td class="text-center">
-                                            <a class="btn btn-sm btn-primary"
-                                               href="<?= base_url() . 'endTask/' . $record->id; ?>"
-                                               title="Görevi Bitir">
-                                                <i class="fa fa-check-circle"></i>
+                                            <a class="btn btn-sm btn-info"
+                                               href="<?php echo base_url() . 'editOldResource/' . $record->id; ?>"
+                                               title="Düzenle">
+                                                <i class="fa fa-pencil"></i>
+                                            </a>
+                                            <a class="btn btn-sm btn-danger deleteUser"
+                                               href="<?php echo base_url() . 'deleteResource/' . $record->id; ?>"
+                                               data-userid="<?php echo $record->id; ?>"
+                                               title="Sil">
+                                                <i class="fa fa-trash"></i>
                                             </a>
                                         </td>
                                     </tr>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
                             </tbody>
                         </table>
                     </div>

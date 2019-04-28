@@ -2,8 +2,8 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            <i class="fa fa-users"></i> Gestion des tâches
-            <small>Ajouter / Modifier une tâche</small>
+            <i class="fa fa-users"></i> Gestion des Ressources
+            <small>Ajouter / Modifier une Ressource</small>
         </h1>
     </section>
     <section class="content">
@@ -18,7 +18,7 @@
                     <!-- /.box-header -->
                     <!-- form start -->
                     <?php $this->load->helper("form"); ?>
-                    <form role="form" id="addNewTask" action="<?php echo base_url() ?>addNewTasks" method="post" role="form">
+                    <form role="form" id="addNewResource" action="<?php echo base_url() ?>addNewResource" method="post" role="form">
                         <div class="box-body">
                             <div class="row">
                                 <div class="col-md-6">
@@ -33,9 +33,9 @@
                                         <select class="form-control required" id="priority" name="priority">
                                             <option value="0">Choisissez la priorité</option>
                                             <?php
-                                            if(!empty($tasks_prioritys))
+                                            if(!empty($resources_prioritys))
                                             {
-                                                foreach ($tasks_prioritys as $rl)
+                                                foreach ($resources_prioritys as $rl)
                                                 {
                                                     ?>
                                                 <option value="<?php echo $rl->priorityId ?>" <?php if($rl->priorityId == set_value('priority')) {echo "selected=selected";} ?>>

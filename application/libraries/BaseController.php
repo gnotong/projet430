@@ -1,9 +1,7 @@
-<?php defined ( 'BASEPATH' ) or exit ( 'No direct script access allowed' ); 
+<?php defined ( 'BASEPATH' ) or exit ( 'No direct script access allowed' );
+
 /**
  * Class : BaseController (BaseController)
- * @author : Samet Aydın / sametay153@gmail.com
- * @version : 1.0
- * @since : 27.02.2018
  */
 class BaseController extends CI_Controller {
 	// User session variables

@@ -34,37 +34,37 @@ class Manager extends BaseController
     }
         
      /**
-     * This function used to show tasks
+     * This function used to show resources
      */
-    function tasks()
+    function resources()
     {
             $data['taskRecords'] = $this->user_model->getTasks();
 
-            $process = 'Toutes les tâches';
-            $processFunction = 'Manager/tasks';
+            $process = 'Toutes les Ressources';
+            $processFunction = 'Manager/resources';
             $this->logrecord($process,$processFunction);
 
-            $this->global['pageTitle'] = 'UY1: Toutes les tâches';
+            $this->global['pageTitle'] = 'UY1: Toutes les Ressources';
             
-            $this->loadViews("tasks", $this->global, $data, NULL);
+            $this->loadViews("resources", $this->global, $data, NULL);
     }
 
     /**
-     * This function is used to load the add new task
+     * This function is used to load the add new resource
      */
-    function addNewTask()
+    function loadNewResource()
     {
-            $data['tasks_prioritys'] = $this->user_model->getTasksPrioritys();
+            $data['resources_prioritys'] = $this->user_model->getTasksPrioritys();
 
-            $this->global['pageTitle'] = 'UY1: Ajouter une tâche';
+            $this->global['pageTitle'] = 'UY1: Ajouter une ressource';
 
-            $this->loadViews("addNewTask", $this->global, $data, NULL);
+            $this->loadViews("addNewResource", $this->global, $data, NULL);
     }
 
      /**
-     * This function is used to add new task to the system
+     * This function is used to add new resource to the system
      */
-    function addNewTasks()
+    function addNewResource()
     {
             $this->load->library('form_validation');
             
@@ -73,7 +73,7 @@ class Manager extends BaseController
             
             if($this->form_validation->run() == FALSE)
             {
-                $this->addNewTask();
+                $this->loadNewResource();
             }
             else
             {
@@ -83,15 +83,15 @@ class Manager extends BaseController
                 $statusId = 1;
                 $permalink = sef($title);
                 
-                $taskInfo = array('title'=>$title, 'comment'=>$comment, 'priorityId'=>$priorityId, 'statusId'=> $statusId,
+                $resourceInfo = array('title'=>$title, 'comment'=>$comment, 'priorityId'=>$priorityId, 'statusId'=> $statusId,
                                     'permalink'=>$permalink, 'createdBy'=>$this->vendorId, 'createdDtm'=>date('Y-m-d H:i:s'));
                                     
-                $result = $this->user_model->addNewTasks($taskInfo);
+                $result = $this->user_model->addNewResource($resourceInfo);
                 
                 if($result > 0)
                 {
-                    $process = 'Ajouter une tâche';
-                    $processFunction = 'Manager/addNewTasks';
+                    $process = 'Ajouter une ressource';
+                    $processFunction = 'Manager/addNewResource';
                     $this->logrecord($process,$processFunction);
 
                     $this->session->set_flashdata('success', 'Tâche créée avec succès');
@@ -101,90 +101,91 @@ class Manager extends BaseController
                     $this->session->set_flashdata('error', '    Vérifier le mot de passeRôle La création de la tâche a échoué');
                 }
                 
-                redirect('addNewTask');
+                redirect('addNewResource');
             }
         }
 
     /**
-     * This function is used to open edit tasks view
+     * This function is used to open edit resources view
      */
-    function editOldTask($taskId = NULL)
+    function editOldResource($resourceId = NULL)
     {
-            if($taskId == null)
+            if($resourceId == null)
             {
-                redirect('tasks');
+                redirect('resources');
             }
             
-            $data['taskInfo'] = $this->user_model->getTaskInfo($taskId);
-            $data['tasks_prioritys'] = $this->user_model->getTasksPrioritys();
-            $data['tasks_situations'] = $this->user_model->getTasksSituations();
+            $data['resourceInfo'] = $this->user_model->getResourceInfo($resourceId);
+            $data['resources_prioritys'] = $this->user_model->getTasksPrioritys();
+            $data['resources_situations'] = $this->user_model->getTasksSituations();
             
             $this->global['pageTitle'] = 'UY1 : Modifier la tâche';
             
-            $this->loadViews("editOldTask", $this->global, $data, NULL);
+            $this->loadViews("editOldResource", $this->global, $data, NULL);
     }
 
     /**
-     * This function is used to edit tasks
+     * This function is used to edit resource
      */
-    function editTask()
-    {            
+    function editResource(): void
+    {
         $this->load->library('form_validation');
 
         $this->form_validation->set_rules('fname','Titre de la tâche','required');
         $this->form_validation->set_rules('priority','Priorité','required');
-        
-        $taskId = $this->input->post('taskId');
+
+        $resourceId = $this->input->post('taskId');
 
         if($this->form_validation->run() == FALSE)
         {
-            $this->editOldTask($taskId);
+            $this->editOldResource($resourceId);
         }
         else
         {
-            $taskId = $this->input->post('taskId');
+            $resourceId = $this->input->post('taskId');
             $title = $this->input->post('fname');
             $comment = $this->input->post('comment');
             $priorityId = $this->input->post('priority');
             $statusId = $this->input->post('status');
             $permalink = sef($title);
-            
-            $taskInfo = array('title'=>$title, 'comment'=>$comment, 'priorityId'=>$priorityId, 'statusId'=> $statusId,
+
+            $resourceInfo = array('title'=>$title, 'comment'=>$comment, 'priorityId'=>$priorityId, 'statusId'=> $statusId,
                                 'permalink'=>$permalink);
                                 
-            $result = $this->user_model->editTask($taskInfo,$taskId);
-            
+            $result = $this->user_model->editResource($resourceInfo,$resourceId);
+
             if($result > 0)
             {
-                $process = 'Görev Düzenleme';
-                $processFunction = 'Manager/editTask';
+                $process = 'Edition de ressource';
+                $processFunction = 'Manager/editResource';
                 $this->logrecord($process,$processFunction);
-                $this->session->set_flashdata('success', 'Görev düzenleme başarılı');
+                $this->session->set_flashdata('success', 'Ressource modifiée avec succès');
             }
             else
             {
-                $this->session->set_flashdata('error', 'Görev düzenleme başarısız');
+                $this->session->set_flashdata('error', 'La modification de la ressource a échoué');
             }
-            redirect('tasks');
+            redirect('resources');
 
-            }
+        }
     }
 
     /**
-     * This function is used to delete tasks
+     * This function is used to delete resources
+     * @param null $resourceId
      */
-    function deleteTask($taskId = NULL)
+    function deleteResource($resourceId = NULL)
     {
-        if($taskId == null)
+        if($resourceId == null)
             {
-                redirect('tasks');
+                redirect('resources');
             }
 
-            $result = $this->user_model->deleteTask($taskId);
+            $result = $this->user_model->deleteResource($resourceId);
             
             if ($result == TRUE) {
                  $process = 'Görev Silme';
-                 $processFunction = 'Manager/deleteTask';
+                 $processFunction = 'Manager/deleteResource';
                  $this->logrecord($process,$processFunction);
 
                  $this->session->set_flashdata('success', 'Görev silme başarılı');
@@ -193,7 +194,7 @@ class Manager extends BaseController
             {
                 $this->session->set_flashdata('error', 'Görev silme başarısız');
             }
-            redirect('tasks');
+            redirect('resources');
     }
 
 }

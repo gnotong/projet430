@@ -130,15 +130,15 @@
             {
             ?>
             <li class="treeview">
-              <a href="<?php echo base_url(); ?>tasks">
+              <a href="<?php echo base_url(); ?>resources">
                 <i class="fa fa-tasks"></i>
-                <span>Tâches</span>
+                <span>Ressources</span>
               </a>
             </li>
             <li class="treeview">
-              <a href="<?php echo base_url(); ?>addNewTask">
+              <a href="<?php echo base_url(); ?>addNewResource">
                 <i class="fa fa-plus-circle"></i>
-                <span>Ajouter une tâche</span>
+                <span>Ajouter une ressource</span>
               </a>
             </li>
             <?php
@@ -147,7 +147,7 @@
             {
             ?>
               <li class="treeview">
-                <a href="<?php echo base_url(); ?>userListing">
+                <a href="<?php echo base_url(); ?>user_list">
                   <i class="fa fa-users"></i>
                   <span>Les utilisateurs</span>
                 </a>
@@ -164,9 +164,9 @@
             {
             ?>
                 <li class="treeview">
-                  <a href="<?php echo base_url(); ?>etasks">
+                  <a href="<?php echo base_url(); ?>eresource">
                     <i class="fa fa-tasks"></i>
-                    <span>Tâches</span>
+                    <span>Ressources</span>
                   </a>
                   <?php
             }

@@ -7,9 +7,9 @@ $priorityId = '';
 $statusId = '';
 
 
-if(!empty($taskInfo))
+if(!empty($resourceInfo))
 {
-    foreach ($taskInfo as $uf)
+    foreach ($resourceInfo as $uf)
     {
         $id = $uf->id;
         $title = $uf->title;
@@ -26,8 +26,8 @@ if(!empty($taskInfo))
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                <i class="fa fa-users"></i> Gestion des tâches
-                <small>Ajouter / Modifier une tâche</small>
+                <i class="fa fa-users"></i> Gestion des Ressources
+                <small>Ajouter / Modifier une Ressource</small>
             </h1>
         </section>
         <section class="content">
@@ -42,7 +42,7 @@ if(!empty($taskInfo))
                         <!-- /.box-header -->
                         <!-- form start -->
                         <?php $this->load->helper("form"); ?>
-                        <form role="form" id="addNewTask" action="<?php echo base_url() ?>editTask" method="post" role="form">
+                        <form role="form" id="addNewResource" action="<?php echo base_url() ?>editResource" method="post" role="form">
                             <div class="box-body">
                                 <div class="row">
                                     <div class="col-md-6">
@@ -59,9 +59,9 @@ if(!empty($taskInfo))
                                             <select class="form-control required" id="priority" name="priority">
                                                 <option value="0">Choisissez la priorité/option>
                                                 <?php
-                                            if(!empty($tasks_prioritys))
+                                            if(!empty($resources_prioritys))
                                             {
-                                                foreach ($tasks_prioritys as $rl)
+                                                foreach ($resources_prioritys as $rl)
                                                 {
                                                     ?>
                                                     <option value="<?php echo $rl->priorityId ?>" <?php if($rl->priorityId == $priorityId) {echo "selected=selected";} ?>>
@@ -92,9 +92,9 @@ if(!empty($taskInfo))
                                                     <select class="form-control required" id="status" name="status">
                                                         <option value="0">Durum seçiniz</option>
                                                         <?php
-                                            if(!empty($tasks_situations))
+                                            if(!empty($resources_situations))
                                             {
-                                                foreach ($tasks_situations as $rl)
+                                                foreach ($resources_situations as $rl)
                                                 {
                                                     ?>
                                                             <option value="<?php echo $rl->statusId ?>" <?php if($rl->statusId == $statusId) {echo "selected=selected";} ?>>

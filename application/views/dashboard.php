@@ -13,14 +13,14 @@
         <div class="small-box bg-aqua">
           <div class="inner">
             <h3>
-              <?php if(isset($tasksCount)) { echo $tasksCount; } else { echo '0'; } ?>
+              <?php if(isset($resourcesCount)) { echo $resourcesCount; } else { echo '0'; } ?>
             </h3>
-            <p>Tâches</p>
+            <p>Ressources</p>
           </div>
           <div class="icon">
             <i class="fa fa-tasks"></i>
           </div>
-          <a href="<?php echo base_url(); ?><?php  if($role != ROLE_EMPLOYEE) {echo 'tasks';}else{echo 'etasks';} ?>" class="small-box-footer">Plus d'informations
+          <a href="<?php echo base_url(); ?><?php  if($role != ROLE_EMPLOYEE) {echo 'resources';}else{echo 'eresouce';} ?>" class="small-box-footer">Plus d'informations
             <i class="fa fa-arrow-circle-right"></i>
           </a>
         </div>
@@ -31,14 +31,14 @@
         <div class="small-box bg-green">
           <div class="inner">
             <h3>
-              <?php if(isset($finishedTasksCount)) { echo $finishedTasksCount; } else { echo '0'; } ?>
+              <?php if(isset($finishedResourcesCount)) { echo $finishedResourcesCount; } else { echo '0'; } ?>
             </h3>
-            <p>Tâches terminées</p>
+            <p>Ressources terminées</p>
           </div>
           <div class="icon">
             <i class="ion ion-pie-graph"></i>
           </div>
-          <a href="<?php echo base_url(); ?><?php  if($role != ROLE_EMPLOYEE) {echo 'tasks';}else{echo 'etasks';} ?>" class="small-box-footer">Plus d'informations
+          <a href="<?php echo base_url(); ?><?php  if($role != ROLE_EMPLOYEE) {echo 'resources';}else{echo 'eresouce';} ?>" class="small-box-footer">Plus d'informations
             <i class="fa fa-arrow-circle-right"></i>
           </a>
         </div>
@@ -51,12 +51,12 @@
             <h3>
               <?php if(isset($usersCount)) { echo $usersCount; } else { echo '0'; } ?>
             </h3>
-            <p>Kullanıcı</p>
+            <p>Utilisateurs</p>
           </div>
           <div class="icon">
             <i class="ion ion-person"></i>
           </div>
-          <a href="<?php echo base_url(); ?>userListing" class="small-box-footer">Plus d'informations
+          <a href="<?php echo base_url(); ?>user_list" class="small-box-footer">Plus d'informations
             <i class="fa fa-arrow-circle-right"></i>
           </a>
         </div>

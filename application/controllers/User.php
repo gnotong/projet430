@@ -28,8 +28,8 @@ class User extends BaseController
     {
         $this->global['pageTitle'] = 'UY1 : Acceuil';
 
-        $data['tasksCount'] = $this->user_model->tasksCount();
-        $data['finishedTasksCount'] = $this->user_model->finishedTasksCount();
+        $data['resourcesCount'] = $this->user_model->resourcesCount();
+        $data['finishedResourcesCount'] = $this->user_model->finishedResourcesCount();
         $data['usersCount'] = $this->user_model->usersCount();
 
         if ($this->getUserStatus() == TRUE)
@@ -222,49 +222,49 @@ class User extends BaseController
     /**
      * This function is used to finish tasks.
      */
-    function endTask($taskId)
+    function endResource($resourceId)
     {
-            $taskInfo = array('statusId'=>2,'endDtm'=>date('Y-m-d H:i:s'));
+            $resourceInfo = array('statusId'=>2,'endDtm'=>date('Y-m-d H:i:s'));
             
-            $result = $this->user_model->endTask($taskId, $taskInfo);
+            $result = $this->user_model->endResource($resourceId, $resourceInfo);
             
             if ($result > 0) {
                  $process = 'Görev Bitirme';
-                 $processFunction = 'User/endTask';
+                 $processFunction = 'User/endResource';
                  $this->logrecord($process,$processFunction);
                  $this->session->set_flashdata('success', 'Tâche terminée avec succès');
                  if ($this->role != ROLE_EMPLOYEE){
-                    redirect('tasks');
+                    redirect('resources');
                  }
                  else{
-                    redirect('etasks');
+                    redirect('eresource');
                  }
                 }
             else {
                 $this->session->set_flashdata('error', 'La clôture de la tâche a échoué');
                 if ($this->role != ROLE_EMPLOYEE){
-                    redirect('tasks');
+                    redirect('resources');
                  }
                  else{
-                    redirect('etasks');
+                    redirect('eresource');
                  }
             }
     }
 
     /**
-     * This function is used to open the tasks page for users (no edit/delete etc)
+     * This function is used to open the resources page for users (no edit/delete etc)
      */
-    function etasks()
+    function eresouce()
     {
             $data['taskRecords'] = $this->user_model->getTasks();
 
-            $process = 'Toutes les tâches utilisateur';
-            $processFunction = 'User/etasks';
+            $process = 'Toutes les Ressources';
+            $processFunction = 'User/eresource';
             $this->logrecord($process,$processFunction);
 
-            $this->global['pageTitle'] = 'UY1: Toutes les tâches';
+            $this->global['pageTitle'] = 'UY1: Toutes les ressources';
             
-            $this->loadViews("etasks", $this->global, $data, NULL);
+            $this->loadViews("eresource", $this->global, $data, NULL);
     }
 }
 ?>

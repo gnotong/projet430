@@ -10,8 +10,8 @@ class User_model extends CI_Model
     function userListingCount($searchText = '')
     {
         $this->db->select('BaseTbl.userId, BaseTbl.email, BaseTbl.name, BaseTbl.mobile, Role.role');
-        $this->db->from('tbl_users as BaseTbl');
-        $this->db->join('tbl_roles as Role', 'Role.roleId = BaseTbl.roleId','left');
+        $this->db->from('users as BaseTbl');
+        $this->db->join('roles as Role', 'Role.roleId = BaseTbl.roleId','left');
         if(!empty($searchText)) {
             $likeCriteria = "(BaseTbl.email  LIKE '%".$searchText."%'
                             OR  BaseTbl.name  LIKE '%".$searchText."%'
@@ -34,8 +34,8 @@ class User_model extends CI_Model
     function userListing($searchText = '', $page, $segment)
     {
         $this->db->select('BaseTbl.userId, BaseTbl.email, BaseTbl.name, BaseTbl.mobile, Role.role');
-        $this->db->from('tbl_users as BaseTbl');
-        $this->db->join('tbl_roles as Role', 'Role.roleId = BaseTbl.roleId','left');
+        $this->db->from('users as BaseTbl');
+        $this->db->join('roles as Role', 'Role.roleId = BaseTbl.roleId','left');
         if(!empty($searchText)) {
             $likeCriteria = "(BaseTbl.email  LIKE '%".$searchText."%'
                             OR  BaseTbl.name  LIKE '%".$searchText."%'
@@ -57,7 +57,7 @@ class User_model extends CI_Model
     function getUserRoles()
     {
         $this->db->select('roleId, role');
-        $this->db->from('tbl_roles');
+        $this->db->from('roles');
         $query = $this->db->get();
         
         return $query->result();
@@ -72,7 +72,7 @@ class User_model extends CI_Model
     function checkEmailExists($email, $userId = 0)
     {
         $this->db->select("email");
-        $this->db->from("tbl_users");
+        $this->db->from("users");
         $this->db->where("email", $email);   
         $this->db->where("isDeleted", 0);
         if($userId != 0){
@@ -91,7 +91,7 @@ class User_model extends CI_Model
     function addNewUser($userInfo)
     {
         $this->db->trans_start();
-        $this->db->insert('tbl_users', $userInfo);
+        $this->db->insert('users', $userInfo);
         
         $insert_id = $this->db->insert_id();
         
@@ -108,7 +108,7 @@ class User_model extends CI_Model
     function getUserInfo($userId)
     {
         $this->db->select('userId, name, email, mobile, roleId');
-        $this->db->from('tbl_users');
+        $this->db->from('users');
         $this->db->where('isDeleted', 0);
         $this->db->where('userId', $userId);
         $query = $this->db->get();
@@ -125,7 +125,7 @@ class User_model extends CI_Model
     function editUser($userInfo, $userId)
     {
         $this->db->where('userId', $userId);
-        $this->db->update('tbl_users', $userInfo);
+        $this->db->update('users', $userInfo);
         
         return TRUE;
     }
@@ -140,7 +140,7 @@ class User_model extends CI_Model
     function deleteUser($userId, $userInfo)
     {
         $this->db->where('userId', $userId);
-        $this->db->update('tbl_users', $userInfo);
+        $this->db->update('users', $userInfo);
         
         return $this->db->affected_rows();
     }
@@ -155,7 +155,7 @@ class User_model extends CI_Model
         $this->db->select('userId, password');
         $this->db->where('userId', $userId);        
         $this->db->where('isDeleted', 0);
-        $query = $this->db->get('tbl_users');
+        $query = $this->db->get('users');
         
         $user = $query->result();
 
@@ -179,7 +179,7 @@ class User_model extends CI_Model
     {
         $this->db->where('userId', $userId);
         $this->db->where('isDeleted', 0);
-        $this->db->update('tbl_users', $userInfo);
+        $this->db->update('users', $userInfo);
         
         return $this->db->affected_rows();
     }
@@ -193,7 +193,7 @@ class User_model extends CI_Model
     function logHistoryCount($userId)
     {
         $this->db->select('*');
-        $this->db->from('tbl_log as BaseTbl');
+        $this->db->from('logs as BaseTbl');
 
         if ($userId == NULL)
         {
@@ -216,7 +216,7 @@ class User_model extends CI_Model
     function logHistory($userId)
     {
         $this->db->select('*');
-        $this->db->from('tbl_log as BaseTbl');
+        $this->db->from('logs as BaseTbl');
 
         if ($userId == NULL)
         {
@@ -243,7 +243,7 @@ class User_model extends CI_Model
     function getUserInfoById($userId)
     {
         $this->db->select('userId, name, email, mobile, roleId');
-        $this->db->from('tbl_users');
+        $this->db->from('users');
         $this->db->where('isDeleted', 0);
         $this->db->where('userId', $userId);
         $query = $this->db->get();
@@ -252,14 +252,14 @@ class User_model extends CI_Model
     }
 
     /**
-     * This function is used to get tasks
+     * This function is used to get resources
      */
     function getTasks()
     {
         $this->db->select('*');
-        $this->db->from('tbl_task as TaskTbl');
-        $this->db->join('tbl_users as Users','Users.userId = TaskTbl.createdBy');
-        $this->db->join('tbl_roles as Roles','Roles.roleId = Users.roleId');
+        $this->db->from('tasks as TaskTbl');
+        $this->db->join('users as Users','Users.userId = TaskTbl.createdBy');
+        $this->db->join('roles as Roles','Roles.roleId = Users.roleId');
         $this->db->join('tbl_tasks_situations as Situations','Situations.statusId = TaskTbl.statusId');
         $this->db->join('tbl_tasks_prioritys as Prioritys','Prioritys.priorityId = TaskTbl.priorityId');
         $this->db->order_by('TaskTbl.statusId ASC, TaskTbl.priorityId');
@@ -295,10 +295,10 @@ class User_model extends CI_Model
     /**
      * This function is used to add a new task
      */
-    function addNewTasks($taskInfo)
+    function addNewResource($resourceInfo)
     {
         $this->db->trans_start();
-        $this->db->insert('tbl_task', $taskInfo);
+        $this->db->insert('tasks', $resourceInfo);
         
         $insert_id = $this->db->insert_id();
         
@@ -309,39 +309,39 @@ class User_model extends CI_Model
 
     /**
      * This function used to get task information by id
-     * @param number $taskId : This is task id
+     * @param number $resourceId : This is task id
      * @return array $result : This is task information
      */
-    function getTaskInfo($taskId)
+    function getResourceInfo($resourceId)
     {
         $this->db->select('*');
-        $this->db->from('tbl_task');
-        $this->db->join('tbl_tasks_situations as Situations','Situations.statusId = tbl_task.statusId');
-        $this->db->join('tbl_tasks_prioritys as Prioritys','Prioritys.priorityId = tbl_task.priorityId');
-        $this->db->where('id', $taskId);
+        $this->db->from('tasks');
+        $this->db->join('tbl_tasks_situations as Situations','Situations.statusId = tasks.statusId');
+        $this->db->join('tbl_tasks_prioritys as Prioritys','Prioritys.priorityId = tasks.priorityId');
+        $this->db->where('id', $resourceId);
         $query = $this->db->get();
         
         return $query->result();
     }
     
     /**
-     * This function is used to edit tasks
+     * This function is used to edit resources
      */
-    function editTask($taskInfo, $taskId)
+    function editResource($resourceInfo, $resourceId)
     {
-        $this->db->where('id', $taskId);
-        $this->db->update('tbl_task', $taskInfo);
+        $this->db->where('id', $resourceId);
+        $this->db->update('tasks', $resourceInfo);
         
         return $this->db->affected_rows();
     }
     
     /**
-     * This function is used to delete tasks
+     * This function is used to delete resources
      */
-    function deleteTask($taskId)
+    function deleteResource($resourceId)
     {
-        $this->db->where('id', $taskId);
-        $this->db->delete('tbl_task');
+        $this->db->where('id', $resourceId);
+        $this->db->delete('tasks');
         return TRUE;
     }
 
@@ -363,45 +363,45 @@ class User_model extends CI_Model
     }
 
     /**
-     * This function is used to delete tbl_log table records
+     * This function is used to delete logs table records
      */
     function clearlogtbl()
     {
-        $this->db->truncate('tbl_log');
+        $this->db->truncate('logs');
         return TRUE;
     }
 
     /**
-     * This function is used to complete tasks
+     * This function is used to complete resources
      */
-    function endTask($taskId, $taskInfo)
+    function endResource($resourceId, $resourceInfo)
     {
-        $this->db->where('id', $taskId);
-        $this->db->update('tbl_task', $taskInfo);
+        $this->db->where('id', $resourceId);
+        $this->db->update('tasks', $resourceInfo);
         
         return $this->db->affected_rows();
     }
 
     /**
-     * This function is used to get the tasks count
+     * This function is used to get the resources count
      * @return array $result : This is result
      */
-    function tasksCount()
+    function resourcesCount()
     {
         $this->db->select('*');
-        $this->db->from('tbl_task as BaseTbl');
+        $this->db->from('tasks as BaseTbl');
         $query = $this->db->get();
         return $query->num_rows();
     }
 
     /**
-     * This function is used to get the finished tasks count
+     * This function is used to get the finished resources count
      * @return array $result : This is result
      */
-    function finishedTasksCount()
+    function finishedResourcesCount()
     {
         $this->db->select('*');
-        $this->db->from('tbl_task as BaseTbl');
+        $this->db->from('tasks as BaseTbl');
         $this->db->where('BaseTbl.statusId', 2);
         $query = $this->db->get();
         return $query->num_rows();
@@ -414,7 +414,7 @@ class User_model extends CI_Model
     function logsCount()
     {
         $this->db->select('*');
-        $this->db->from('tbl_log as BaseTbl');
+        $this->db->from('logs as BaseTbl');
         $query = $this->db->get();
         return $query->num_rows();
     }
@@ -426,7 +426,7 @@ class User_model extends CI_Model
     function usersCount()
     {
         $this->db->select('*');
-        $this->db->from('tbl_users as BaseTbl');
+        $this->db->from('users as BaseTbl');
         $this->db->where('isDeleted', 0);
         $query = $this->db->get();
         return $query->num_rows();
@@ -437,7 +437,7 @@ class User_model extends CI_Model
         $this->db->select('BaseTbl.status');
         $this->db->where('BaseTbl.userId', $userId);
         $this->db->limit(1);
-        $query = $this->db->get('tbl_users as BaseTbl');
+        $query = $this->db->get('users as BaseTbl');
 
         return $query->row();
     }
