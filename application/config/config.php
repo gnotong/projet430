@@ -1,6 +1,9 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+# load Faker data
+include_once 'vendor/autoload.php';
+
 /*
 |--------------------------------------------------------------------------
 | Base Site URL

@@ -9,7 +9,6 @@
         <h1>
             <i class="fa fa-users"></i>
             Toutes les Ressources
-            <small>Toutes les Ressources de notre panel</small>
         </h1>
     </section>
     <section class="content">
@@ -45,9 +44,8 @@
                             <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Libellé</th>
+                                    <th>Nom</th>
                                     <th>Description</th>
-                                    <th>Marque</th>
                                     <th>Catégorie</th>
                                     <th>Créateur</th>
                                     <th>Rôle créateur</th>
@@ -63,36 +61,33 @@
                                                 <?php echo $record->id ?>
                                             </td>
                                             <td>
-                                                <?php echo $record->label ?>
+                                                <?php echo $record->name ?>
                                             </td>
                                             <td>
                                                 <?php echo $record->description ?>
                                             </td>
                                             <td>
-                                                <?php echo $record->brand ?>
+                                                <?php echo $record->category ?>
                                             </td>
                                             <td>
-                                                <?php echo $record->categoryId ?>
+                                                <?php echo $record->creator ?>
                                             </td>
                                             <td>
-                                                <?php echo $record->createdBy ?>
-                                            </td>
-                                            <td>
-                                                <?php echo $record->role ?>
+                                                <?php echo $record->creatorRole ?>
                                             </td>
                                             <td>
                                                 <?php echo $record->created ?>
                                             </td>
                                             <td class="text-center">
                                                 <a class="btn btn-sm btn-info"
-                                                   href="<?php echo base_url() . 'edit_old_resource/' . $record->id; ?>"
-                                                   title="Düzenle">
+                                                   href="<?php echo base_url() . 'edit_resource/' . $record->id; ?>"
+                                                   title="Editer">
                                                     <i class="fa fa-pencil"></i>
                                                 </a>
                                                 <a class="btn btn-sm btn-danger deleteUser"
                                                    href="<?php echo base_url() . 'deleteResource/' . $record->id; ?>"
                                                    data-userid="<?php echo $record->id; ?>"
-                                                   title="Sil">
+                                                   title="Supprimer">
                                                     <i class="fa fa-trash"></i>
                                                 </a>
                                             </td>

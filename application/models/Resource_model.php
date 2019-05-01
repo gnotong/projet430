@@ -7,10 +7,19 @@ class Resource_model extends CI_Model
      */
     function getResources()
     {
-        $this->db->select('*');
-        $this->db->from('resources as TaskTbl');
-        $this->db->join('users as Users','Users.userId = TaskTbl.createdBy');
-        $this->db->join('roles as Roles','Roles.roleId = Users.roleId');
+        $this->db->select('
+            res.id, 
+            res.label as name, 
+            res.description, 
+            res.created, 
+            usr.name as creator, 
+            rol.role as creatorRole, 
+            cat.label as category'
+        );
+        $this->db->from('resources as res');
+        $this->db->join('categories as cat','cat.id = res.categoryId');
+        $this->db->join('users as usr','usr.userId = res.createdBy');
+        $this->db->join('roles as rol','rol.roleId = usr.roleId');
         $query = $this->db->get();
         $result = $query->result();        
         return $result;
@@ -43,7 +52,7 @@ class Resource_model extends CI_Model
     /**
      * This function is used to add a new task
      */
-    function addNewResource($resourceInfo)
+    function insert($resourceInfo)
     {
         $this->db->trans_start();
         $this->db->insert('resources', $resourceInfo);
@@ -67,7 +76,7 @@ class Resource_model extends CI_Model
         $this->db->where('id', $resourceId);
         $query = $this->db->get();
         
-        return $query->result();
+        return $query->result()[0];
     }
     
     /**
@@ -89,23 +98,6 @@ class Resource_model extends CI_Model
         $this->db->where('id', $resourceId);
         $this->db->delete('resources');
         return TRUE;
-    }
-
-    /**
-     * This function is used to return the size of the table
-     * @param string $tablename : This is table name
-     * @param string $dbname : This is database name
-     * @return array $return : Table size in mb
-     */
-    function gettablemb($tablename,$dbname)
-    {
-        $this->db->select('round(((data_length + index_length)/1024/1024),2) as total_size');
-        $this->db->from('information_schema.tables');
-        $this->db->where('table_name', $tablename);
-        $this->db->where('table_schema', $dbname);
-        $query = $this->db->get($tablename);
-        
-        return $query->row();
     }
 
     /**

@@ -9,7 +9,6 @@
         <h1>
             <i class="fa fa-users"></i>
             Toutes les Ressources
-            <small>Toutes les Ressources de notre panel</small>
         </h1>
     </section>
     <section class="content">

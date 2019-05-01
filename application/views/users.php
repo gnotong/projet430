@@ -15,7 +15,7 @@
         <div class="row">
             <div class="col-xs-12 text-right">
                 <div class="form-group">
-                    <a class="btn btn-primary" href="<?php echo base_url(); ?>create">
+                    <a class="btn btn-primary" href="<?php echo base_url(); ?>add_user">
                         <i class="fa fa-plus"></i> Ajouter un utilisateur</a>
                 </div>
             </div>
@@ -57,32 +57,32 @@
                                 </thead>
 
                                 <tbody>
-                                <?php if (!empty($userRecords)): ?>
-                                    <?php foreach ($userRecords as $record): ?>
+                                <?php if (!empty($users)): ?>
+                                    <?php foreach ($users as $user): ?>
                                         <tr>
                                             <td>
-                                                <?php echo $record->userId ?>
+                                                <?php echo $user->userId ?>
                                             </td>
                                             <td>
-                                                <?php echo $record->name ?>
+                                                <?php echo $user->name ?>
                                             </td>
                                             <td>
-                                                <?php echo $record->email ?>
+                                                <?php echo $user->email ?>
                                             </td>
                                             <td>
-                                                <?php echo $record->mobile ?>
+                                                <?php echo $user->mobile ?>
                                             </td>
                                             <td>
-                                                <?php echo $record->role ?>
+                                                <?php echo $user->role ?>
                                             </td>
                                             <td class="text-center">
                                                 <a class="btn btn-sm btn-info"
-                                                   href="<?php echo base_url() . 'edit_old_user/' . $record->userId; ?>"
+                                                   href="<?php echo base_url() . 'edit_user/' . $user->userId; ?>"
                                                    title="Modifier">
                                                     <i class="fa fa-pencil"></i>
                                                 </a>
                                                 <a class="btn btn-sm btn-danger deleteUser" href="#"
-                                                   data-userid="<?php echo $record->userId; ?>" title="Supprimer">
+                                                   data-userid="<?php echo $user->userId; ?>" title="Supprimer">
                                                     <i class="fa fa-trash"></i>
                                                 </a>
                                             </td
