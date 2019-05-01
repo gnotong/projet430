@@ -26,7 +26,6 @@
                     <div class="box-header">
                         <h3 class="box-title">Liste d'utilisateurs</h3>
                     </div>
-                    <!-- /.box-header -->
                     <div class="box-body table-responsive no-padding">
                         <?php if ($error): ?>
                             <div class="alert alert-danger alert-dismissable">

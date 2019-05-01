@@ -10,11 +10,19 @@ class Login_model extends CI_Model
      */
     function loginMe($email, $password)
     {
-        $this->db->select('BaseTbl.userId, BaseTbl.password, BaseTbl.name,BaseTbl.status,BaseTbl.roleId, Roles.role');
-        $this->db->from('users as BaseTbl');
-        $this->db->join('roles as Roles','Roles.roleId = BaseTbl.roleId');
-        $this->db->where('BaseTbl.email', $email);
-        $this->db->where('BaseTbl.isDeleted', 0);
+        $this->db->select('
+            u.userId, 
+            u.password, 
+            u.name,
+            u.status,
+            u.roleId, 
+            r.role as role, 
+            r.code as roleCode
+        ');
+        $this->db->from('users as u');
+        $this->db->join('roles as r','r.roleId = u.roleId');
+        $this->db->where('u.email', $email);
+        $this->db->where('u.isDeleted', 0);
         $query = $this->db->get();
         
         $user = $query->result();
@@ -124,11 +132,11 @@ class Login_model extends CI_Model
      */
     function lastLoginInfo($userId)
     {
-        $this->db->select('BaseTbl.createdDtm');
-        $this->db->where('BaseTbl.userId', $userId);
-        $this->db->order_by('BaseTbl.id', 'DESC');
+        $this->db->select('u.createdDtm');
+        $this->db->where('u.userId', $userId);
+        $this->db->order_by('u.id', 'DESC');
         $this->db->limit(1);
-        $query = $this->db->get('logs as BaseTbl');
+        $query = $this->db->get('logs as u');
 
         return $query->row();
     }

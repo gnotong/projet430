@@ -5,7 +5,8 @@
  */
 class BaseController extends CI_Controller {
 	// User session variables
-	protected $role = '';
+	protected $roleId = '';
+	protected $roleCode = '';
 	protected $vendorId = '';
 	protected $name = '';
 	protected $roleText = '';
@@ -43,7 +44,7 @@ class BaseController extends CI_Controller {
 	 * Rol definetions in application/config/constants.php
 	 */
 	function isAdmin() {
-		if ($this->role != ROLE_ADMIN) {
+		if ($this->roleCode != ROLE_ADMIN) {
 			return true;
 		} else {
 			return false;
@@ -55,7 +56,7 @@ class BaseController extends CI_Controller {
 	 * Rol definetions in application/config/constants.php
 	 */
 	function isManagerOrAdmin() {
-		if ($this->role == ROLE_ADMIN || $this->role == ROLE_MANAGER) {
+		if ($this->roleCode == ROLE_ADMIN || $this->roleCode == ROLE_TEACHER) {
 			return false;
 		} else {
 			return true;
@@ -93,7 +94,7 @@ class BaseController extends CI_Controller {
 	 */
 	function logout() {
 
-		$process = 'Çıkış';
+		$process = 'Déconnexion';
         $processFunction = 'BaseController/logout';
         $this->logrecord($process,$processFunction);
 
@@ -166,16 +167,18 @@ class BaseController extends CI_Controller {
 	 */
 	function datas()
 	{
-		$this->role = $this->session->userdata ( 'role' );
+		$this->roleId = $this->session->userdata ( 'roleId' );
 		$this->vendorId = $this->session->userdata ( 'userId' );
 		$this->name = $this->session->userdata ( 'name' );
 		$this->roleText = $this->session->userdata ( 'roleText' );
+		$this->roleCode = $this->session->userdata ( 'roleCode' );
 		$this->lastLogin = $this->session->userdata ( 'lastLogin' );
 		$this->status = $this->session->userdata ( 'status' );
 		
 		
 		$this->global ['name'] = $this->name;
-		$this->global ['role'] = $this->role;
+		$this->global ['role_id'] = $this->roleId;
+		$this->global ['role'] = $this->roleCode;
 		$this->global ['role_text'] = $this->roleText;
 		$this->global ['last_login'] = $this->lastLogin;
 		$this->global ['status'] = $this->status;
@@ -191,7 +194,7 @@ class BaseController extends CI_Controller {
 		"userName"=>$this->name,
 		"process"=>$process,
 		"processFunction"=>$processFunction,
-		"userRoleId"=>$this->role,
+		"userRoleId"=>$this->roleId,
 		"userRoleText"=>$this->roleText,
 		"userIp"=>$_SERVER['REMOTE_ADDR'],
 		"userAgent"=>getBrowserAgent(),
