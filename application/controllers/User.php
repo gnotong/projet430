@@ -12,6 +12,7 @@ class User extends BaseController
      * @var Resource_model $resource_model
      */
     public $resource_model;
+
     /**
      * @var User_model $user_model
      */

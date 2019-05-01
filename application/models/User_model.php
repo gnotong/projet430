@@ -134,7 +134,6 @@ class User_model extends CI_Model
 
     }
 
-
     function matchPassword($password, $verification)
     {
         return strcmp($password, $verification) === 0;
@@ -156,50 +155,6 @@ class User_model extends CI_Model
     }
 
     /**
-     * This function is used to get user log history count
-     * @param $userId
-     * @return mixed
-     */
-    function logHistoryCount($userId)
-    {
-        $this->db->select('*');
-        $this->db->from('logs as BaseTbl');
-
-        if ($userId == NULL) {
-            $query = $this->db->get();
-            return $query->num_rows();
-        } else {
-            $this->db->where('BaseTbl.userId', $userId);
-            $query = $this->db->get();
-            return $query->num_rows();
-        }
-    }
-
-    /**
-     * This function is used to get user log history
-     * @param number $userId : This is user id
-     * @return array $result : This is result
-     */
-    function logHistory($userId)
-    {
-        $this->db->select('*');
-        $this->db->from('logs as BaseTbl');
-
-        if ($userId == NULL) {
-            $this->db->order_by('BaseTbl.createdDtm', 'DESC');
-            $query = $this->db->get();
-            $result = $query->result();
-            return $result;
-        } else {
-            $this->db->where('BaseTbl.userId', $userId);
-            $this->db->order_by('BaseTbl.createdDtm', 'DESC');
-            $query = $this->db->get();
-            $result = $query->result();
-            return $result;
-        }
-    }
-
-    /**
      * This function used to get user information by id
      * @param number $userId : This is user id
      * @return array $result : This is user information
@@ -213,77 +168,6 @@ class User_model extends CI_Model
         $query = $this->db->get();
 
         return $query->row();
-    }
-
-    /**
-     * This function is used to get resources
-     */
-    function getResources()
-    {
-        $this->db->select('*');
-        $this->db->from('resources as TaskTbl');
-        $this->db->join('users as Users', 'Users.userId = TaskTbl.createdBy');
-        $this->db->join('roles as Roles', 'Roles.roleId = Users.roleId');
-        $this->db->join('categories as cat', 'cat.id = TaskTbl.categoryId');
-        $this->db->order_by('TaskTbl.created DESC');
-        $query = $this->db->get();
-        $result = $query->result();
-        return $result;
-    }
-
-    /**
-     * This function is used to get resource categories
-     */
-    function getResourcesCategories()
-    {
-        $this->db->select('*');
-        $this->db->from('categories');
-        $query = $this->db->get();
-
-        return $query->result();
-    }
-
-    /**
-     * This function is used to get task situations
-     */
-    function getResourcesSituations()
-    {
-        $this->db->select('*');
-        $this->db->from('tbl_tasks_situations');
-        $query = $this->db->get();
-
-        return $query->result();
-    }
-
-    /**
-     * This function is used to add a new task
-     */
-    function addNewResource($resourceInfo)
-    {
-        $this->db->trans_start();
-        $this->db->insert('resources', $resourceInfo);
-
-        $insert_id = $this->db->insert_id();
-
-        $this->db->trans_complete();
-
-        return $insert_id;
-    }
-
-    /**
-     * This function used to get task information by id
-     * @param number $resourceId : This is task id
-     * @return array $result : This is task information
-     */
-    function getResourceInfo($resourceId)
-    {
-        $this->db->select('*');
-        $this->db->from('resources');
-        $this->db->join('categories as cat', 'cat.id = resources.categoryId');
-        $this->db->where('id', $resourceId);
-        $query = $this->db->get();
-
-        return $query->result();
     }
 
     /**
@@ -320,6 +204,10 @@ class User_model extends CI_Model
 
         return $query->row();
     }
+
+    function truncate()
+    {
+        $this->db->truncate('users');
+    }
 }
 
-  
