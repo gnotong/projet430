@@ -1,4 +1,4 @@
-<?php if(!defined('BASEPATH')) exit('No direct script access allowed');
+<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 require APPPATH . '/libraries/BaseController.php';
 
@@ -9,6 +9,11 @@ require APPPATH . '/libraries/BaseController.php';
 class Admin extends BaseController
 {
     /**
+     * @var User_model $user_model
+     */
+    public $user_model;
+
+    /**
      * This is default constructor of the class
      */
     public function __construct()
@@ -16,207 +21,169 @@ class Admin extends BaseController
         parent::__construct();
         $this->load->model('login_model');
         $this->load->model('user_model');
+
         // Datas -> libraries ->BaseController / This function used load user sessions
         $this->datas();
-        // isLoggedIn / Login control function /  This function used login control
+
         $isLoggedIn = $this->session->userdata('isLoggedIn');
-        if(!isset($isLoggedIn) || $isLoggedIn != TRUE)
-        {
+        if (!isset($isLoggedIn) || $isLoggedIn != TRUE) {
             redirect('login');
-        }
-        
-        else
-        {
-            // isAdmin / Admin role control function / This function used admin role control
-            if($this->isAdmin() == TRUE)
-            {
+        } else {
+            if ($this->isAdmin() == TRUE) {
                 $this->accesslogincontrol();
             }
         }
     }
-	
-     /**
+
+    /**
      * This function is used to load the user list
      */
-    function userListing()
-    {   
-            $searchText = $this->security->xss_clean($this->input->post('searchText'));
-            $data['searchText'] = $searchText;
-            
-            $this->load->library('pagination');
-            
-            $count = $this->user_model->userListingCount($searchText);
+    function userList()
+    {
+        $data['users'] = $this->user_model->getAll();
 
-			$returns = $this->paginationCompress ( "user_list/", $count, 10 );
-            
-            $data['userRecords'] = $this->user_model->userListing($searchText, $returns["page"], $returns["segment"]);
-            
-            $process = 'Liste d\'utilisateurs';
-            $processFunction = 'Admin/user_list';
+        $this->global['pageTitle'] = 'UY1 : liste d\'utilisateurs';
 
-            $this->global['pageTitle'] = 'UY1 : liste d\'utilisateurs';
-            
-            $this->loadViews("users", $this->global, $data, NULL);
+        $this->loadViews("users", $this->global, $data, NULL);
     }
 
     /**
-     * This function is used to load the add new form
+     * This function is used to load the create user form
+     * TODO: Factoriser les formulaires d'édition et de création (userForm et userEditForm)
+     * TODO: Factoriser les action d'édition et de création d'utilisateur
+     * TODO: Car code redondant
      */
-    function addNew()
+    private function userForm()
     {
-            $data['roles'] = $this->user_model->getUserRoles();
+        $data['roles'] = $this->user_model->getUserRoles();
 
-            $this->global['pageTitle'] = 'UY1 : Ajouter un utilisateur';
+        $this->global['pageTitle'] = 'UY1 : Ajouter un utilisateur';
 
-            $this->loadViews("addNew", $this->global, $data, NULL);
+        $this->loadViews("form_add_user", $this->global, $data, NULL);
     }
 
-
     /**
-     * This function is used to add new user to the system
+     * This function gets data from the form and persist them in to the system
      */
-    function addNewUser()
+    function addUser()
     {
+        if ($this->input->server('REQUEST_METHOD') == 'GET') {
+            $this->userForm();
+        } else {
+
             $this->load->library('form_validation');
-            
-            $this->form_validation->set_rules('fname','Full Name','trim|required|max_length[128]');
-            $this->form_validation->set_rules('email','Email','trim|required|valid_email|max_length[128]');
-            $this->form_validation->set_rules('password','Password','required|max_length[20]');
-            $this->form_validation->set_rules('cpassword','Confirm Password','trim|required|matches[password]|max_length[20]');
-            $this->form_validation->set_rules('role','Role','trim|required|numeric');
-            $this->form_validation->set_rules('mobile','Mobile Number','required|min_length[10]');
-            
-            if($this->form_validation->run() == FALSE)
-            {
-                $this->addNew();
-            }
-            else
-            {
-                $name = ucwords(strtolower($this->security->xss_clean($this->input->post('fname'))));
-                $email = $this->security->xss_clean($this->input->post('email'));
-                $password = $this->input->post('password');
-                $roleId = $this->input->post('role');
-                $mobile = $this->security->xss_clean($this->input->post('mobile'));
-                
-                $userInfo = array('email'=>$email, 'password'=>getHashedPassword($password), 'roleId'=>$roleId, 'name'=> $name,
-                                    'mobile'=>$mobile, 'createdBy'=>$this->vendorId, 'createdDtm'=>date('Y-m-d H:i:s'));
-                                    
-                $result = $this->user_model->addNewUser($userInfo);
-                
-                if($result > 0)
-                {
-                    $process = 'Ajout d\'utilisateurs';
-                    $processFunction = 'Admin/addNewUser';
 
-                    $this->session->set_flashdata('success', 'Utilisateur créé avec succès');
-                }
-                else
-                {
-                    $this->session->set_flashdata('error', 'La création de l\'utilisateur a échoué');
-                }
-                
-                redirect('user_list');
+            $this->form_validation->set_rules('fname', 'Full Name', 'trim|required|max_length[128]');
+            $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email|max_length[128]');
+            $this->form_validation->set_rules('password', 'Password', 'required|max_length[20]');
+            $this->form_validation->set_rules('cpassword', 'Confirm Password', 'trim|required|matches[password]|max_length[20]');
+            $this->form_validation->set_rules('role', 'Role', 'trim|required|numeric');
+            $this->form_validation->set_rules('mobile', 'Mobile Number', 'required|min_length[10]');
+
+            $userInfo = [
+                'email' => $this->security->xss_clean($this->input->post('email')),
+                'password' => getHashedPassword($this->input->post('password')),
+                'roleId' => $this->input->post('role'),
+                'name' => ucwords(strtolower($this->security->xss_clean($this->input->post('fname')))),
+                'mobile' => $this->security->xss_clean($this->input->post('mobile')),
+                'createdBy' => $this->vendorId,
+                'createdDtm' => date('Y-m-d H:i:s')
+            ];
+
+            $result = $this->user_model->add($userInfo);
+
+            if ($result > 0) {
+                $this->session->set_flashdata('success', 'Utilisateur créé avec succès');
+            } else {
+                $this->session->set_flashdata('error', 'La création de l\'utilisateur a échoué');
             }
+
+            redirect('user_list');
         }
+    }
 
-     /**
+    /**
      * This function is used load user edit information
      * @param number $userId : Optional : This is user id
      */
-    function editOld($userId = NULL)
+    private function userEditForm($userId)
     {
-            if($userId == null)
-            {
-                redirect('user_list');
-            }
-            
-            $data['roles'] = $this->user_model->getUserRoles();
-            $data['userInfo'] = $this->user_model->getUserInfo($userId);
+        $data['roles'] = $this->user_model->getUserRoles();
+        $data['userInfo'] = $this->user_model->getUserInfo($userId);
 
-            $this->global['pageTitle'] = 'UY1 : Modification d\'un utilisateur';
-            
-            $this->loadViews("editOld", $this->global, $data, NULL);
+        $this->global['pageTitle'] = 'UY1 : Modification d\'un utilisateur';
+
+        $this->loadViews("form_edit_user", $this->global, $data, NULL);
     }
-
 
     /**
      * This function is used to edit the user informations
      */
-    function editUser()
+    function editUser($userId = NULL)
     {
+        if ($this->input->server('REQUEST_METHOD') == 'GET') {
+            $this->userEditForm($userId);
+        } else {
             $this->load->library('form_validation');
-            
-            $userId = $this->input->post('userId');
-            
-            $this->form_validation->set_rules('fname','Full Name','trim|required|max_length[128]');
-            $this->form_validation->set_rules('email','Email','trim|required|valid_email|max_length[128]');
-            $this->form_validation->set_rules('password','Password','matches[cpassword]|max_length[20]');
-            $this->form_validation->set_rules('cpassword','Confirm Password','matches[password]|max_length[20]');
-            $this->form_validation->set_rules('role','Role','trim|required|numeric');
-            $this->form_validation->set_rules('mobile','Mobile Number','required|min_length[10]');
-            
-            if($this->form_validation->run() == FALSE)
-            {
-                $this->editOld($userId);
-            }
-            else
-            {
-                $name = ucwords(strtolower($this->security->xss_clean($this->input->post('fname'))));
-                $email = $this->security->xss_clean($this->input->post('email'));
-                $password = $this->input->post('password');
-                $roleId = $this->input->post('role');
-                $mobile = $this->security->xss_clean($this->input->post('mobile'));
-                
-                $userInfo = array();
-                
-                if(empty($password))
-                {
-                    $userInfo = array('email'=>$email, 'roleId'=>$roleId, 'name'=>$name,
-                                    'mobile'=>$mobile, 'status'=>0, 'updatedBy'=>$this->vendorId, 'updatedDtm'=>date('Y-m-d H:i:s'));
-                }
-                else
-                {
-                    $userInfo = array('email'=>$email, 'password'=>getHashedPassword($password), 'roleId'=>$roleId,
-                        'name'=>ucwords($name), 'mobile'=>$mobile,'status'=>0, 'updatedBy'=>$this->vendorId, 
-                        'updatedDtm'=>date('Y-m-d H:i:s'));
-                }
-                
-                $result = $this->user_model->editUser($userInfo, $userId);
-                
-                if($result == true)
-                {
-                    $process = 'Mise à jour de l\'utilisateur';
-                    $processFunction = 'Admin/editUser';
 
-                    $this->session->set_flashdata('success', 'Utilisateur mis à jour avec succès');
-                }
-                else
-                {
-                    $this->session->set_flashdata('error', 'La mise à jour de l\'utilisateur a échoué');
-                }
-                
-                redirect('user_list');
+            $userId = $this->input->post('userId');
+
+            $this->form_validation->set_rules('fname', 'Full Name', 'trim|required|max_length[128]');
+            $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email|max_length[128]');
+            $this->form_validation->set_rules('password', 'Password', 'matches[cpassword]|max_length[20]');
+            $this->form_validation->set_rules('cpassword', 'Confirm Password', 'matches[password]|max_length[20]');
+            $this->form_validation->set_rules('role', 'Role', 'trim|required|numeric');
+            $this->form_validation->set_rules('mobile', 'Mobile Number', 'required|min_length[10]');
+
+            $password = $this->input->post('password');
+            $userInfo = [
+                'email' => $this->security->xss_clean($this->input->post('email')),
+                'password' => '',
+                'roleId' => $this->input->post('role'),
+                'name' => ucwords(strtolower($this->security->xss_clean($this->input->post('fname')))),
+                'mobile' => $this->security->xss_clean($this->input->post('mobile')),
+                'status' => 0,
+                'updatedBy' => $this->vendorId,
+                'updatedDtm' => date('Y-m-d H:i:s')
+            ];
+
+            if (!empty($password)) {
+                $userInfo['password'] = getHashedPassword($password);
+            } else {
+                unset($userInfo['password']);
             }
+
+            $result = $this->user_model->editUser($userInfo, $userId);
+
+            if ($result == true) {
+                $this->session->set_flashdata('success', 'Utilisateur mis à jour avec succès');
+            } else {
+                $this->session->set_flashdata('error', 'La mise à jour de l\'utilisateur a échoué');
+            }
+
+            redirect('user_list');
+        }
     }
 
-     /**
+    /**
      * This function is used to delete the user using userId
      * @return boolean $result : TRUE / FALSE
      */
     function deleteUser()
     {
-            $userId = $this->input->post('userId');
-            $userInfo = array('isDeleted'=>1,'updatedBy'=>$this->vendorId, 'updatedDtm'=>date('Y-m-d H:i:s'));
-            
-            $result = $this->user_model->deleteUser($userId, $userInfo);
-            
-            if ($result > 0) {
-                 echo(json_encode(array('status'=>TRUE)));
+        $userId = $this->input->post('userId');
+        $userInfo = array('isDeleted' => 1, 'updatedBy' => $this->vendorId, 'updatedDtm' => date('Y-m-d H:i:s'));
 
-                 $process = 'Supprimer l\'utilisateur';
-                 $processFunction = 'Admin/deleteUser';
+        $result = $this->user_model->deleteUser($userId, $userInfo);
 
-                }
-            else { echo(json_encode(array('status'=>FALSE))); }
+        if ($result > 0) {
+            echo(json_encode(array('status' => TRUE)));
+
+            $process = 'Supprimer l\'utilisateur';
+            $processFunction = 'Admin/deleteUser';
+
+        } else {
+            echo(json_encode(array('status' => FALSE)));
+        }
     }
 }

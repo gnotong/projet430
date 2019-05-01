@@ -74,7 +74,7 @@
                             </li>
                             <li class="user-footer">
                                 <div class="pull-left">
-                                    <a href="<?= base_url(); ?>userEdit" class="btn btn-default btn-flat">
+                                    <a href="<?= base_url(); ?>user_edit_profile" class="btn btn-default btn-flat">
                                         <i class="fa fa-key"></i> Paramètres</a>
                                 </div>
                                 <div class="pull-right">
@@ -122,7 +122,7 @@
                         </a>
                     </li>
                     <li class="treeview">
-                        <a href="<?= base_url(); ?>create">
+                        <a href="<?= base_url(); ?>add_user">
                             <i class="fa fa-plus-circle"></i>
                             <span>Ajouter un utilisateur</span>
                         </a>

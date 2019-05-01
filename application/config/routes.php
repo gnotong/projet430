@@ -14,21 +14,17 @@ $route['logout'] = 'user/logout';
 
 /*********** ADMIN CONTROLLER ROUTES *******************/
 $route['noaccess'] = 'login/noaccess';
-$route['user_list'] = 'admin/userListing';
-$route['user_list/(:num)'] = "admin/userListing/$1";
-$route['create'] = "admin/addNew";
-$route['addNewUser'] = "admin/addNewUser";
-$route['edit_old_user'] = "admin/editOld";
-$route['edit_old_user/(:num)'] = "admin/editOld/$1";
-$route['editUser'] = "admin/editUser";
+$route['user_list'] = 'admin/userList';
+$route['user_list/(:num)'] = "admin/userList/$1";
+$route['add_user'] = "admin/addUser";
+$route['edit_user/(:num)'] = "admin/editUser/$1";
 $route['deleteUser'] = "admin/deleteUser";
 
-/*********** MANAGER CONTROLLER ROUTES *******************/
-$route['resources'] = "manager/resources";
-$route['add_resource'] = "manager/addNewResource";
-$route['edit_old_resource/(:num)'] = "manager/editOldResource/$1";
-$route['editResource'] = "manager/editResource";
-$route['deleteResource/(:num)'] = "manager/deleteResource/$1";
+/*********** RESOURCE CONTROLLER ROUTES *******************/
+$route['resources'] = "resource/list";
+$route['add_resource'] = "resource/create";
+$route['edit_resource/(:num)'] = "resource/editResource/$1";
+$route['deleteResource/(:num)'] = "resource/deleteResource/$1";
 
 /*********** USER CONTROLLER ROUTES *******************/
 $route['loadChangePass'] = "user/loadChangePass";
@@ -37,8 +33,8 @@ $route['pageNotFound'] = "user/pageNotFound";
 $route['checkEmailExists'] = "user/checkEmailExists";
 $route['endResource/(:num)'] = "user/endResource/$1";
 $route['eresource'] = "user/eresource";
-$route['userEdit'] = "user/loadUserEdit";
-$route['updateUser'] = "user/updateUser";
+$route['user_edit_profile'] = "user/editProfile";
+//$route['updateUser'] = "user/updateUser";
 
 
 /*********** LOGIN CONTROLLER ROUTES *******************/

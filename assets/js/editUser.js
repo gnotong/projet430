@@ -1,10 +1,3 @@
-/**
- * File : editUser.js 
- * 
- * This file contain the validation of edit user form
- * 
- * @author Kishor Mali
- */
 $(document).ready(function(){
 	
 	var editUserForm = $("#editUser");

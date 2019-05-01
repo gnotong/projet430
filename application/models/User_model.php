@@ -1,55 +1,23 @@
-<?php if(!defined('BASEPATH')) exit('No direct script access allowed');
+<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 class User_model extends CI_Model
 {
     /**
      * This function is used to get the user listing count
-     * @param string $searchText : This is optional search text
-     * @return number $count : This is row count
-     */
-    function userListingCount($searchText = '')
-    {
-        $this->db->select('BaseTbl.userId, BaseTbl.email, BaseTbl.name, BaseTbl.mobile, Role.role');
-        $this->db->from('users as BaseTbl');
-        $this->db->join('roles as Role', 'Role.roleId = BaseTbl.roleId','left');
-        if(!empty($searchText)) {
-            $likeCriteria = "(BaseTbl.email  LIKE '%".$searchText."%'
-                            OR  BaseTbl.name  LIKE '%".$searchText."%'
-                            OR  BaseTbl.mobile  LIKE '%".$searchText."%')";
-            $this->db->where($likeCriteria);
-        }
-        $this->db->where('BaseTbl.isDeleted', 0);
-        $query = $this->db->get();
-        
-        return $query->num_rows();
-    }
-    
-    /**
-     * This function is used to get the user listing count
-     * @param string $searchText : This is optional search text
-     * @param number $page : This is pagination offset
-     * @param number $segment : This is pagination limit
      * @return array $result : This is result
      */
-    function userListing($searchText = '', $page, $segment)
+    function getAll()
     {
-        $this->db->select('BaseTbl.userId, BaseTbl.email, BaseTbl.name, BaseTbl.mobile, Role.role');
-        $this->db->from('users as BaseTbl');
-        $this->db->join('roles as Role', 'Role.roleId = BaseTbl.roleId','left');
-        if(!empty($searchText)) {
-            $likeCriteria = "(BaseTbl.email  LIKE '%".$searchText."%'
-                            OR  BaseTbl.name  LIKE '%".$searchText."%'
-                            OR  BaseTbl.mobile  LIKE '%".$searchText."%')";
-            $this->db->where($likeCriteria);
-        }
-        $this->db->where('BaseTbl.isDeleted', 0);
-        $this->db->limit($page, $segment);
+        $this->db->select('u.userId, u.email, u.name, u.mobile, r.role');
+        $this->db->from('users as u');
+        $this->db->join('roles as r', 'r.roleId = u.roleId', 'left');
+        $this->db->where('u.isDeleted', 0);
         $query = $this->db->get();
-        
-        $result = $query->result();        
+
+        $result = $query->result();
         return $result;
     }
-    
+
     /**
      * This function is used to get the user roles information
      * @return array $result : This is result of the query
@@ -59,7 +27,7 @@ class User_model extends CI_Model
         $this->db->select('roleId, role');
         $this->db->from('roles');
         $query = $this->db->get();
-        
+
         return $query->result();
     }
 
@@ -73,33 +41,33 @@ class User_model extends CI_Model
     {
         $this->db->select("email");
         $this->db->from("users");
-        $this->db->where("email", $email);   
+        $this->db->where("email", $email);
         $this->db->where("isDeleted", 0);
-        if($userId != 0){
+        if ($userId != 0) {
             $this->db->where("userId !=", $userId);
         }
         $query = $this->db->get();
 
         return $query->result();
     }
-    
-    
+
+
     /**
      * This function is used to add new user to system
      * @return number $insert_id : This is last inserted id
      */
-    function addNewUser($userInfo)
+    function add($userInfo)
     {
         $this->db->trans_start();
         $this->db->insert('users', $userInfo);
-        
+
         $insert_id = $this->db->insert_id();
-        
+
         $this->db->trans_complete();
-        
+
         return $insert_id;
     }
-    
+
     /**
      * This function used to get user information by id
      * @param number $userId : This is user id
@@ -112,26 +80,24 @@ class User_model extends CI_Model
         $this->db->where('isDeleted', 0);
         $this->db->where('userId', $userId);
         $query = $this->db->get();
-        
-        return $query->result();
+
+        return $query->result()[0];
     }
-    
-    
+
     /**
      * This function is used to update the user information
-     * @param array $userInfo : This is users updated information
-     * @param number $userId : This is user id
+     * @param $userInfo
+     * @param $userId
+     * @return bool
      */
     function editUser($userInfo, $userId)
     {
         $this->db->where('userId', $userId);
         $this->db->update('users', $userInfo);
-        
+
         return TRUE;
     }
-    
-    
-    
+
     /**
      * This function is used to delete the user information
      * @param number $userId : This is user id
@@ -141,67 +107,68 @@ class User_model extends CI_Model
     {
         $this->db->where('userId', $userId);
         $this->db->update('users', $userInfo);
-        
+
         return $this->db->affected_rows();
     }
 
-
     /**
      * This function is used to match users password for change password
-     * @param number $userId : This is user id
+     * @param $userId
+     * @param $oldPassword
+     * @return array
      */
     function matchOldPassword($userId, $oldPassword)
     {
         $this->db->select('userId, password');
-        $this->db->where('userId', $userId);        
+        $this->db->where('userId', $userId);
         $this->db->where('isDeleted', 0);
         $query = $this->db->get('users');
-        
+
         $user = $query->result();
 
-        if(!empty($user)){
-            if(verifyHashedPassword($oldPassword, $user[0]->password)){
-                return $user;
-            } else {
-                return array();
-            }
-        } else {
+        if (empty($user) || !verifyHashedPassword($oldPassword, $user[0]->password)) {
             return array();
         }
+
+        return $user;
+
     }
-    
+
+
+    function matchPassword($password, $verification)
+    {
+        return strcmp($password, $verification) === 0;
+    }
+
     /**
      * This function is used to change users password
-     * @param number $userId : This is user id
-     * @param array $userInfo : This is user updation info
+     * @param $userId
+     * @param $userInfo
+     * @return mixed
      */
     function changePassword($userId, $userInfo)
     {
         $this->db->where('userId', $userId);
         $this->db->where('isDeleted', 0);
         $this->db->update('users', $userInfo);
-        
+
         return $this->db->affected_rows();
     }
 
-
     /**
      * This function is used to get user log history count
-     * @param number $userId : This is user id
+     * @param $userId
+     * @return mixed
      */
-
     function logHistoryCount($userId)
     {
         $this->db->select('*');
         $this->db->from('logs as BaseTbl');
 
-        if ($userId == NULL)
-        {
+        if ($userId == NULL) {
             $query = $this->db->get();
             return $query->num_rows();
-        }
-        else
-        {
+        } else {
             $this->db->where('BaseTbl.userId', $userId);
             $query = $this->db->get();
             return $query->num_rows();
@@ -218,15 +185,12 @@ class User_model extends CI_Model
         $this->db->select('*');
         $this->db->from('logs as BaseTbl');
 
-        if ($userId == NULL)
-        {
+        if ($userId == NULL) {
             $this->db->order_by('BaseTbl.createdDtm', 'DESC');
             $query = $this->db->get();
             $result = $query->result();
             return $result;
-        }
-        else
-        {
+        } else {
             $this->db->where('BaseTbl.userId', $userId);
             $this->db->order_by('BaseTbl.createdDtm', 'DESC');
             $query = $this->db->get();
@@ -247,7 +211,7 @@ class User_model extends CI_Model
         $this->db->where('isDeleted', 0);
         $this->db->where('userId', $userId);
         $query = $this->db->get();
-        
+
         return $query->row();
     }
 
@@ -258,12 +222,12 @@ class User_model extends CI_Model
     {
         $this->db->select('*');
         $this->db->from('resources as TaskTbl');
-        $this->db->join('users as Users','Users.userId = TaskTbl.createdBy');
-        $this->db->join('roles as Roles','Roles.roleId = Users.roleId');
-        $this->db->join('categories as cat','cat.id = TaskTbl.categoryId');
+        $this->db->join('users as Users', 'Users.userId = TaskTbl.createdBy');
+        $this->db->join('roles as Roles', 'Roles.roleId = Users.roleId');
+        $this->db->join('categories as cat', 'cat.id = TaskTbl.categoryId');
         $this->db->order_by('TaskTbl.created DESC');
         $query = $this->db->get();
-        $result = $query->result();        
+        $result = $query->result();
         return $result;
     }
 
@@ -275,7 +239,7 @@ class User_model extends CI_Model
         $this->db->select('*');
         $this->db->from('categories');
         $query = $this->db->get();
-        
+
         return $query->result();
     }
 
@@ -287,10 +251,10 @@ class User_model extends CI_Model
         $this->db->select('*');
         $this->db->from('tbl_tasks_situations');
         $query = $this->db->get();
-        
+
         return $query->result();
     }
-    
+
     /**
      * This function is used to add a new task
      */
@@ -298,11 +262,11 @@ class User_model extends CI_Model
     {
         $this->db->trans_start();
         $this->db->insert('resources', $resourceInfo);
-        
+
         $insert_id = $this->db->insert_id();
-        
+
         $this->db->trans_complete();
-        
+
         return $insert_id;
     }
 
@@ -315,93 +279,11 @@ class User_model extends CI_Model
     {
         $this->db->select('*');
         $this->db->from('resources');
-        $this->db->join('categories as cat','cat.id = resources.categoryId');
+        $this->db->join('categories as cat', 'cat.id = resources.categoryId');
         $this->db->where('id', $resourceId);
         $query = $this->db->get();
-        
+
         return $query->result();
-    }
-    
-    /**
-     * This function is used to edit resources
-     */
-    function editResource($resourceInfo, $resourceId)
-    {
-        $this->db->where('id', $resourceId);
-        $this->db->update('resources', $resourceInfo);
-        
-        return $this->db->affected_rows();
-    }
-    
-    /**
-     * This function is used to delete resources
-     */
-    function deleteResource($resourceId)
-    {
-        $this->db->where('id', $resourceId);
-        $this->db->delete('resources');
-        return TRUE;
-    }
-
-    /**
-     * This function is used to return the size of the table
-     * @param string $tablename : This is table name
-     * @param string $dbname : This is database name
-     * @return array $return : Table size in mb
-     */
-    function gettablemb($tablename,$dbname)
-    {
-        $this->db->select('round(((data_length + index_length)/1024/1024),2) as total_size');
-        $this->db->from('information_schema.tables');
-        $this->db->where('table_name', $tablename);
-        $this->db->where('table_schema', $dbname);
-        $query = $this->db->get($tablename);
-        
-        return $query->row();
-    }
-
-    /**
-     * This function is used to delete logs table records
-     */
-    function clearlogtbl()
-    {
-        $this->db->truncate('logs');
-        return TRUE;
-    }
-
-    /**
-     * This function is used to complete resources
-     */
-    function endResource($resourceId, $resourceInfo)
-    {
-        $this->db->where('id', $resourceId);
-        $this->db->update('resources', $resourceInfo);
-        
-        return $this->db->affected_rows();
-    }
-
-    /**
-     * This function is used to get the resources count
-     * @return array $result : This is result
-     */
-    function resourcesCount()
-    {
-        $this->db->select('*');
-        $this->db->from('resources as BaseTbl');
-        $query = $this->db->get();
-        return $query->num_rows();
-    }
-
-    /**
-     * This function is used to get the finished resources count
-     * @return array $result : This is result
-     */
-    function finishedResourcesCount()
-    {
-        $this->db->select('*');
-        $this->db->from('resources');
-        $query = $this->db->get();
-        return $query->num_rows();
     }
 
     /**
