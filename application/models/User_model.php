@@ -257,7 +257,7 @@ class User_model extends CI_Model
     function getResources()
     {
         $this->db->select('*');
-        $this->db->from('tasks as TaskTbl');
+        $this->db->from('resources as TaskTbl');
         $this->db->join('users as Users','Users.userId = TaskTbl.createdBy');
         $this->db->join('roles as Roles','Roles.roleId = Users.roleId');
         $this->db->join('categories as cat','cat.id = TaskTbl.categoryId');
@@ -297,7 +297,7 @@ class User_model extends CI_Model
     function addNewResource($resourceInfo)
     {
         $this->db->trans_start();
-        $this->db->insert('tasks', $resourceInfo);
+        $this->db->insert('resources', $resourceInfo);
         
         $insert_id = $this->db->insert_id();
         
@@ -314,8 +314,8 @@ class User_model extends CI_Model
     function getResourceInfo($resourceId)
     {
         $this->db->select('*');
-        $this->db->from('tasks');
-        $this->db->join('categories as cat','cat.id = tasks.categoryId');
+        $this->db->from('resources');
+        $this->db->join('categories as cat','cat.id = resources.categoryId');
         $this->db->where('id', $resourceId);
         $query = $this->db->get();
         
@@ -328,7 +328,7 @@ class User_model extends CI_Model
     function editResource($resourceInfo, $resourceId)
     {
         $this->db->where('id', $resourceId);
-        $this->db->update('tasks', $resourceInfo);
+        $this->db->update('resources', $resourceInfo);
         
         return $this->db->affected_rows();
     }
@@ -339,7 +339,7 @@ class User_model extends CI_Model
     function deleteResource($resourceId)
     {
         $this->db->where('id', $resourceId);
-        $this->db->delete('tasks');
+        $this->db->delete('resources');
         return TRUE;
     }
 
@@ -375,7 +375,7 @@ class User_model extends CI_Model
     function endResource($resourceId, $resourceInfo)
     {
         $this->db->where('id', $resourceId);
-        $this->db->update('tasks', $resourceInfo);
+        $this->db->update('resources', $resourceInfo);
         
         return $this->db->affected_rows();
     }
@@ -387,7 +387,7 @@ class User_model extends CI_Model
     function resourcesCount()
     {
         $this->db->select('*');
-        $this->db->from('tasks as BaseTbl');
+        $this->db->from('resources as BaseTbl');
         $query = $this->db->get();
         return $query->num_rows();
     }
@@ -399,7 +399,7 @@ class User_model extends CI_Model
     function finishedResourcesCount()
     {
         $this->db->select('*');
-        $this->db->from('tasks');
+        $this->db->from('resources');
         $query = $this->db->get();
         return $query->num_rows();
     }

@@ -23,7 +23,7 @@
         <div class="login-logo">
             <a href="#">
                 <b>UY1</b>
-                <br>Panneau de gestion</a>
+                <br>Réinitialisation</a>
         </div>
         <!-- /.login-logo -->
         <div class="login-box-body">
@@ -102,7 +102,7 @@
                         <!-- /.col -->
                     </div>
                 </form>
-                <a href="<?php echo base_url() ?>">Giriş Yap</a>
+                <a href="<?php echo base_url() ?>">Retour à la connexion</a>
                 <br>
         </div>
         <!-- /.login-box-body -->
