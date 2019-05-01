@@ -3,7 +3,6 @@ $(document).ready(function(){
 	var editUserForm = $("#editUser");
 	
 	var validator = editUserForm.validate({
-		
 		rules:{
 			fname :{ required : true },
 			email : { required : true, email : true, remote : { url : baseURL + "checkEmailExists", type :"post", data : { userId : function(){ return $("#userId").val(); } } } },

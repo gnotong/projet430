@@ -137,6 +137,27 @@
                         </a>
                     </li>
                 <?php endif; ?>
+
+                <?php if ($role == ROLE_ADMIN): ?>
+                    <li class="treeview">
+                        <a href="<?= base_url(); ?>fake_users">
+                            <i class="fa fa-arrow-circle-o-up"></i>
+                            <span>Fake users</span>
+                        </a>
+                    </li>
+                    <li class="treeview">
+                        <a href="<?= base_url(); ?>fake_categories">
+                            <i class="fa fa-area-chart"></i>
+                            <span>Fake resources categories</span>
+                        </a>
+                    </li>
+                    <li class="treeview">
+                        <a href="<?= base_url(); ?>fake_resources">
+                            <i class="fa fa-arrow-circle-o-down"></i>
+                            <span>Fake resources</span>
+                        </a>
+                    </li>
+                <?php endif; ?>
             </ul>
         </section>
     </aside>

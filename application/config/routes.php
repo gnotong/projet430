@@ -34,8 +34,6 @@ $route['checkEmailExists'] = "user/checkEmailExists";
 $route['endResource/(:num)'] = "user/endResource/$1";
 $route['eresource'] = "user/eresource";
 $route['user_edit_profile'] = "user/editProfile";
-//$route['updateUser'] = "user/updateUser";
-
 
 /*********** LOGIN CONTROLLER ROUTES *******************/
 $route['forgotPassword'] = "login/forgotPassword";
@@ -45,5 +43,7 @@ $route['resetPasswordConfirmUser/(:any)'] = "login/resetPasswordConfirmUser/$1";
 $route['resetPasswordConfirmUser/(:any)/(:any)'] = "login/resetPasswordConfirmUser/$1/$2";
 $route['createPasswordUser'] = "login/createPasswordUser";
 
-/* End of file routes.php */
-/* Location: ./application/config/routes.php */
+/*********** FAKER *******************/
+$route['fake_users'] = "fake/seedUser";
+$route['fake_resources'] = "fake/seedResource";
+$route['fake_categories'] = "fake/seedCategory";

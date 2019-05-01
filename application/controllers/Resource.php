@@ -90,7 +90,7 @@ class Resource extends BaseController
                 'created'=>date('Y-m-d H:i:s')
             ];
 
-            $result = $this->resource_model->insert($resourceInfo);
+            $result = $this->resource_model->add($resourceInfo);
 
             if($result > 0)
             {

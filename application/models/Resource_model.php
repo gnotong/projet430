@@ -52,7 +52,7 @@ class Resource_model extends CI_Model
     /**
      * This function is used to add a new task
      */
-    function insert($resourceInfo)
+    function add($resourceInfo)
     {
         $this->db->trans_start();
         $this->db->insert('resources', $resourceInfo);
@@ -61,6 +61,21 @@ class Resource_model extends CI_Model
         
         $this->db->trans_complete();
         
+        return $insert_id;
+    }
+
+    /**
+     * This function is used to add a new task
+     */
+    function addCategory($category)
+    {
+        $this->db->trans_start();
+        $this->db->insert('categories', $category);
+
+        $insert_id = $this->db->insert_id();
+
+        $this->db->trans_complete();
+
         return $insert_id;
     }
 
@@ -149,6 +164,16 @@ class Resource_model extends CI_Model
         $this->global['pageTitle'] = 'UY1: Toutes les ressources';
 
         $this->loadViews("eresource", $this->global, $data, NULL);
+    }
+
+    function truncate()
+    {
+        $this->db->truncate('resources');
+    }
+
+    function truncateCategory()
+    {
+        $this->db->truncate('categories');
     }
 }
 
