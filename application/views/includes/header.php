@@ -51,7 +51,7 @@
                         <ul class="dropdown-menu">
                             <li class="header"> Dernière connexion :
                                 <i class="fa fa-clock-o"></i>
-                                <?= empty($last_login) ? "İlk Giriş" : $last_login; ?>
+                                <?= empty($last_login) ? "Première connexion" : $last_login; ?>
                             </li>
                         </ul>
                     </li>
@@ -99,7 +99,7 @@
                         <span>Accueil</span>
                     </a>
                 </li>
-                <?php if ($role == ROLE_ADMIN || $role == ROLE_MANAGER): ?>
+                <?php if ($role == ROLE_ADMIN || $role == ROLE_TEACHER): ?>
                     <li class="treeview">
                         <a href="<?= base_url(); ?>resources">
                             <i class="fa fa-tasks"></i>
@@ -129,7 +129,7 @@
                     </li>
                 <?php endif; ?>
 
-                <?php if ($role == ROLE_EMPLOYEE): ?>
+                <?php if ($role_text == ROLE_STUDENT): ?>
                     <li class="treeview">
                         <a href="<?= base_url(); ?>eresource">
                             <i class="fa fa-tasks"></i>
@@ -138,7 +138,13 @@
                     </li>
                 <?php endif; ?>
 
+
                 <?php if ($role == ROLE_ADMIN): ?>
+                    <li class="treeview">
+                        <a href="#" class="text-bold text-yellow">
+                            <i class="fa fa-warning"></i>FAKE DATA
+                        </a>
+                    </li>
                     <li class="treeview">
                         <a href="<?= base_url(); ?>fake_users">
                             <i class="fa fa-arrow-circle-o-up"></i>

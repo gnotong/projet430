@@ -1,4 +1,4 @@
-<?php if(!defined('BASEPATH')) exit('No direct script access allowed');
+<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 require APPPATH . '/libraries/BaseController.php';
 
@@ -31,16 +31,13 @@ class Login extends BaseController
     public function error()
     {
         $isLoggedIn = $this->session->userdata('isLoggedIn');
-        
-        if(!isset($isLoggedIn) || $isLoggedIn != TRUE)
-        {
+
+        if (!isset($isLoggedIn) || $isLoggedIn != TRUE) {
             $this->load->view('login');
-        }
-        else
-        {
+        } else {
             $process = 'Erreur';
             $processFunction = 'Login/error';
-            $this->logrecord($process,$processFunction);
+            $this->logrecord($process, $processFunction);
             redirect('pageNotFound');
         }
     }
@@ -48,14 +45,15 @@ class Login extends BaseController
     /**
      * This function is used to access denied page
      */
-    public function noaccess() {
-        
+    public function noaccess()
+    {
+
         $this->global['pageTitle'] = 'UY1 : accès refusé';
         $this->datas();
 
-        $this->load->view ( 'includes/header', $this->global );
-		$this->load->view ( 'access' );
-		$this->load->view ( 'includes/footer' );
+        $this->load->view('includes/header', $this->global);
+        $this->load->view('access');
+        $this->load->view('includes/footer');
     }
 
     /**
@@ -64,70 +62,62 @@ class Login extends BaseController
     function isLoggedIn()
     {
         $isLoggedIn = $this->session->userdata('isLoggedIn');
-        
-        if(!isset($isLoggedIn) || $isLoggedIn != TRUE)
-        {
+
+        if (!isset($isLoggedIn) || $isLoggedIn != TRUE) {
             $this->load->view('login');
-        }
-        else
-        {
+        } else {
             redirect('/dashboard');
         }
     }
-    
-    
+
+
     /**
      * This function used to logged in user
      */
     public function loginMe()
     {
         $this->load->library('form_validation');
-        
+
         $this->form_validation->set_rules('email', 'Email', 'required|valid_email|max_length[128]|trim');
         $this->form_validation->set_rules('password', 'Password', 'required|max_length[32]');
-        
-        if($this->form_validation->run() == FALSE)
-        {
+
+        if ($this->form_validation->run() == FALSE) {
             $this->index();
-        }
-        else
-        {
+        } else {
             $email = $this->security->xss_clean($this->input->post('email'));
             $password = $this->input->post('password');
-            
+
             $result = $this->login_model->loginMe($email, $password);
-            
-            if(count($result) > 0)
-            {
-                foreach ($result as $res)
-                {
+
+            if (count($result) > 0) {
+                foreach ($result as $res) {
                     $lastLogin = $this->login_model->lastLoginInfo($res->userId);
-                    
-                    $process = 'Giriş';
+
+                    $process = 'Connexion';
                     $processFunction = 'Login/loginMe';
 
-                    $sessionArray = array('userId'=>$res->userId,                    
-                                            'role'=>$res->roleId,
-                                            'roleText'=>$res->role,
-                                            'name'=>$res->name,
-                                            'lastLogin'=> $lastLogin->createdDtm,
-                                            'status'=> $res->status,
-                                            'isLoggedIn' => TRUE
-                                    );
+                    $sessionArray = array(
+                        'userId' => $res->userId,
+                        'roleId' => $res->roleId,
+                        'roleCode' => $res->roleCode,
+                        'roleText' => $res->role,
+                        'name' => $res->name,
+                        'lastLogin' => $lastLogin->createdDtm,
+                        'status' => $res->status,
+                        'isLoggedIn' => TRUE
+                    );
 
                     $this->session->set_userdata($sessionArray);
 
                     unset($sessionArray['userId'], $sessionArray['isLoggedIn'], $sessionArray['lastLogin']);
-                    
-                    $this->logrecord($process,$processFunction);
+
+                    $this->logrecord($process, $processFunction);
 
                     redirect('/dashboard');
                 }
-            }
-            else
-            {
+            } else {
                 $this->session->set_flashdata('error', 'L\'adresse email ou le mot de passe est incorrect');
-                
+
                 redirect('/login');
             }
         }
@@ -139,55 +129,47 @@ class Login extends BaseController
     public function forgotPassword()
     {
         $isLoggedIn = $this->session->userdata('isLoggedIn');
-        
-        if(!isset($isLoggedIn) || $isLoggedIn != TRUE)
-        {
+
+        if (!isset($isLoggedIn) || $isLoggedIn != TRUE) {
             $this->load->view('forgotPassword');
-        }
-        else
-        {
+        } else {
             redirect('/dashboard');
         }
     }
-    
+
     /**
      * This function used to generate reset password request link
      */
     function resetPasswordUser()
     {
         $status = '';
-        
+
         $this->load->library('form_validation');
-        
-        $this->form_validation->set_rules('login_email','Email','trim|required|valid_email');
-                
-        if($this->form_validation->run() == FALSE)
-        {
+
+        $this->form_validation->set_rules('login_email', 'Email', 'trim|required|valid_email');
+
+        if ($this->form_validation->run() == FALSE) {
             $this->forgotPassword();
-        }
-        else 
-        {
+        } else {
             $email = $this->security->xss_clean($this->input->post('login_email'));
-            
-            if($this->login_model->checkEmailExist($email))
-            {
+
+            if ($this->login_model->checkEmailExist($email)) {
                 $encoded_email = urlencode($email);
-                
+
                 $this->load->helper('string');
                 $data['email'] = $email;
-                $data['activation_id'] = random_string('alnum',15);
+                $data['activation_id'] = random_string('alnum', 15);
                 $data['createdDtm'] = date('Y-m-d H:i:s');
                 $data['agent'] = getBrowserAgent();
                 $data['client_ip'] = $this->input->ip_address();
-                
-                $save = $this->login_model->resetPasswordUser($data);                
-                
-                if($save)
-                {
+
+                $save = $this->login_model->resetPasswordUser($data);
+
+                if ($save) {
                     $data1['reset_link'] = base_url() . "resetPasswordConfirmUser/" . $data['activation_id'] . "/" . $encoded_email;
                     $userInfo = $this->login_model->getCustomerInfoByEmail($email);
 
-                    if(!empty($userInfo)){
+                    if (!empty($userInfo)) {
                         $data1["name"] = $userInfo[0]->name;
                         $data1["email"] = $userInfo[0]->email;
                         $data1["message"] = "Réinitialiser le mot de passe";
@@ -197,24 +179,20 @@ class Login extends BaseController
 
                     $process = 'Demande de réinitialisation de mot de passe';
                     $processFunction = 'Login/resetPasswordUser';
-                    $this->logrecord($process,$processFunction);
+                    $this->logrecord($process, $processFunction);
 
-                    if($sendStatus){
+                    if ($sendStatus) {
                         $status = "send";
                         setFlashData($status, "Le lien de réinitialisation de votre mot de passe a été envoyé avec succès. Veuillez vérifier votre courrier.");
                     } else {
                         $status = "notsend";
                         setFlashData($status, "L'envoi d'email a échoué, essayez à nouveau.");
                     }
-                }
-                else
-                {
+                } else {
                     $status = 'unable';
                     setFlashData($status, "Une erreur s'est produite lors de l'envoi de vos informations, essayez à nouveau.");
                 }
-            }
-            else
-            {
+            } else {
                 $status = 'invalid';
                 setFlashData($status, "Votre adresse email n'est pas enregistrée dans le système.");
             }
@@ -223,7 +201,7 @@ class Login extends BaseController
     }
 
     /**
-     * This function used to reset the password 
+     * This function used to reset the password
      * @param string $activation_id : This is unique id
      * @param string $email : This is user email
      */
@@ -231,23 +209,20 @@ class Login extends BaseController
     {
         // Get email and activation code from URL values at index 3-4
         $email = urldecode($email);
-        
+
         // Check activation id in database
         $is_correct = $this->login_model->checkActivationDetails($email, $activation_id);
-        
+
         $data['email'] = $email;
         $data['activation_code'] = $activation_id;
-        
-        if ($is_correct == 1)
-        {
+
+        if ($is_correct == 1) {
             $this->load->view('newPassword', $data);
-        }
-        else
-        {
+        } else {
             redirect('/login');
         }
     }
-    
+
     /**
      * This function used to create new password for user
      */
@@ -257,41 +232,35 @@ class Login extends BaseController
         $message = '';
         $email = $this->input->post("email");
         $activation_id = $this->input->post("activation_code");
-        
+
         $this->load->library('form_validation');
-        
-        $this->form_validation->set_rules('password','Password','required|max_length[20]');
-        $this->form_validation->set_rules('cpassword','Confirm Password','trim|required|matches[password]|max_length[20]');
-        
-        if($this->form_validation->run() == FALSE)
-        {
+
+        $this->form_validation->set_rules('password', 'Password', 'required|max_length[20]');
+        $this->form_validation->set_rules('cpassword', 'Confirm Password', 'trim|required|matches[password]|max_length[20]');
+
+        if ($this->form_validation->run() == FALSE) {
             $this->resetPasswordConfirmUser($activation_id, urlencode($email));
-        }
-        else
-        {
+        } else {
             $password = $this->input->post('password');
             $cpassword = $this->input->post('cpassword');
-            
+
             // Check activation id in database
             $is_correct = $this->login_model->checkActivationDetails($email, $activation_id);
-            
-            if($is_correct == 1)
-            {               
+
+            if ($is_correct == 1) {
                 $this->login_model->createPasswordUser($email, $password);
-                
+
                 $process = 'Réinitialisation du mot de passe';
                 $processFunction = 'Login/createPasswordUser';
-                $this->logrecord($process,$processFunction);
+                $this->logrecord($process, $processFunction);
 
                 $status = 'success';
                 $message = 'Mot de passe changé avec succès';
-            }
-            else
-            {
+            } else {
                 $status = 'error';
                 $message = 'Impossible de changer le mot de passe';
             }
-            
+
             setFlashData($status, $message);
 
             redirect("/login");

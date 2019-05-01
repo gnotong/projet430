@@ -22,7 +22,7 @@
                     <div class="icon">
                         <i class="fa fa-tasks"></i>
                     </div>
-                    <a href="<?php echo base_url(); ?><?php if ($role != ROLE_EMPLOYEE) {
+                    <a href="<?php echo base_url(); ?><?php if ($role != ROLE_STUDENT) {
                         echo 'resources';
                     } else {
                         echo 'eresource';
@@ -47,7 +47,7 @@
                     <div class="icon">
                         <i class="ion ion-pie-graph"></i>
                     </div>
-                    <a href="<?php echo base_url(); ?><?php if ($role != ROLE_EMPLOYEE) {
+                    <a href="<?php echo base_url(); ?><?php if ($role != ROLE_STUDENT) {
                         echo 'resources';
                     } else {
                         echo 'eresource';
