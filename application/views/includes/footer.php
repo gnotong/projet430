@@ -42,7 +42,7 @@
                                 rows: "%d ligne sélectionnée."
                             },
 
-                            url: "http://cdn.datatables.net/plug-ins/1.10.12/i18n/French.json"
+                            url: "<?= base_url(); ?>application/Resources/Translations/French.json"
                         },
                         buttons: [{
                             extend: "print",
