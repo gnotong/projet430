@@ -1,6 +1,6 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-require APPPATH . '/libraries/BaseController.php';
+require 'base/BaseController.php';
 
 /**
  * Class : User (UserController)
@@ -8,16 +8,6 @@ require APPPATH . '/libraries/BaseController.php';
  */
 class User extends BaseController
 {
-    /**
-     * @var Resource_model $resource_model
-     */
-    public $resource_model;
-
-    /**
-     * @var User_model $user_model
-     */
-    public $user_model;
-
     /**
      * This is default constructor of the class
      */
@@ -34,7 +24,7 @@ class User extends BaseController
      */
     public function index()
     {
-        $this->global['pageTitle'] = 'UY1 : Acceuil';
+        $this->global['pageTitle'] = 'UY1 : Home';
 
         $data['resourcesCount'] = $this->resource_model->resourcesCount();
         $data['finishedResourcesCount'] = $this->resource_model->finishedResourcesCount();
@@ -43,7 +33,7 @@ class User extends BaseController
 
         if ($this->getUserStatus() == TRUE) {
             $this->session->set_flashdata('error', 'Veuillez d\'abord changer votre mot de passe pour votre sécurité.');
-            redirect('loadChangePass');
+            redirect('changePassword');
         }
 
         $this->loadViews("dashboard", $this->global, $data, NULL);
@@ -150,7 +140,7 @@ class User extends BaseController
     /**
      * This function is used to load the change password view
      */
-    function loadChangePass()
+    private function loadChangePasswordForm()
     {
         $this->global['pageTitle'] = 'UY1 : Changer le mot de passe';
 
@@ -162,15 +152,16 @@ class User extends BaseController
      */
     function changePassword()
     {
-        $this->load->library('form_validation');
-
-        $this->form_validation->set_rules('oldPassword', 'Old password', 'required|max_length[20]');
-        $this->form_validation->set_rules('newPassword', 'New password', 'required|max_length[20]');
-        $this->form_validation->set_rules('cNewPassword', 'Confirm new password', 'required|matches[newPassword]|max_length[20]');
-
-        if ($this->form_validation->run() == FALSE) {
-            $this->loadChangePass();
+        if ($this->input->server('REQUEST_METHOD') == 'GET') {
+            $this->loadChangePasswordForm();
         } else {
+
+            $this->load->library('form_validation');
+
+            $this->form_validation->set_rules('oldPassword', 'Old password', 'required|max_length[20]');
+            $this->form_validation->set_rules('newPassword', 'New password', 'required|max_length[20]');
+            $this->form_validation->set_rules('cNewPassword', 'Confirm new password', 'required|matches[newPassword]|max_length[20]');
+
             $oldPassword = $this->input->post('oldPassword');
             $newPassword = $this->input->post('newPassword');
 
@@ -178,7 +169,6 @@ class User extends BaseController
 
             if (empty($resultPas)) {
                 $this->session->set_flashdata('nomatch', 'Votre ancien mot de passe n\'est pas correct');
-                redirect('loadChangePass');
             } else {
                 $usersData = array(
                     'password' => getHashedPassword($newPassword),
@@ -189,7 +179,6 @@ class User extends BaseController
                 $result = $this->user_model->changePassword($this->vendorId, $usersData);
 
                 if ($result > 0) {
-
                     $process = 'Changement de mot de passe';
                     $processFunction = 'User/changePassword';
                     $this->logrecord($process, $processFunction);
@@ -198,9 +187,9 @@ class User extends BaseController
                 } else {
                     $this->session->set_flashdata('error', 'Le changement de mot de passe a échoué');
                 }
-
-                redirect('loadChangePass');
             }
+
+            redirect('changePassword');
         }
     }
 
@@ -214,5 +203,3 @@ class User extends BaseController
         $this->loadViews("404", $this->global, NULL, NULL);
     }
 }
-
-?>

@@ -1,5 +1,6 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
+
 class User_model extends CI_Model
 {
     /**
@@ -33,9 +34,9 @@ class User_model extends CI_Model
 
     /**
      * This function is used to check whether email id is already exist or not
-     * @param {string} $email : This is email id
-     * @param {number} $userId : This is user id
-     * @return {mixed} $result : This is searched result
+     * @param $email
+     * @param int $userId
+     * @return array
      */
     function checkEmailExists($email, $userId = 0)
     {
@@ -54,7 +55,8 @@ class User_model extends CI_Model
 
     /**
      * This function is used to add new user to system
-     * @return number $insert_id : This is last inserted id
+     * @param $userInfo
+     * @return mixed
      */
     function add($userInfo)
     {
@@ -100,8 +102,9 @@ class User_model extends CI_Model
 
     /**
      * This function is used to delete the user information
-     * @param number $userId : This is user id
-     * @return boolean $result : TRUE / FALSE
+     * @param $userId
+     * @param $userInfo
+     * @return mixed
      */
     function deleteUser($userId, $userInfo)
     {
@@ -172,7 +175,7 @@ class User_model extends CI_Model
 
     /**
      * This function is used to get the logs count
-     * @return array $result : This is result
+     * @return int
      */
     function logsCount()
     {
@@ -184,7 +187,7 @@ class User_model extends CI_Model
 
     /**
      * This function is used to get the users count
-     * @return array $result : This is result
+     * @return int
      */
     function usersCount()
     {

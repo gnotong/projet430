@@ -1,6 +1,6 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-require APPPATH . '/libraries/BaseController.php';
+require 'base/BaseController.php';
 
 /**
  * Class : Admin (AdminController)
@@ -8,11 +8,6 @@ require APPPATH . '/libraries/BaseController.php';
  */
 class Admin extends BaseController
 {
-    /**
-     * @var User_model $user_model
-     */
-    public $user_model;
-
     /**
      * This is default constructor of the class
      */
@@ -118,6 +113,7 @@ class Admin extends BaseController
 
     /**
      * This function is used to edit the user informations
+     * @param null $userId
      */
     function editUser($userId = NULL)
     {
@@ -167,7 +163,6 @@ class Admin extends BaseController
 
     /**
      * This function is used to delete the user using userId
-     * @return boolean $result : TRUE / FALSE
      */
     function deleteUser()
     {
@@ -181,6 +176,7 @@ class Admin extends BaseController
 
             $process = 'Supprimer l\'utilisateur';
             $processFunction = 'Admin/deleteUser';
+            $this->logrecord($process,$processFunction);
 
         } else {
             echo(json_encode(array('status' => FALSE)));
