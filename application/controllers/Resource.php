@@ -1,6 +1,6 @@
-<?php if(!defined('BASEPATH')) exit('No direct script access allowed');
+<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-require APPPATH . '/libraries/BaseController.php';
+require 'base/BaseController.php';
 
 /**
  * Class : Manager (ManagerController)
@@ -8,46 +8,43 @@ require APPPATH . '/libraries/BaseController.php';
  */
 class Resource extends BaseController
 {
-    /** @var Resource_model $resource_model */
-    public $resource_model;
-
     /**
      * This is default constructor of the class
      */
     public function __construct()
     {
         parent::__construct();
+
         $this->load->model('resource_model');
+
         // Datas -> libraries ->BaseController / This function used load user sessions
         $this->datas();
+
         $isLoggedIn = $this->session->userdata('isLoggedIn');
-        if(!isset($isLoggedIn) || $isLoggedIn != TRUE)
-        {
+
+        if (!isset($isLoggedIn) || $isLoggedIn != TRUE) {
             redirect('login');
-        }
-        else
-        {
-            if($this->isManagerOrAdmin() == TRUE)
-            {
+        } else {
+            if ($this->isManagerOrTeacher() == TRUE) {
                 $this->accesslogincontrol();
             }
         }
     }
 
-     /**
+    /**
      * This function used to show resources
      */
     public function list()
     {
-            $data['resourcesRecords'] = $this->resource_model->getResources();
+        $data['resourcesRecords'] = $this->resource_model->getResources();
 
-            $process = 'Toutes les Ressources';
-            $processFunction = 'Manager/resources';
-            $this->logrecord($process,$processFunction);
+        $process = 'Toutes les Ressources';
+        $processFunction = 'Manager/resources';
+        $this->logrecord($process, $processFunction);
 
-            $this->global['pageTitle'] = 'UY1: Toutes les Ressources';
-            
-            $this->loadViews("resources", $this->global, $data, NULL);
+        $this->global['pageTitle'] = 'UY1: Toutes les Ressources';
+
+        $this->loadViews("resources", $this->global, $data, NULL);
     }
 
     /**
@@ -62,46 +59,40 @@ class Resource extends BaseController
         $this->loadViews("form_add_resource", $this->global, $data, NULL);
     }
 
-     /**
+    /**
      * This function is used to add new resource to the system
      */
     public function create()
     {
         $this->load->library('form_validation');
 
-        $this->form_validation->set_rules('label','Libellé','required');
-        $this->form_validation->set_rules('category','Catégorie','required');
+        $this->form_validation->set_rules('label', 'Libellé', 'required');
+        $this->form_validation->set_rules('category', 'Catégorie', 'required');
 
-        if($this->form_validation->run() == FALSE)
-        {
+        if ($this->form_validation->run() == FALSE) {
             $this->newResourceForm();
-        }
-        else
-        {
+        } else {
             $label = $this->input->post('label');
             $description = $this->input->post('description');
             $categoryId = $this->input->post('category');
 
             $resourceInfo = [
-                'label'=>$label,
-                'description'=>$description,
-                'categoryId'=>$categoryId,
-                'createdBy'=>$this->vendorId,
-                'created'=>date('Y-m-d H:i:s')
+                'label' => $label,
+                'description' => $description,
+                'categoryId' => $categoryId,
+                'createdBy' => $this->vendorId,
+                'created' => date('Y-m-d H:i:s')
             ];
 
             $result = $this->resource_model->add($resourceInfo);
 
-            if($result > 0)
-            {
+            if ($result > 0) {
                 $process = 'Ajouter une ressource';
                 $processFunction = 'Resource/create';
-                $this->logrecord($process,$processFunction);
+                $this->logrecord($process, $processFunction);
 
                 $this->session->set_flashdata('success', 'Ressource créée avec succès');
-            }
-            else
-            {
+            } else {
                 $this->session->set_flashdata('error', '    Vérifier le mot de passeRôle La création de la tâche a échoué');
             }
 
@@ -111,34 +102,33 @@ class Resource extends BaseController
 
     /**
      * This function is used to open edit resources view
+     * @param null $resourceId
      */
     private function resourceForm($resourceId = NULL)
     {
-            $data['resource'] = $this->resource_model->getResourceInfo($resourceId);
-            $data['resourcesCategories'] = $this->resource_model->getResourcesCategories();
-            $data['resources_situations'] = $this->resource_model->getResourcesSituations();
-            
-            $this->global['pageTitle'] = 'UY1 : Modifier la tâche';
-            
-            $this->loadViews("form_edit_resource", $this->global, $data, NULL);
+        $data['resource'] = $this->resource_model->getResourceInfo($resourceId);
+        $data['resourcesCategories'] = $this->resource_model->getResourcesCategories();
+        $data['resources_situations'] = $this->resource_model->getResourcesSituations();
+
+        $this->global['pageTitle'] = 'UY1 : Modifier la tâche';
+
+        $this->loadViews("form_edit_resource", $this->global, $data, NULL);
     }
 
     /**
      * This function is used to edit resource
+     * @param null $resourceId
      */
     public function editResource($resourceId = NULL): void
     {
 
-        if($this->input->server('REQUEST_METHOD') == 'GET')
-        {
+        if ($this->input->server('REQUEST_METHOD') == 'GET') {
             $this->resourceForm($resourceId);
-        }
-        else
-        {
+        } else {
 
             $this->load->library('form_validation');
-            $this->form_validation->set_rules('label','Libellé','required');
-            $this->form_validation->set_rules('category','Catégorie','required');
+            $this->form_validation->set_rules('label', 'Libellé', 'required');
+            $this->form_validation->set_rules('category', 'Catégorie', 'required');
 
             $resourceId = $this->input->post('resourceId');
             $label = $this->input->post('label');
@@ -146,22 +136,19 @@ class Resource extends BaseController
             $category = $this->input->post('category');
 
             $resourceInfo = [
-                'label'=>$label,
-                'description'=>$description,
-                'categoryId'=>$category,
+                'label' => $label,
+                'description' => $description,
+                'categoryId' => $category,
             ];
 
-            $result = $this->resource_model->editResource($resourceInfo,$resourceId);
+            $result = $this->resource_model->editResource($resourceInfo, $resourceId);
 
-            if($result > 0)
-            {
+            if ($result > 0) {
                 $process = 'Edition de ressource';
                 $processFunction = 'Manager/editResource';
-                $this->logrecord($process,$processFunction);
+                $this->logrecord($process, $processFunction);
                 $this->session->set_flashdata('success', 'Ressource modifiée avec succès');
-            }
-            else
-            {
+            } else {
                 $this->session->set_flashdata('error', 'La modification de la ressource a échoué');
             }
             redirect('resources');
@@ -175,25 +162,22 @@ class Resource extends BaseController
      */
     public function deleteResource($resourceId = NULL)
     {
-        if($resourceId == null)
-            {
-                redirect('resources');
-            }
-
-            $result = $this->resource_model->deleteResource($resourceId);
-            
-            if ($result == TRUE) {
-                 $process = 'Suprpession de ressources';
-                 $processFunction = 'Manager/deleteResource';
-                 $this->logrecord($process,$processFunction);
-
-                 $this->session->set_flashdata('success', 'Ressources supprimées avec succès');
-                }
-            else
-            {
-                $this->session->set_flashdata('error', 'Erreur de suppression de la ressource');
-            }
+        if ($resourceId == null) {
             redirect('resources');
+        }
+
+        $result = $this->resource_model->deleteResource($resourceId);
+
+        if ($result == TRUE) {
+            $process = 'Suprpession de ressources';
+            $processFunction = 'Manager/deleteResource';
+            $this->logrecord($process, $processFunction);
+
+            $this->session->set_flashdata('success', 'Ressources supprimées avec succès');
+        } else {
+            $this->session->set_flashdata('error', 'Erreur de suppression de la ressource');
+        }
+        redirect('resources');
     }
 
 }

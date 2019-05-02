@@ -11,62 +11,46 @@
                 <div class="small-box bg-aqua">
                     <div class="inner">
                         <h3>
-                            <?php if (isset($resourcesCount)) {
-                                echo $resourcesCount;
-                            } else {
-                                echo '0';
-                            } ?>
+                            <?= isset($resourcesCount) ? $resourcesCount : '0' ?>
                         </h3>
                         <p>Ressources</p>
                     </div>
                     <div class="icon">
                         <i class="fa fa-tasks"></i>
                     </div>
-                    <a href="<?php echo base_url(); ?><?php if ($role != ROLE_STUDENT) {
-                        echo 'resources';
-                    } else {
-                        echo 'eresource';
-                    } ?>" class="small-box-footer">Plus d'informations
+                    <a
+                        href="<?php echo base_url(); ?><?= ($role != ROLE_STUDENT) ? 'resources' : 'eresource' ?>"
+                        class="small-box-footer"
+                    >
+                        Plus d'informations
                         <i class="fa fa-arrow-circle-right"></i>
                     </a>
                 </div>
             </div>
             <div class="col-lg-3 col-xs-6">
-                <!-- small box -->
                 <div class="small-box bg-green">
                     <div class="inner">
                         <h3>
-                            <?php if (isset($finishedResourcesCount)) {
-                                echo $finishedResourcesCount;
-                            } else {
-                                echo '0';
-                            } ?>
+                            <?= isset($finishedResourcesCount) ? $finishedResourcesCount : '0' ?>
                         </h3>
                         <p>Ressources terminées</p>
                     </div>
                     <div class="icon">
                         <i class="ion ion-pie-graph"></i>
                     </div>
-                    <a href="<?php echo base_url(); ?><?php if ($role != ROLE_STUDENT) {
-                        echo 'resources';
-                    } else {
-                        echo 'eresource';
-                    } ?>" class="small-box-footer">Plus d'informations
+                    <a
+                        href="<?php echo base_url(); ?><?= ($role != ROLE_STUDENT) ? 'resources' : 'eresource' ?>"
+                        class="small-box-footer">
+                        Plus d'informations
                         <i class="fa fa-arrow-circle-right"></i>
                     </a>
                 </div>
             </div>
-            <!-- ./col -->
             <div class="col-lg-3 col-xs-6">
-                <!-- small box -->
                 <div class="small-box bg-yellow">
                     <div class="inner">
                         <h3>
-                            <?php if (isset($usersCount)) {
-                                echo $usersCount;
-                            } else {
-                                echo '0';
-                            } ?>
+                            <?= isset($usersCount) ? $usersCount : '0' ?>
                         </h3>
                         <p>Utilisateurs</p>
                     </div>
@@ -83,11 +67,7 @@
                 <div class="small-box bg-red">
                     <div class="inner">
                         <h3>
-                            <?php if (isset($logsCount)) {
-                                echo $logsCount;
-                            } else {
-                                echo '0';
-                            } ?>
+                            <?= isset($logsCount) ? $logsCount : '0' ?>
                         </h3>
                         <p>Log</p>
                     </div>

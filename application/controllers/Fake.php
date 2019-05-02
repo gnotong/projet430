@@ -1,17 +1,10 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-require APPPATH . '/libraries/BaseController.php';
+require 'base/BaseController.php';
 
 class Fake extends BaseController
 {
-    /**
-     * @var User_model $user_model
-     */
-    public $user_model;
-    /** @var Resource_model $resource_model */
-    public $resource_model;
-
     /**
      * @var \Faker\Generator $faker
      */

@@ -27,21 +27,12 @@ $route['edit_resource/(:num)'] = "resource/editResource/$1";
 $route['deleteResource/(:num)'] = "resource/deleteResource/$1";
 
 /*********** USER CONTROLLER ROUTES *******************/
-$route['loadChangePass'] = "user/loadChangePass";
 $route['changePassword'] = "user/changePassword";
 $route['pageNotFound'] = "user/pageNotFound";
 $route['checkEmailExists'] = "user/checkEmailExists";
 $route['endResource/(:num)'] = "user/endResource/$1";
 $route['eresource'] = "user/eresource";
 $route['user_edit_profile'] = "user/editProfile";
-
-/*********** LOGIN CONTROLLER ROUTES *******************/
-$route['forgotPassword'] = "login/forgotPassword";
-$route['resetPasswordUser'] = "login/resetPasswordUser";
-$route['resetPasswordConfirmUser'] = "login/resetPasswordConfirmUser";
-$route['resetPasswordConfirmUser/(:any)'] = "login/resetPasswordConfirmUser/$1";
-$route['resetPasswordConfirmUser/(:any)/(:any)'] = "login/resetPasswordConfirmUser/$1/$2";
-$route['createPasswordUser'] = "login/createPasswordUser";
 
 /*********** FAKER *******************/
 $route['fake_users'] = "fake/seedUser";
