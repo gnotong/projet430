@@ -62,9 +62,9 @@ class Fake extends BaseController
     {
         /** @var $data the first user is admin*/
         $data = [
-            'email' => 'dmla@gmail.com',
+            'email' => 'dmla@projet430.com ',
             'password' => getHashedPassword('password'),
-            'name' => 'Notgabs Loreim',
+            'name' => 'Lin D',
             'mobile' => $this->faker->phoneNumber,
             'roleId' => 1,
             'isDeleted' => false,
