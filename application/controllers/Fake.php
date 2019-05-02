@@ -12,6 +12,11 @@ class Fake extends BaseController
     /** @var Resource_model $resource_model */
     public $resource_model;
 
+    /**
+     * @var \Faker\Generator $faker
+     */
+    private $faker;
+
     function __construct()
     {
         parent::__construct();
@@ -57,8 +62,8 @@ class Fake extends BaseController
     {
         /** @var $data the first user is admin*/
         $data = [
-            'email' => 'notgabs@gmail.com',
-            'password' => getHashedPassword('12345'),
+            'email' => 'dmla@gmail.com',
+            'password' => getHashedPassword('password'),
             'name' => 'Notgabs Loreim',
             'mobile' => $this->faker->phoneNumber,
             'roleId' => 1,
@@ -74,7 +79,7 @@ class Fake extends BaseController
         for ($i = 0; $i < $limit; $i++) {
             $data = [
                 'email' => $this->faker->email,
-                'password' => getHashedPassword('12345'),
+                'password' => getHashedPassword('password'),
                 'name' => $this->faker->unique()->userName,
                 'mobile' => $this->faker->phoneNumber,
                 'roleId' => 3,
@@ -121,7 +126,7 @@ class Fake extends BaseController
                 'label' => 'SALLE'
             ],
             [
-                'label' => 'VIDEO_PROJECTEUR'
+                'label' => 'VIDEO PROJECTEUR'
             ],
             [
                 'label' => 'GEOGRAPHIE'
