@@ -33,6 +33,22 @@ class User_model extends CI_Model
     }
 
     /**
+     * This function used to get user information by id
+     * @param int $userId : This is user id
+     * @return object $result : This is user
+     */
+    function getUserById(int $userId): object
+    {
+        $this->db->select('*');
+        $this->db->from('users');
+        $this->db->where('isDeleted', 0);
+        $this->db->where('userId', $userId);
+        $query = $this->db->get();
+
+        return $query->result()[0];
+    }
+
+    /**
      * This function is used to check whether email id is already exist or not
      * @param $email
      * @param int $userId
@@ -68,22 +84,6 @@ class User_model extends CI_Model
         $this->db->trans_complete();
 
         return $insert_id;
-    }
-
-    /**
-     * This function used to get user information by id
-     * @param number $userId : This is user id
-     * @return array $result : This is user information
-     */
-    function getUserInfo($userId)
-    {
-        $this->db->select('userId, name, email, mobile, roleId');
-        $this->db->from('users');
-        $this->db->where('isDeleted', 0);
-        $this->db->where('userId', $userId);
-        $query = $this->db->get();
-
-        return $query->result()[0];
     }
 
     /**
@@ -158,22 +158,6 @@ class User_model extends CI_Model
     }
 
     /**
-     * This function used to get user information by id
-     * @param number $userId : This is user id
-     * @return array $result : This is user information
-     */
-    function getUserInfoById($userId)
-    {
-        $this->db->select('userId, name, email, mobile, roleId');
-        $this->db->from('users');
-        $this->db->where('isDeleted', 0);
-        $this->db->where('userId', $userId);
-        $query = $this->db->get();
-
-        return $query->row();
-    }
-
-    /**
      * This function is used to get the logs count
      * @return int
      */
@@ -196,16 +180,6 @@ class User_model extends CI_Model
         $this->db->where('isDeleted', 0);
         $query = $this->db->get();
         return $query->num_rows();
-    }
-
-    function getUserStatus($userId)
-    {
-        $this->db->select('BaseTbl.status');
-        $this->db->where('BaseTbl.userId', $userId);
-        $this->db->limit(1);
-        $query = $this->db->get('users as BaseTbl');
-
-        return $query->row();
     }
 
     function truncate()

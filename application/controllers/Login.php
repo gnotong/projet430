@@ -8,21 +8,21 @@ require 'base/BaseController.php';
  */
 class Login extends BaseController
 {
-    /**
-     * This is default constructor of the class
-     */
-    public function __construct()
-    {
-        parent::__construct();
-        $this->load->model('login_model');
-    }
+    private const CONTROLLER = 'LoginController';
 
     /**
      * Index Page for this controller.
      */
-    public function index()
+    private function loginForm()
     {
-        $this->isLoggedIn();
+        if (!$this->isLoggedIn()) {
+            $this->loadViews('login', [
+                'isLoggedIn' => false,
+                'pageTitle' => 'UY1: Login'
+            ]);
+        } else {
+            redirect('/dashboard');
+        }
     }
 
     /**
@@ -30,15 +30,14 @@ class Login extends BaseController
      */
     public function error()
     {
-        $isLoggedIn = $this->session->userdata('isLoggedIn');
-
-        if (!isset($isLoggedIn) || $isLoggedIn != TRUE) {
-            $this->load->view('login');
+        if (!$this->isLoggedIn()) {
+            $this->loadViews('login', [
+                'isLoggedIn' => false,
+                'pageTitle' => 'UY1: Login'
+            ]);
         } else {
-            $process = 'Erreur';
-            $processFunction = 'Login/error';
-            $this->logrecord($process, $processFunction);
-            redirect('pageNotFound');
+            $this->logrecord('Erreur', self::CONTROLLER . '/error');
+            redirect('not_found');
         }
     }
 
@@ -47,79 +46,66 @@ class Login extends BaseController
      */
     public function noaccess()
     {
-
         $this->global['pageTitle'] = 'UY1 : accès refusé';
-        $this->datas();
 
         $this->load->view('includes/header', $this->global);
         $this->load->view('access');
         $this->load->view('includes/footer');
     }
 
-    /**
-     * This function used to check the user is logged in or not
-     */
-    function isLoggedIn()
-    {
-        $isLoggedIn = $this->session->userdata('isLoggedIn');
 
-        if (!isset($isLoggedIn) || $isLoggedIn != TRUE) {
-            $this->load->view('login');
+    /**
+     * This function used to logged in user
+     */
+    public function connect()
+    {
+        if ($this->input->server('REQUEST_METHOD') == 'GET') {
+            $this->loginForm();
         } else {
+            $email = $this->security->xss_clean($this->input->post('email'));
+            $password = $this->input->post('password');
+
+            $user = $this->login_model->checkUserCredentials($email, $password);
+
+            if (!$user) {
+                $this->session->set_flashdata('error', 'L\'adresse email ou le mot de passe est incorrect');
+                redirect('/login');
+            }
+
+            $lastLogin = $this->login_model->lastLoginInfo($user->userId);
+
+            $sessionArray = [
+                'userId' => $user->userId,
+                'roleId' => $user->roleId,
+                'roleCode' => $user->roleCode,
+                'roleText' => $user->role,
+                'name' => $user->name,
+                'lastLogin' => $lastLogin->createdDtm,
+                'status' => $user->status,
+                'isLoggedIn' => true
+            ];
+
+            $this->session->set_userdata($sessionArray);
+
+            unset($sessionArray['userId'], $sessionArray['isLoggedIn'], $sessionArray['lastLogin']);
+
+            $this->logrecord('Connexion', self::CONTROLLER . '/connect');
+
             redirect('/dashboard');
+
         }
     }
 
 
     /**
-     * This function used to logged in user
+     * This function is used to logged out user from system
      */
-    public function loginMe()
+    function logout()
     {
-        $this->load->library('form_validation');
+        $this->logrecord('Déconnexion', self::CONTROLLER . '/logout');
 
-        $this->form_validation->set_rules('email', 'Email', 'required|valid_email|max_length[128]|trim');
-        $this->form_validation->set_rules('password', 'Password', 'required|max_length[32]');
+        $this->session->sess_destroy();
 
-        if ($this->form_validation->run() == FALSE) {
-            $this->index();
-        } else {
-            $email = $this->security->xss_clean($this->input->post('email'));
-            $password = $this->input->post('password');
-
-            $result = $this->login_model->loginMe($email, $password);
-
-            if (count($result) > 0) {
-                foreach ($result as $res) {
-                    $lastLogin = $this->login_model->lastLoginInfo($res->userId);
-
-                    $process = 'Connexion';
-                    $processFunction = 'Login/loginMe';
-
-                    $sessionArray = array(
-                        'userId' => $res->userId,
-                        'roleId' => $res->roleId,
-                        'roleCode' => $res->roleCode,
-                        'roleText' => $res->role,
-                        'name' => $res->name,
-                        'lastLogin' => $lastLogin->createdDtm,
-                        'status' => $res->status,
-                        'isLoggedIn' => TRUE
-                    );
-
-                    $this->session->set_userdata($sessionArray);
-
-                    unset($sessionArray['userId'], $sessionArray['isLoggedIn'], $sessionArray['lastLogin']);
-
-                    $this->logrecord($process, $processFunction);
-
-                    redirect('/dashboard');
-                }
-            } else {
-                $this->session->set_flashdata('error', 'L\'adresse email ou le mot de passe est incorrect');
-
-                redirect('/login');
-            }
-        }
+        redirect('login');
     }
 }

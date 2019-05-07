@@ -8,9 +8,9 @@ $route['404_override'] = 'login/error';
 
 /*********** USER DEFINED ROUTES *******************/
 
-$route['login'] = 'login/loginMe';
-$route['dashboard'] = 'user';
-$route['logout'] = 'user/logout';
+$route['login'] = 'login/connect';
+$route['logout'] = 'login/logout';
+$route['dashboard'] = 'home';
 
 /*********** ADMIN CONTROLLER ROUTES *******************/
 $route['noaccess'] = 'login/noaccess';
@@ -28,7 +28,7 @@ $route['deleteResource/(:num)'] = "resource/deleteResource/$1";
 
 /*********** USER CONTROLLER ROUTES *******************/
 $route['changePassword'] = "user/changePassword";
-$route['pageNotFound'] = "user/pageNotFound";
+$route['not_found'] = "user/pageNotFound";
 $route['checkEmailExists'] = "user/checkEmailExists";
 $route['endResource/(:num)'] = "user/endResource/$1";
 $route['eresource'] = "user/eresource";
