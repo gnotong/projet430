@@ -6,9 +6,9 @@ class Login_model extends CI_Model
      * This function used to check the login credentials of the user
      * @param $email
      * @param $password
-     * @return array
+     * @return object|null
      */
-    function loginMe($email, $password)
+    function checkUserCredentials(string $email, string $password): ?object
     {
         $this->db->select('
             u.userId, 
@@ -24,18 +24,18 @@ class Login_model extends CI_Model
         $this->db->where('u.email', $email);
         $this->db->where('u.isDeleted', 0);
         $query = $this->db->get();
-        
-        $user = $query->result();
-        
-        if(!empty($user)){
-            if(verifyHashedPassword($password, $user[0]->password)){
-                return $user;
-            } else {
-                return array();
-            }
-        } else {
-            return array();
+
+        $user = $query->result()[0];
+
+        if (empty($user)) {
+            return null;
         }
+
+        if (!verifyHashedPassword($password, $user->password)) {
+            return null;
+        }
+
+        return $user;
     }
 
     /**

@@ -80,7 +80,7 @@ class Resource extends BaseController
                 'label' => $label,
                 'description' => $description,
                 'categoryId' => $categoryId,
-                'createdBy' => $this->vendorId,
+                'createdBy' => $this->userId,
                 'created' => date('Y-m-d H:i:s')
             ];
 

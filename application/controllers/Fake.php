@@ -61,7 +61,7 @@ class Fake extends BaseController
             'mobile' => $this->faker->phoneNumber,
             'roleId' => 1,
             'isDeleted' => false,
-            'status' => 0,
+            'status' => 1,
             'createdBy' => 1,
             'createdDtm' => $this->faker->dateTimeThisCentury->format('Y-m-d H:i:s'),
             'updatedBy' => 1,
@@ -86,7 +86,7 @@ class Fake extends BaseController
             $this->user_model->add($data);
         }
 
-        $this->session->set_flashdata('success', 'Database Successfully 26 Seeded users added in the database');
+        $this->session->set_flashdata('success', 'Database Successfully Seeded 26 users added in the database');
 
         redirect('dashboard');
     }

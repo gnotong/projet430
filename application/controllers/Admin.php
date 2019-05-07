@@ -81,7 +81,7 @@ class Admin extends BaseController
                 'roleId' => $this->input->post('role'),
                 'name' => ucwords(strtolower($this->security->xss_clean($this->input->post('fname')))),
                 'mobile' => $this->security->xss_clean($this->input->post('mobile')),
-                'createdBy' => $this->vendorId,
+                'createdBy' => $this->userId,
                 'createdDtm' => date('Y-m-d H:i:s')
             ];
 
@@ -104,7 +104,7 @@ class Admin extends BaseController
     private function userEditForm($userId)
     {
         $data['roles'] = $this->user_model->getUserRoles();
-        $data['userInfo'] = $this->user_model->getUserInfo($userId);
+        $data['userInfo'] = $this->user_model->getUserById($userId);
 
         $this->global['pageTitle'] = 'UY1 : Modification d\'un utilisateur';
 
@@ -139,7 +139,7 @@ class Admin extends BaseController
                 'name' => ucwords(strtolower($this->security->xss_clean($this->input->post('fname')))),
                 'mobile' => $this->security->xss_clean($this->input->post('mobile')),
                 'status' => 0,
-                'updatedBy' => $this->vendorId,
+                'updatedBy' => $this->userId,
                 'updatedDtm' => date('Y-m-d H:i:s')
             ];
 
@@ -167,7 +167,7 @@ class Admin extends BaseController
     function deleteUser()
     {
         $userId = $this->input->post('userId');
-        $userInfo = array('isDeleted' => 1, 'updatedBy' => $this->vendorId, 'updatedDtm' => date('Y-m-d H:i:s'));
+        $userInfo = array('isDeleted' => 1, 'updatedBy' => $this->userId, 'updatedDtm' => date('Y-m-d H:i:s'));
 
         $result = $this->user_model->deleteUser($userId, $userInfo);
 

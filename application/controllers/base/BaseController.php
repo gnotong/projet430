@@ -6,14 +6,24 @@
 class BaseController extends CI_Controller
 {
     // User session variables
-    protected $roleId = '';
-    protected $roleCode = '';
-    protected $vendorId = '';
-    protected $name = '';
-    protected $roleText = '';
-    protected $global = array();
-    protected $lastLogin = '';
-    protected $status = '';
+    /** @var int */
+    protected $roleId;
+    /** @var string */
+    protected $roleCode;
+    /**  @var int  */
+    protected $userId;
+    /** @var string */
+    protected $name;
+    /** @var string */
+    protected $roleText;
+    /** @var array */
+    protected $global;
+    /** @var string */
+    protected $lastLogin;
+    /** @var int */
+    protected $status;
+    /** @var boolean */
+    protected $isLoggedIn;
 
     /** @var Login_model $login_model */
     public $login_model;
@@ -30,18 +40,14 @@ class BaseController extends CI_Controller
     /** @var CI_security $security */
     protected $security;
 
-    /**
-     * Takes mixed data and optionally a status code, then creates the response
-     *
-     * @access public
-     * @param array|NULL $data
-     *            Data to output to the user
-     *            running the script; otherwise, exit
-     */
-    public function response($data = NULL)
+
+    public function __construct()
     {
-        $this->output->set_status_header(200)->set_content_type('application/json', 'utf-8')->set_output(json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES))->_display();
-        exit ();
+        parent::__construct();
+        $this->load->model('user_model');
+        $this->load->model('resource_model');
+        $this->load->model('login_model');
+        $this->datas();
     }
 
     /**
@@ -51,11 +57,7 @@ class BaseController extends CI_Controller
     {
         $isLoggedIn = $this->session->userdata('isLoggedIn');
 
-        if (!isset ($isLoggedIn) || $isLoggedIn != TRUE) {
-            redirect('login');
-        } else {
-            $this->datas();
-        }
+        return isset($isLoggedIn) && $isLoggedIn;
     }
 
     /**
@@ -85,17 +87,14 @@ class BaseController extends CI_Controller
     }
 
     /**
-     * This function is used to get the user's status from the user table
+     * Checks if the user has logged in at least once
+     * @return bool
      */
-    function getUserStatus()
+    function hasLoggedIn(): bool
     {
-        $this->datas();
-        $status = $this->user_model->getUserStatus($this->vendorId);
-        if ($status->status == 0) {
-            return true;
-        } else {
-            return false;
-        }
+        $user = $this->user_model->getUserById($this->userId);
+
+        return $user->status !== 0;
     }
 
     /**
@@ -111,21 +110,6 @@ class BaseController extends CI_Controller
     }
 
     /**
-     * This function is used to logged out user from system
-     */
-    function logout()
-    {
-
-        $process = 'Déconnexion';
-        $processFunction = 'BaseController/logout';
-        $this->logrecord($process, $processFunction);
-
-        $this->session->sess_destroy();
-
-        redirect('login');
-    }
-
-    /**
      * This function used to load views
      * @param string $viewName
      * @param null $headerInfo
@@ -134,7 +118,6 @@ class BaseController extends CI_Controller
      */
     function loadViews($viewName = "", $headerInfo = NULL, $pageInfo = NULL, $footerInfo = NULL)
     {
-
         $this->load->view('includes/header', $headerInfo);
         $this->load->view($viewName, $pageInfo);
         $this->load->view('includes/footer', $footerInfo);
@@ -143,23 +126,26 @@ class BaseController extends CI_Controller
     /**
      * This function used to load user sessions
      */
-    function datas()
+    function datas(): void
     {
         $this->roleId = $this->session->userdata('roleId');
-        $this->vendorId = $this->session->userdata('userId');
+        $this->userId = $this->session->userdata('userId');
         $this->name = $this->session->userdata('name');
         $this->roleText = $this->session->userdata('roleText');
         $this->roleCode = $this->session->userdata('roleCode');
         $this->lastLogin = $this->session->userdata('lastLogin');
         $this->status = $this->session->userdata('status');
+        $this->isLoggedIn = $this->session->userdata('isLoggedIn');
 
 
         $this->global ['name'] = $this->name;
+        $this->global ['userId'] = $this->userId;
         $this->global ['role_id'] = $this->roleId;
         $this->global ['role'] = $this->roleCode;
         $this->global ['role_text'] = $this->roleText;
         $this->global ['last_login'] = $this->lastLogin;
         $this->global ['status'] = $this->status;
+        $this->global ['isLoggedIn'] = $this->isLoggedIn;
 
     }
 
@@ -171,7 +157,8 @@ class BaseController extends CI_Controller
     function logrecord($process, $processFunction)
     {
         $this->datas();
-        $logInfo = array("userId" => $this->vendorId,
+
+        $logInfo = array("userId" => $this->userId,
             "userName" => $this->name,
             "process" => $process,
             "processFunction" => $processFunction,

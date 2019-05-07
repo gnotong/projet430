@@ -9,37 +9,6 @@ require 'base/BaseController.php';
 class User extends BaseController
 {
     /**
-     * This is default constructor of the class
-     */
-    public function __construct()
-    {
-        parent::__construct();
-        $this->load->model('user_model');
-        $this->load->model('resource_model');
-        $this->isLoggedIn();
-    }
-
-    /**
-     * This function used to load the first screen of the user
-     */
-    public function index()
-    {
-        $this->global['pageTitle'] = 'UY1 : Home';
-
-        $data['resourcesCount'] = $this->resource_model->resourcesCount();
-        $data['finishedResourcesCount'] = $this->resource_model->finishedResourcesCount();
-        $data['usersCount'] = $this->user_model->usersCount();
-        $data['logsCount'] = $this->user_model->logsCount();
-
-        if ($this->getUserStatus() == TRUE) {
-            $this->session->set_flashdata('error', 'Veuillez d\'abord changer votre mot de passe pour votre sécurité.');
-            redirect('changePassword');
-        }
-
-        $this->loadViews("dashboard", $this->global, $data, NULL);
-    }
-
-    /**
      * This function is used to check whether email already exist or not
      */
     function checkEmailExists()
@@ -68,7 +37,7 @@ class User extends BaseController
     {
         $this->global['pageTitle'] = 'UY1 : Paramètres du compte';
 
-        $data['userInfo'] = $this->user_model->getUserInfo($this->vendorId);
+        $data['userInfo'] = $this->user_model->getUserById($this->userId);
 
         $this->loadViews("form_user_profile", $this->global, $data, NULL);
     }
@@ -103,9 +72,9 @@ class User extends BaseController
 
             if (empty($password)) {
                 $userInfo = array('email' => $email, 'name' => $name,
-                    'mobile' => $mobile, 'status' => 1, 'updatedBy' => $this->vendorId, 'updatedDtm' => date('Y-m-d H:i:s'));
+                    'mobile' => $mobile, 'status' => 1, 'updatedBy' => $this->userId, 'updatedDtm' => date('Y-m-d H:i:s'));
             } else {
-                $resultPas = $this->user_model->matchOldPassword($this->vendorId, $oldPassword);
+                $resultPas = $this->user_model->matchOldPassword($this->userId, $oldPassword);
                 $pwdAreSame = $this->user_model->matchPassword($password, $password2);
 
                 if (empty($resultPas)) {
@@ -116,7 +85,7 @@ class User extends BaseController
                     redirect('user_edit_profile');
                 } else {
                     $userInfo = array('email' => $email, 'password' => getHashedPassword($password),
-                        'name' => ucwords($name), 'mobile' => $mobile, 'status' => 1, 'updatedBy' => $this->vendorId,
+                        'name' => ucwords($name), 'mobile' => $mobile, 'status' => 1, 'updatedBy' => $this->userId,
                         'updatedDtm' => date('Y-m-d H:i:s'));
                 }
             }
@@ -165,7 +134,7 @@ class User extends BaseController
             $oldPassword = $this->input->post('oldPassword');
             $newPassword = $this->input->post('newPassword');
 
-            $resultPas = $this->user_model->matchOldPassword($this->vendorId, $oldPassword);
+            $resultPas = $this->user_model->matchOldPassword($this->userId, $oldPassword);
 
             if (empty($resultPas)) {
                 $this->session->set_flashdata('nomatch', 'Votre ancien mot de passe n\'est pas correct');
@@ -173,10 +142,10 @@ class User extends BaseController
                 $usersData = array(
                     'password' => getHashedPassword($newPassword),
                     'status' => 1,
-                    'updatedBy' => $this->vendorId,
+                    'updatedBy' => $this->userId,
                     'updatedDtm' => date('Y-m-d H:i:s'));
 
-                $result = $this->user_model->changePassword($this->vendorId, $usersData);
+                $result = $this->user_model->changePassword($this->userId, $usersData);
 
                 if ($result > 0) {
                     $process = 'Changement de mot de passe';

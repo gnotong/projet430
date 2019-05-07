@@ -43,127 +43,133 @@
                 <span class="sr-only">Toggle navigation</span>
             </a>
             <div class="navbar-custom-menu">
-                <ul class="nav navbar-nav">
-                    <li class="dropdown tasks-menu">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
-                            <i class="fa fa-history"></i>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li class="header"> Dernière connexion :
-                                <i class="fa fa-clock-o"></i>
-                                <?= empty($last_login) ? "Première connexion" : $last_login; ?>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="dropdown user user-menu">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-user text-yellow"></i>
-                            <span class="hidden-xs">
-                      <?= $name; ?>
-                    </span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li class="user-header">
-                                <i class="fa fa-user fa-4x text-yellow"></i>
-                                <p>
-                                    <?= $name; ?>
-                                    <small>
-                                        <?= $role_text; ?>
-                                    </small>
-                                </p>
-                            </li>
-                            <li class="user-footer">
-                                <div class="pull-left">
-                                    <a href="<?= base_url(); ?>user_edit_profile" class="btn btn-default btn-flat">
-                                        <i class="fa fa-key"></i> Paramètres</a>
-                                </div>
-                                <div class="pull-right">
-                                    <a href="<?= base_url(); ?>logout" class="btn btn-danger btn-flat">
-                                        <i class="fa fa-sign-out"></i> Déconnexion</a>
-                                </div>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
+
+                <?php if($isLoggedIn): ?>
+                    <ul class="nav navbar-nav">
+                        <li class="dropdown tasks-menu">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                                <i class="fa fa-history"></i>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li class="header"> Dernière connexion :
+                                    <i class="fa fa-clock-o"></i>
+                                    <?= empty($last_login) ? "Première connexion" : $last_login; ?>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="dropdown user user-menu">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="fa fa-user text-yellow"></i>
+                                <span class="hidden-xs">
+                          <?= $name; ?>
+                        </span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li class="user-header">
+                                    <i class="fa fa-user fa-4x text-yellow"></i>
+                                    <p>
+                                        <?= $name; ?>
+                                        <small>
+                                            <?= $role_text; ?>
+                                        </small>
+                                    </p>
+                                </li>
+                                <li class="user-footer">
+                                    <div class="pull-left">
+                                        <a href="<?= base_url(); ?>user_edit_profile" class="btn btn-default btn-flat">
+                                            <i class="fa fa-key"></i> Paramètres</a>
+                                    </div>
+                                    <div class="pull-right">
+                                        <a href="<?= base_url(); ?>logout" class="btn btn-danger btn-flat">
+                                            <i class="fa fa-sign-out"></i> Déconnexion</a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                <?php endif; ?>
+
             </div>
         </nav>
     </header>
 
-    <aside class="main-sidebar">
-        <section class="sidebar">
-            <ul class="sidebar-menu">
-                <li class="header"></li>
-                <li class="treeview">
-                    <a href="<?= base_url(); ?>dashboard">
-                        <i class="fa fa-dashboard"></i>
-                        <span>Accueil</span>
-                    </a>
-                </li>
-                <?php if ($role == ROLE_ADMIN || $role == ROLE_TEACHER): ?>
+    <?php if($isLoggedIn): ?>
+        <aside class="main-sidebar">
+            <section class="sidebar">
+                <ul class="sidebar-menu">
+                    <li class="header"></li>
                     <li class="treeview">
-                        <a href="<?= base_url(); ?>resources">
-                            <i class="fa fa-tasks"></i>
-                            <span>Ressources</span>
+                        <a href="<?= base_url(); ?>dashboard">
+                            <i class="fa fa-dashboard"></i>
+                            <span>Accueil</span>
                         </a>
                     </li>
-                    <li class="treeview">
-                        <a href="<?= base_url(); ?>add_resource">
-                            <i class="fa fa-plus-circle"></i>
-                            <span>Ajouter une ressource</span>
-                        </a>
-                    </li>
-                <?php endif; ?>
+                    <?php if ($role == ROLE_ADMIN || $role == ROLE_TEACHER): ?>
+                        <li class="treeview">
+                            <a href="<?= base_url(); ?>resources">
+                                <i class="fa fa-tasks"></i>
+                                <span>Ressources</span>
+                            </a>
+                        </li>
+                        <li class="treeview">
+                            <a href="<?= base_url(); ?>add_resource">
+                                <i class="fa fa-plus-circle"></i>
+                                <span>Ajouter une ressource</span>
+                            </a>
+                        </li>
+                    <?php endif; ?>
 
-                <?php if ($role == ROLE_ADMIN): ?>
-                    <li class="treeview">
-                        <a href="<?= base_url(); ?>user_list">
-                            <i class="fa fa-users"></i>
-                            <span>Les utilisateurs</span>
-                        </a>
-                    </li>
-                    <li class="treeview">
-                        <a href="<?= base_url(); ?>add_user">
-                            <i class="fa fa-plus-circle"></i>
-                            <span>Ajouter un utilisateur</span>
-                        </a>
-                    </li>
-                <?php endif; ?>
+                    <?php if ($role == ROLE_ADMIN): ?>
+                        <li class="treeview">
+                            <a href="<?= base_url(); ?>user_list">
+                                <i class="fa fa-users"></i>
+                                <span>Les utilisateurs</span>
+                            </a>
+                        </li>
+                        <li class="treeview">
+                            <a href="<?= base_url(); ?>add_user">
+                                <i class="fa fa-plus-circle"></i>
+                                <span>Ajouter un utilisateur</span>
+                            </a>
+                        </li>
+                    <?php endif; ?>
 
-                <?php if ($role_text == ROLE_STUDENT): ?>
-                    <li class="treeview">
-                        <a href="<?= base_url(); ?>eresource">
-                            <i class="fa fa-tasks"></i>
-                            <span>Ressources</span>
-                        </a>
-                    </li>
-                <?php endif; ?>
+                    <?php if ($role_text == ROLE_STUDENT): ?>
+                        <li class="treeview">
+                            <a href="<?= base_url(); ?>eresource">
+                                <i class="fa fa-tasks"></i>
+                                <span>Ressources</span>
+                            </a>
+                        </li>
+                    <?php endif; ?>
 
 
-                <?php if ($role == ROLE_ADMIN): ?>
-                    <li class="treeview">
-                        <a href="#" class="text-bold text-yellow">
-                            <i class="fa fa-warning"></i>FAKE DATA
-                        </a>
-                    </li>
-                    <li class="treeview">
-                        <a href="<?= base_url(); ?>fake_users">
-                            <i class="fa fa-arrow-circle-o-up"></i>
-                            <span>Fake users</span>
-                        </a>
-                    </li>
-                    <li class="treeview">
-                        <a href="<?= base_url(); ?>fake_categories">
-                            <i class="fa fa-area-chart"></i>
-                            <span>Fake resources categories</span>
-                        </a>
-                    </li>
-                    <li class="treeview">
-                        <a href="<?= base_url(); ?>fake_resources">
-                            <i class="fa fa-arrow-circle-o-down"></i>
-                            <span>Fake resources</span>
-                        </a>
-                    </li>
-                <?php endif; ?>
-            </ul>
-        </section>
-    </aside>
+                    <?php if ($role == ROLE_ADMIN): ?>
+                        <li class="treeview">
+                            <a href="#" class="text-bold text-yellow">
+                                <i class="fa fa-warning"></i>FAKE DATA
+                            </a>
+                        </li>
+                        <li class="treeview">
+                            <a href="<?= base_url(); ?>fake_users">
+                                <i class="fa fa-arrow-circle-o-up"></i>
+                                <span>Fake users</span>
+                            </a>
+                        </li>
+                        <li class="treeview">
+                            <a href="<?= base_url(); ?>fake_categories">
+                                <i class="fa fa-area-chart"></i>
+                                <span>Fake resources categories</span>
+                            </a>
+                        </li>
+                        <li class="treeview">
+                            <a href="<?= base_url(); ?>fake_resources">
+                                <i class="fa fa-arrow-circle-o-down"></i>
+                                <span>Fake resources</span>
+                            </a>
+                        </li>
+                    <?php endif; ?>
+                </ul>
+            </section>
+        </aside>
+    <?php endif; ?>
