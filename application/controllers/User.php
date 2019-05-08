@@ -9,24 +9,19 @@ require 'base/BaseController.php';
 class User extends BaseController
 {
     /**
-     * This function is used to check whether email already exist or not
+     * If the email exists, we return false to js. Because the validation response needs to be false
+     * in order to raise the validation exception
+     *
+     * userId is used in edit mode
      */
     function checkEmailExists()
     {
-        $userId = $this->input->post("userId");
         $email = $this->input->post("email");
+        $userId = $this->input->post("userId");
 
-        if (empty($userId)) {
-            $result = $this->user_model->checkEmailExists($email);
-        } else {
-            $result = $this->user_model->checkEmailExists($email, $userId);
-        }
+        $emailExists = $this->user_model->checkEmailExists($email, !empty($userId) ? $userId : 0);
 
-        if (empty($result)) {
-            echo("true");
-        } else {
-            echo("false");
-        }
+        echo( $emailExists ? 'false' : 'true' );
     }
 
     /**
@@ -95,7 +90,7 @@ class User extends BaseController
             if ($result == true) {
                 $process = 'Mise à jour des paramètres du compte';
                 $processFunction = 'User/editProfile';
-                $this->logrecord($process, $processFunction);
+                $this->log($process, $processFunction);
 
                 $this->session->set_flashdata('success', 'Les paramètres de votre compte ont été mis à jour avec succès');
             } else {
@@ -150,7 +145,7 @@ class User extends BaseController
                 if ($result > 0) {
                     $process = 'Changement de mot de passe';
                     $processFunction = 'User/changePassword';
-                    $this->logrecord($process, $processFunction);
+                    $this->log($process, $processFunction);
 
                     $this->session->set_flashdata('success', 'Mot de passe mis à jour avec succès');
                 } else {

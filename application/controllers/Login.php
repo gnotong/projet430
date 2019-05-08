@@ -36,7 +36,7 @@ class Login extends BaseController
                 'pageTitle' => 'UY1: Login'
             ]);
         } else {
-            $this->logrecord('Erreur', self::CONTROLLER . '/error');
+            $this->log('Erreur', self::CONTROLLER . '/error');
             redirect('not_found');
         }
     }
@@ -74,7 +74,7 @@ class Login extends BaseController
 
             $lastLogin = $this->login_model->lastLoginInfo($user->userId);
 
-            $sessionArray = [
+            $this->session->set_userdata([
                 'userId' => $user->userId,
                 'roleId' => $user->roleId,
                 'roleCode' => $user->roleCode,
@@ -83,13 +83,9 @@ class Login extends BaseController
                 'lastLogin' => $lastLogin->createdDtm,
                 'status' => $user->status,
                 'isLoggedIn' => true
-            ];
+            ]);
 
-            $this->session->set_userdata($sessionArray);
-
-            unset($sessionArray['userId'], $sessionArray['isLoggedIn'], $sessionArray['lastLogin']);
-
-            $this->logrecord('Connexion', self::CONTROLLER . '/connect');
+            $this->log('Connexion', self::CONTROLLER . '/connect');
 
             redirect('/dashboard');
 
@@ -102,7 +98,7 @@ class Login extends BaseController
      */
     function logout()
     {
-        $this->logrecord('Déconnexion', self::CONTROLLER . '/logout');
+        $this->log('Déconnexion', self::CONTROLLER . '/logout');
 
         $this->session->sess_destroy();
 

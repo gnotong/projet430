@@ -104,7 +104,7 @@ class BaseController extends CI_Controller
     {
         $process = 'Accès interdit';
         $processFunction = 'Admin/accesslogincontrol';
-        $this->logrecord($process, $processFunction);
+        $this->log($process, $processFunction);
 
         redirect('noaccess');
     }
@@ -154,23 +154,20 @@ class BaseController extends CI_Controller
      * @param $process
      * @param $processFunction
      */
-    function logrecord($process, $processFunction)
+    function log($process, $processFunction)
     {
-        $this->datas();
-
-        $logInfo = array("userId" => $this->userId,
-            "userName" => $this->name,
+        $logInfo = array("userId" => $this->session->userdata('userId'),
+            "userName" => $this->session->userdata('name'),
             "process" => $process,
             "processFunction" => $processFunction,
-            "userRoleId" => $this->roleId,
-            "userRoleText" => $this->roleText,
+            "userRoleId" => $this->session->userdata('roleId'),
+            "userRoleText" => $this->session->userdata('roleText'),
             "userIp" => $_SERVER['REMOTE_ADDR'],
             "userAgent" => getBrowserAgent(),
             "agentString" => $this->agent->agent_string(),
             "platform" => $this->agent->platform()
         );
 
-        $this->load->model('login_model');
         $this->login_model->loginsert($logInfo);
     }
 }

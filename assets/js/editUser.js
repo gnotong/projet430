@@ -5,17 +5,17 @@ $(document).ready(function(){
 	var validator = editUserForm.validate({
 		rules:{
 			fname :{ required : true },
-			email : { required : true, email : true, remote : { url : baseURL + "checkEmailExists", type :"post", data : { userId : function(){ return $("#userId").val(); } } } },
+			email : { required : true, email : true, remote : { url : baseURL + "check_email", type :"post", data : { userId : function(){ return $("#userId").val(); } } } },
 			cpassword : {equalTo: "#password"},
 			mobile : { required : true, digits : true },
 			role : { required : true, selected : true}
 		},
 		messages:{
-			fname :{ required : "This field is required" },
-			email : { required : "This field is required", email : "Please enter valid email address", remote : "Email already taken" },
-			cpassword : {equalTo: "Please enter same password" },
-			mobile : { required : "This field is required", digits : "Please enter numbers only" },
-			role : { required : "This field is required", selected : "Please select atleast one option" }			
+			fname :{ required : "Ce champ est obligatoire" },
+			email : { required : "Ce champ est obligatoire", email : "Cet email n'est pas valide", remote : "Email déjà utilisé" },
+			cpassword : {equalTo: "Les mots de passes ne sont pas identiques" },
+			mobile : { required : "Ce champ est obligatoire", digits : "Uniquement les chiffres allant de 0-9 sont autorisés" },
+			role : { required : "Ce champ est obligatoire", selected : "Au moins un rôle doit être sélectionné" }
 		}
 	});
 });

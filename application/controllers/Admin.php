@@ -176,7 +176,7 @@ class Admin extends BaseController
 
             $process = 'Supprimer l\'utilisateur';
             $processFunction = 'Admin/deleteUser';
-            $this->logrecord($process,$processFunction);
+            $this->log($process,$processFunction);
 
         } else {
             echo(json_encode(array('status' => FALSE)));

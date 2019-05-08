@@ -52,9 +52,9 @@ class User_model extends CI_Model
      * This function is used to check whether email id is already exist or not
      * @param $email
      * @param int $userId
-     * @return array
+     * @return boolean
      */
-    function checkEmailExists($email, $userId = 0)
+    function checkEmailExists($email, $userId = 0): bool
     {
         $this->db->select("email");
         $this->db->from("users");
@@ -65,7 +65,7 @@ class User_model extends CI_Model
         }
         $query = $this->db->get();
 
-        return $query->result();
+        return $query->num_rows() > 0;
     }
 
 
