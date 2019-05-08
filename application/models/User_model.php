@@ -35,15 +35,19 @@ class User_model extends CI_Model
     /**
      * This function used to get user information by id
      * @param int $userId : This is user id
-     * @return object $result : This is user
+     * @return null|object $result : This is user
      */
-    function getUserById(int $userId): object
+    function getUserById(int $userId): ?object
     {
         $this->db->select('*');
         $this->db->from('users');
         $this->db->where('isDeleted', 0);
         $this->db->where('userId', $userId);
         $query = $this->db->get();
+
+        if (!$query->num_rows()) {
+            return null;
+        }
 
         return $query->result()[0];
     }
@@ -118,7 +122,7 @@ class User_model extends CI_Model
      * This function is used to match users password for change password
      * @param $userId
      * @param $oldPassword
-     * @return array
+     * @return array|null
      */
     function matchOldPassword($userId, $oldPassword)
     {
@@ -130,7 +134,7 @@ class User_model extends CI_Model
         $user = $query->result();
 
         if (empty($user) || !verifyHashedPassword($oldPassword, $user[0]->password)) {
-            return array();
+            return null;
         }
 
         return $user;

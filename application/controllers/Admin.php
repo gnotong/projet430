@@ -8,25 +8,15 @@ require 'base/BaseController.php';
  */
 class Admin extends BaseController
 {
-    /**
-     * This is default constructor of the class
-     */
     public function __construct()
     {
         parent::__construct();
-        $this->load->model('login_model');
-        $this->load->model('user_model');
 
-        // Datas -> libraries ->BaseController / This function used load user sessions
-        $this->datas();
-
-        $isLoggedIn = $this->session->userdata('isLoggedIn');
-        if (!isset($isLoggedIn) || $isLoggedIn != TRUE) {
+        if (!$this->isLoggedIn()) {
             redirect('login');
-        } else {
-            if ($this->isAdmin() == TRUE) {
-                $this->accesslogincontrol();
-            }
+        }
+        if (!$this->isAdmin()) {
+            $this->accesslogincontrol();
         }
     }
 
@@ -44,9 +34,6 @@ class Admin extends BaseController
 
     /**
      * This function is used to load the create user form
-     * TODO: Factoriser les formulaires d'édition et de création (userForm et userEditForm)
-     * TODO: Factoriser les action d'édition et de création d'utilisateur
-     * TODO: Car code redondant
      */
     private function userForm()
     {
@@ -62,19 +49,9 @@ class Admin extends BaseController
      */
     function addUser()
     {
-        if ($this->input->server('REQUEST_METHOD') == 'GET') {
+        if (!$this->validateUserForm()) {
             $this->userForm();
         } else {
-
-            $this->load->library('form_validation');
-
-            $this->form_validation->set_rules('fname', 'Full Name', 'trim|required|max_length[128]');
-            $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email|max_length[128]');
-            $this->form_validation->set_rules('password', 'Password', 'required|max_length[20]');
-            $this->form_validation->set_rules('cpassword', 'Confirm Password', 'trim|required|matches[password]|max_length[20]');
-            $this->form_validation->set_rules('role', 'Role', 'trim|required|numeric');
-            $this->form_validation->set_rules('mobile', 'Mobile Number', 'required|min_length[10]');
-
             $userInfo = [
                 'email' => $this->security->xss_clean($this->input->post('email')),
                 'password' => getHashedPassword($this->input->post('password')),
@@ -106,6 +83,11 @@ class Admin extends BaseController
         $data['roles'] = $this->user_model->getUserRoles();
         $data['userInfo'] = $this->user_model->getUserById($userId);
 
+        if (!$data['userInfo']) {
+            $this->session->set_flashdata('error', "L'utilisateur que vous voulez éditer n'existe pas");
+            redirect('user_list');
+        }
+
         $this->global['pageTitle'] = 'UY1 : Modification d\'un utilisateur';
 
         $this->loadViews("form_edit_user", $this->global, $data, NULL);
@@ -113,23 +95,13 @@ class Admin extends BaseController
 
     /**
      * This function is used to edit the user informations
-     * @param null $userId
+     * @param int $userId
      */
-    function editUser($userId = NULL)
+    function editUser(int $userId)
     {
-        if ($this->input->server('REQUEST_METHOD') == 'GET') {
+        if (!$this->validateUserForm()) {
             $this->userEditForm($userId);
         } else {
-            $this->load->library('form_validation');
-
-            $userId = $this->input->post('userId');
-
-            $this->form_validation->set_rules('fname', 'Full Name', 'trim|required|max_length[128]');
-            $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email|max_length[128]');
-            $this->form_validation->set_rules('password', 'Password', 'matches[cpassword]|max_length[20]');
-            $this->form_validation->set_rules('cpassword', 'Confirm Password', 'matches[password]|max_length[20]');
-            $this->form_validation->set_rules('role', 'Role', 'trim|required|numeric');
-            $this->form_validation->set_rules('mobile', 'Mobile Number', 'required|min_length[10]');
 
             $password = $this->input->post('password');
             $userInfo = [

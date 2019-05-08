@@ -44,6 +44,7 @@ class BaseController extends CI_Controller
     public function __construct()
     {
         parent::__construct();
+
         $this->load->model('user_model');
         $this->load->model('resource_model');
         $this->load->model('login_model');
@@ -66,11 +67,7 @@ class BaseController extends CI_Controller
      */
     function isAdmin()
     {
-        if ($this->roleCode != ROLE_ADMIN) {
-            return true;
-        } else {
-            return false;
-        }
+        return $this->roleCode === ROLE_ADMIN;
     }
 
     /**
@@ -169,5 +166,32 @@ class BaseController extends CI_Controller
         );
 
         $this->login_model->loginsert($logInfo);
+    }
+
+    /**
+     * @param bool $isProfile
+     * @return bool
+     */
+    function validateUserForm(bool $isProfile = false): bool
+    {
+        $this->load->library('form_validation');
+
+        $this->form_validation->set_rules('fname', 'Full Name', 'trim|required|max_length[128]');
+        $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email|max_length[128]');
+        $this->form_validation->set_rules('mobile', 'Mobile Number', 'required|min_length[10]');
+
+        if ($isProfile) {
+            $this->form_validation->set_rules('oldpassword', 'Old password', 'max_length[20]');
+            $this->form_validation->set_rules('cpassword', 'Password', 'matches[cpassword2]|max_length[20]');
+            $this->form_validation->set_rules('cpassword2', 'Confirm Password', 'matches[cpassword]|max_length[20]');
+        } else {
+            $this->form_validation->set_rules('role', 'Role', 'trim|required|numeric');
+            $this->form_validation->set_rules('password', 'Password', 'matches[cpassword]|max_length[20]');
+            $this->form_validation->set_rules('cpassword', 'Confirm Password', 'matches[password]|max_length[20]');
+        }
+
+
+
+        return $this->form_validation->run();
     }
 }

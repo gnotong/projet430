@@ -2,6 +2,7 @@
 
 require 'base/BaseController.php';
 
+
 /**
  * Class : User (UserController)
  * User Class to control all user related operations.
@@ -42,19 +43,10 @@ class User extends BaseController
      */
     function editProfile()
     {
-        if ($this->input->server('REQUEST_METHOD') == 'GET') {
+        if (!$this->validateUserForm(true)) {
             $this->userProfileForm();
         } else {
-            $this->load->library('form_validation');
-
             $userId = $this->input->post('userId');
-
-            $this->form_validation->set_rules('fname', 'Full Name', 'trim|required|max_length[128]');
-            $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email|max_length[128]');
-            $this->form_validation->set_rules('oldpassword', 'Old password', 'max_length[20]');
-            $this->form_validation->set_rules('cpassword', 'Password', 'matches[cpassword2]|max_length[20]');
-            $this->form_validation->set_rules('cpassword2', 'Confirm Password', 'matches[cpassword]|max_length[20]');
-            $this->form_validation->set_rules('mobile', 'Mobile Number', 'required|min_length[10]');
 
             $name = $this->security->xss_clean($this->input->post('fname'));
             $email = $this->security->xss_clean($this->input->post('email'));
@@ -63,34 +55,38 @@ class User extends BaseController
             $mobile = $this->security->xss_clean($this->input->post('mobile'));
             $oldPassword = $this->input->post('oldpassword');
 
-            $userInfo = array();
+            $userInfo = [
+                'email' => $email,
+                'password' => '',
+                'name' => $name,
+                'mobile' => $mobile,
+                'status' => 1,
+                'updatedBy' => $this->userId,
+                'updatedDtm' => date('Y-m-d H:i:s')
+            ];
 
-            if (empty($password)) {
-                $userInfo = array('email' => $email, 'name' => $name,
-                    'mobile' => $mobile, 'status' => 1, 'updatedBy' => $this->userId, 'updatedDtm' => date('Y-m-d H:i:s'));
-            } else {
-                $resultPas = $this->user_model->matchOldPassword($this->userId, $oldPassword);
+            if (!empty($password)) {
+                $userInfo['password'] = getHashedPassword($password);
+
+                $oldPasswordMatches = $this->user_model->matchOldPassword($this->userId, $oldPassword);
                 $pwdAreSame = $this->user_model->matchPassword($password, $password2);
 
-                if (empty($resultPas)) {
+                if (!$oldPasswordMatches) {
                     $this->session->set_flashdata('nomatch', 'Votre ancien mot de passe n\'est pas correct');
-                    redirect('user_edit_profile');
-                } elseif (!$pwdAreSame) {
-                    $this->session->set_flashdata('nomatch', 'Vos nouveaux mots de passes ne sont pas identiques');
-                    redirect('user_edit_profile');
-                } else {
-                    $userInfo = array('email' => $email, 'password' => getHashedPassword($password),
-                        'name' => ucwords($name), 'mobile' => $mobile, 'status' => 1, 'updatedBy' => $this->userId,
-                        'updatedDtm' => date('Y-m-d H:i:s'));
                 }
+
+                if (!$pwdAreSame) {
+                    $this->session->set_flashdata('nomatch', 'Vos nouveaux mots de passes ne sont pas identiques');
+                }
+                redirect('user_edit_profile');
             }
 
-            $result = $this->user_model->editUser($userInfo, $userId);
+            unset($userInfo['password']);
 
-            if ($result == true) {
-                $process = 'Mise à jour des paramètres du compte';
-                $processFunction = 'User/editProfile';
-                $this->log($process, $processFunction);
+            if ($this->user_model->editUser($userInfo, $userId)) {
+                $this->log('Mise à jour des paramètres du compte', 'User/editProfile');
+
+                $this->session->set_userdata(['name' => $name,'status' => 1]);
 
                 $this->session->set_flashdata('success', 'Les paramètres de votre compte ont été mis à jour avec succès');
             } else {
