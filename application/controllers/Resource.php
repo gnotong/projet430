@@ -15,8 +15,6 @@ class Resource extends BaseController
     {
         parent::__construct();
 
-        $this->load->model('resource_model');
-
         // Datas -> libraries ->BaseController / This function used load user sessions
         $this->datas();
 
@@ -40,7 +38,7 @@ class Resource extends BaseController
 
         $process = 'Toutes les Ressources';
         $processFunction = 'Manager/resources';
-        $this->logrecord($process, $processFunction);
+        $this->log($process, $processFunction);
 
         $this->global['pageTitle'] = 'UY1: Toutes les Ressources';
 
@@ -89,7 +87,7 @@ class Resource extends BaseController
             if ($result > 0) {
                 $process = 'Ajouter une ressource';
                 $processFunction = 'Resource/create';
-                $this->logrecord($process, $processFunction);
+                $this->log($process, $processFunction);
 
                 $this->session->set_flashdata('success', 'Ressource créée avec succès');
             } else {
@@ -146,7 +144,7 @@ class Resource extends BaseController
             if ($result > 0) {
                 $process = 'Edition de ressource';
                 $processFunction = 'Manager/editResource';
-                $this->logrecord($process, $processFunction);
+                $this->log($process, $processFunction);
                 $this->session->set_flashdata('success', 'Ressource modifiée avec succès');
             } else {
                 $this->session->set_flashdata('error', 'La modification de la ressource a échoué');
@@ -171,7 +169,7 @@ class Resource extends BaseController
         if ($result == TRUE) {
             $process = 'Suprpession de ressources';
             $processFunction = 'Manager/deleteResource';
-            $this->logrecord($process, $processFunction);
+            $this->log($process, $processFunction);
 
             $this->session->set_flashdata('success', 'Ressources supprimées avec succès');
         } else {

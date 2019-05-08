@@ -1,16 +1,11 @@
-/**
- * @author Kishor Mali
- */
-
-
 jQuery(document).ready(function(){
 	
 	jQuery(document).on("click", ".deleteUser", function(){
 		var userId = $(this).data("userid"),
-			hitURL = baseURL + "deleteUser",
+			hitURL = baseURL + "delete_user",
 			currentRow = $(this);
 		
-		var confirmation = confirm("Are you sure to delete this user ?");
+		var confirmation = confirm("Êtes-vous certains de vouloir supprimer cet utilisateur ?");
 		
 		if(confirmation)
 		{
@@ -22,16 +17,10 @@ jQuery(document).ready(function(){
 			}).done(function(data){
 				console.log(data);
 				currentRow.parents('tr').remove();
-				if(data.status = true) { alert("User successfully deleted"); }
-				else if(data.status = false) { alert("User deletion failed"); }
-				else { alert("Access denied..!"); }
+				if(data.status = true) { alert("Utilisateur supprimé avec succès"); }
+				else if(data.status = false) { alert("La suppression de l'utilisateur a échoué"); }
+				else { alert("Accès interdit..!"); }
 			});
 		}
 	});
-	
-	
-	jQuery(document).on("click", ".searchList", function(){
-		
-	});
-	
 });

@@ -159,7 +159,7 @@ class Resource_model extends CI_Model
 
         $process = 'Toutes les Ressources';
         $processFunction = 'User/eresource';
-        $this->logrecord($process,$processFunction);
+        $this->log($process,$processFunction);
 
         $this->global['pageTitle'] = 'UY1: Toutes les ressources';
 
