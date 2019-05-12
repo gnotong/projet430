@@ -38,3 +38,6 @@ $route['user_edit_profile'] = "user/editProfile";
 $route['fake_users'] = "fake/seedUser";
 $route['fake_resources'] = "fake/seedResource";
 $route['fake_categories'] = "fake/seedCategory";
+
+$route['resource_calendar'] = 'resourceCalendar';
+$route['load_data'] = 'resourceCalendar/loadData';

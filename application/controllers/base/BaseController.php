@@ -31,6 +31,8 @@ class BaseController extends CI_Controller
     public $resource_model;
     /** @var User_model $user_model */
     public $user_model;
+    /** @var ResourceCalendar_model $resourceCalendar_model */
+    public $resourceCalendar_model;
     /** @var CI_Session $session */
     public $session;
     /** @var CI_Form_validation $form_validation */
@@ -48,6 +50,7 @@ class BaseController extends CI_Controller
         $this->load->model('user_model');
         $this->load->model('resource_model');
         $this->load->model('login_model');
+        $this->load->model('resourceCalendar_model');
         $this->datas();
     }
 
