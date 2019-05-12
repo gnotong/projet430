@@ -11,6 +11,11 @@
     <link href="<?= base_url(); ?>assets/dist/css/AdminLTE.min.css" rel="stylesheet" type="text/css"/>
     <link rel="stylesheet" type="text/css" href="<?= base_url(); ?>assets/dist/css/datatables.min.css" rel="stylesheet" type="text/css"/>
     <link href="<?= base_url(); ?>assets/dist/css/skins/_all-skins.min.css" rel="stylesheet" type="text/css"/>
+
+    <!-- fullCalendar -->
+    <link rel="stylesheet" href="<?= base_url(); ?>assets/fullcalendar/dist/fullcalendar.min.css">
+    <link rel="stylesheet" href="<?= base_url(); ?>assets/fullcalendar/dist/fullcalendar.print.min.css" media="print">
+
     <style>
         .error {
             color: red;
@@ -21,6 +26,21 @@
         var baseURL = "<?= base_url(); ?>";
     </script>
     <script src="<?= base_url(); ?>assets/js/jQuery-2.1.4.min.js"></script>
+    <!-- Bootstrap 3.3.7 -->
+    <script src="<?= base_url(); ?>assets/fullcalendar/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- jQuery UI 1.11.4 -->
+    <script src="<?= base_url(); ?>assets/fullcalendar/jquery-ui/jquery-ui.min.js"></script>
+    <!-- Slimscroll -->
+    <script src="<?= base_url(); ?>assets/fullcalendar/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+    <!-- FastClick -->
+    <script src="<?= base_url(); ?>assets/fullcalendar//fastclick/lib/fastclick.js"></script>
+    <!-- AdminLTE App -->
+    <script src="<?= base_url(); ?>assets/fullcalendar/dist/adminlte.min.js"></script>
+    <!-- fullCalendar -->
+    <script src="<?= base_url(); ?>assets/fullcalendar/moment/moment.js"></script>
+    <script src="<?= base_url(); ?>assets/fullcalendar/dist/fullcalendar.min.js"></script>
+    <script src="<?= base_url(); ?>assets/fullcalendar/dist/locale/fr.js"></script>
+
     <!--[if lt IE 9]>
     <script src="<?= base_url(); ?>assets/dist/js/html5shiv.min.js"></script>
     <script src="<?= base_url(); ?>assets/dist/js/respond.min.js"></script>
@@ -102,6 +122,12 @@
                         <a href="<?= base_url(); ?>dashboard">
                             <i class="fa fa-dashboard"></i>
                             <span>Accueil</span>
+                        </a>
+                    </li>
+                    <li class="treeview">
+                        <a href="<?= base_url(); ?>resource_calendar">
+                            <i class="fa fa-dashboard"></i>
+                            <span>Affectation de ressources</span>
                         </a>
                     </li>
                     <?php if ($role == ROLE_ADMIN || $role == ROLE_TEACHER): ?>

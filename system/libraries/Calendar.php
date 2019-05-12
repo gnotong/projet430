@@ -130,7 +130,7 @@ class CI_Calendar {
 	public function __construct($config = array())
 	{
 		$this->CI =& get_instance();
-		$this->CI->lang->load('calendar');
+		$this->CI->lang->load('ResourceCalendar');
 
 		empty($config) OR $this->initialize($config);
 

@@ -3,7 +3,7 @@
 require 'base/BaseController.php';
 
 /**
- * Class : Manager (ManagerController)
+ * Class : Resource (ResourceController)
  * Manager class to control to authenticate manager credentials and include manager functions.
  */
 class Resource extends BaseController
