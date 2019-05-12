@@ -108,7 +108,7 @@ class Resource extends BaseController
         $data['resourcesCategories'] = $this->resource_model->getResourcesCategories();
         $data['resources_situations'] = $this->resource_model->getResourcesSituations();
 
-        $this->global['pageTitle'] = 'UY1 : Modifier la tâche';
+        $this->global['pageTitle'] = 'UY1 : Modifier la resource';
 
         $this->loadViews("form_edit_resource", $this->global, $data, NULL);
     }

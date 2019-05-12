@@ -15,11 +15,16 @@
     <!-- fullCalendar -->
     <link rel="stylesheet" href="<?= base_url(); ?>assets/fullcalendar/dist/fullcalendar.min.css">
     <link rel="stylesheet" href="<?= base_url(); ?>assets/fullcalendar/dist/fullcalendar.print.min.css" media="print">
+    <!-- datetime picker-->
+    <link rel="stylesheet" href="<?= base_url(); ?>assets/fullcalendar/dist/bootstrap-datetimepicker.min.css" />
 
     <style>
         .error {
             color: red;
             font-weight: normal;
+        }
+        .display-none{
+            display: none;
         }
     </style>
     <script type="text/javascript">
@@ -40,6 +45,8 @@
     <script src="<?= base_url(); ?>assets/fullcalendar/moment/moment.js"></script>
     <script src="<?= base_url(); ?>assets/fullcalendar/dist/fullcalendar.min.js"></script>
     <script src="<?= base_url(); ?>assets/fullcalendar/dist/locale/fr.js"></script>
+    <!-- datetime picker-->
+    <script type="text/javascript" src="<?= base_url(); ?>assets/fullcalendar/dist/bootstrap-datetimepicker.min.js"></script>
 
     <!--[if lt IE 9]>
     <script src="<?= base_url(); ?>assets/dist/js/html5shiv.min.js"></script>
@@ -125,7 +132,7 @@
                         </a>
                     </li>
                     <li class="treeview">
-                        <a href="<?= base_url(); ?>resource_calendar">
+                        <a href="<?= base_url(); ?>resource_allocation">
                             <i class="fa fa-dashboard"></i>
                             <span>Affectation de ressources</span>
                         </a>
