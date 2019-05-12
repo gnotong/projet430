@@ -39,5 +39,7 @@ $route['fake_users'] = "fake/seedUser";
 $route['fake_resources'] = "fake/seedResource";
 $route['fake_categories'] = "fake/seedCategory";
 
-$route['resource_calendar'] = 'resourceCalendar';
-$route['load_data'] = 'resourceCalendar/loadData';
+$route['resource_allocation'] = 'resourceAllocation';
+$route['allocation_data'] = 'resourceAllocation/loadData';
+$route['allocation_data/(:num)'] = 'resourceAllocation/loadData/$1';
+$route['add_allocation'] = 'resourceAllocation/add';

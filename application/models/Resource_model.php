@@ -93,6 +93,17 @@ class Resource_model extends CI_Model
         
         return $query->result()[0];
     }
+
+    function getResourceByCategory(int $resourceTypeId)
+    {
+        $this->db->select('re.id, re.label as name');
+        $this->db->from('resources as re');
+        $this->db->join('categories as ca','ca.id = re.categoryId');
+        $this->db->where('re.categoryId', $resourceTypeId);
+        $query = $this->db->get();
+
+        return $query->result();
+    }
     
     /**
      * This function is used to edit resources
