@@ -9,21 +9,23 @@
     <link href="<?= base_url(); ?>assets/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
     <link href="<?= base_url(); ?>assets/dist/css/ionicons.min.css" rel="stylesheet" type="text/css"/>
     <link href="<?= base_url(); ?>assets/dist/css/AdminLTE.min.css" rel="stylesheet" type="text/css"/>
-    <link rel="stylesheet" type="text/css" href="<?= base_url(); ?>assets/dist/css/datatables.min.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" type="text/css" href="<?= base_url(); ?>assets/dist/css/datatables.min.css" rel="stylesheet"
+          type="text/css"/>
     <link href="<?= base_url(); ?>assets/dist/css/skins/_all-skins.min.css" rel="stylesheet" type="text/css"/>
 
     <!-- fullCalendar -->
     <link rel="stylesheet" href="<?= base_url(); ?>assets/fullcalendar/dist/fullcalendar.min.css">
     <link rel="stylesheet" href="<?= base_url(); ?>assets/fullcalendar/dist/fullcalendar.print.min.css" media="print">
     <!-- datetime picker-->
-    <link rel="stylesheet" href="<?= base_url(); ?>assets/fullcalendar/dist/bootstrap-datetimepicker.min.css" />
+    <link rel="stylesheet" href="<?= base_url(); ?>assets/fullcalendar/dist/bootstrap-datetimepicker.min.css"/>
 
     <style>
         .error {
             color: red;
             font-weight: normal;
         }
-        .display-none{
+
+        .display-none {
             display: none;
         }
     </style>
@@ -46,7 +48,8 @@
     <script src="<?= base_url(); ?>assets/fullcalendar/dist/fullcalendar.min.js"></script>
     <script src="<?= base_url(); ?>assets/fullcalendar/dist/locale/fr.js"></script>
     <!-- datetime picker-->
-    <script type="text/javascript" src="<?= base_url(); ?>assets/fullcalendar/dist/bootstrap-datetimepicker.min.js"></script>
+    <script type="text/javascript"
+            src="<?= base_url(); ?>assets/fullcalendar/dist/bootstrap-datetimepicker.min.js"></script>
 
     <!--[if lt IE 9]>
     <script src="<?= base_url(); ?>assets/dist/js/html5shiv.min.js"></script>
@@ -71,7 +74,7 @@
             </a>
             <div class="navbar-custom-menu">
 
-                <?php if($isLoggedIn): ?>
+                <?php if ($isLoggedIn): ?>
                     <ul class="nav navbar-nav">
                         <li class="dropdown tasks-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
@@ -120,15 +123,43 @@
         </nav>
     </header>
 
-    <?php if($isLoggedIn): ?>
-        <aside class="main-sidebar">
-            <section class="sidebar">
-                <ul class="sidebar-menu">
-                    <li class="header"></li>
+    <?php if ($isLoggedIn): ?>
+    <aside class="main-sidebar">
+        <section class="sidebar">
+            <ul class="sidebar-menu">
+                <li class="header"></li>
+                <li class="treeview">
+                    <a href="<?= base_url(); ?>dashboard">
+                        <i class="fa fa-dashboard"></i>
+                        <span>Accueil</span>
+                    </a>
+                </li>
+
+                <?php if ($role == ROLE_ADMIN): ?>
                     <li class="treeview">
-                        <a href="<?= base_url(); ?>dashboard">
-                            <i class="fa fa-dashboard"></i>
-                            <span>Accueil</span>
+                        <a href="#" class="text-bold text-yellow">
+                            <i class="fa fa-warning"></i>Gestion des utilisateurs
+                        </a>
+                    </li>
+                    <li class="treeview">
+                        <a href="<?= base_url(); ?>user_list">
+                            <i class="fa fa-users"></i>
+                            <span>Les utilisateurs</span>
+                        </a>
+                    </li>
+                    <li class="treeview">
+                        <a href="<?= base_url(); ?>add_user">
+                            <i class="fa fa-plus-circle"></i>
+                            <span>Ajouter un utilisateur</span>
+                        </a>
+                    </li>
+                <?php endif; ?>
+
+
+                <?php if ($role == ROLE_ADMIN): ?>
+                    <li class="treeview">
+                        <a href="#" class="text-bold text-yellow">
+                            <i class="fa fa-warning"></i>Gestion des ressources
                         </a>
                     </li>
                     <li class="treeview">
@@ -137,72 +168,58 @@
                             <span>Affectation de ressources</span>
                         </a>
                     </li>
-                    <?php if ($role == ROLE_ADMIN || $role == ROLE_TEACHER): ?>
-                        <li class="treeview">
-                            <a href="<?= base_url(); ?>resources">
-                                <i class="fa fa-tasks"></i>
-                                <span>Ressources</span>
-                            </a>
-                        </li>
-                        <li class="treeview">
-                            <a href="<?= base_url(); ?>add_resource">
-                                <i class="fa fa-plus-circle"></i>
-                                <span>Ajouter une ressource</span>
-                            </a>
-                        </li>
-                    <?php endif; ?>
+                    <li class="treeview">
+                        <a href="<?= base_url(); ?>resources">
+                            <i class="fa fa-tasks"></i>
+                            <span>Ressources</span>
+                        </a>
+                    </li>
+                    <li class="treeview">
+                        <a href="<?= base_url(); ?>add_resource">
+                            <i class="fa fa-plus-circle"></i>
+                            <span>Ajouter une ressource</span>
+                        </a>
+                    </li>
+                    <li class="treeview">
+                        <a href="<?= base_url(); ?>lessons">
+                            <i class="fa fa-plus-circle"></i>
+                            <span>Liste de cours</span>
+                        </a>
+                    </li>
+                    <li class="treeview">
+                        <a href="<?= base_url(); ?>levels">
+                            <i class="fa fa-plus-circle"></i>
+                            <span>Les niveaux d'études</span>
+                        </a>
+                    </li>
+                <?php endif; ?>
 
-                    <?php if ($role == ROLE_ADMIN): ?>
-                        <li class="treeview">
-                            <a href="<?= base_url(); ?>user_list">
-                                <i class="fa fa-users"></i>
-                                <span>Les utilisateurs</span>
-                            </a>
-                        </li>
-                        <li class="treeview">
-                            <a href="<?= base_url(); ?>add_user">
-                                <i class="fa fa-plus-circle"></i>
-                                <span>Ajouter un utilisateur</span>
-                            </a>
-                        </li>
-                    <?php endif; ?>
-
-                    <?php if ($role_text == ROLE_STUDENT): ?>
-                        <li class="treeview">
-                            <a href="<?= base_url(); ?>eresource">
-                                <i class="fa fa-tasks"></i>
-                                <span>Ressources</span>
-                            </a>
-                        </li>
-                    <?php endif; ?>
-
-
-                    <?php if ($role == ROLE_ADMIN): ?>
-                        <li class="treeview">
-                            <a href="#" class="text-bold text-yellow">
-                                <i class="fa fa-warning"></i>FAKE DATA
-                            </a>
-                        </li>
-                        <li class="treeview">
-                            <a href="<?= base_url(); ?>fake_users">
-                                <i class="fa fa-arrow-circle-o-up"></i>
-                                <span>Fake users</span>
-                            </a>
-                        </li>
-                        <li class="treeview">
-                            <a href="<?= base_url(); ?>fake_categories">
-                                <i class="fa fa-area-chart"></i>
-                                <span>Fake resources categories</span>
-                            </a>
-                        </li>
-                        <li class="treeview">
-                            <a href="<?= base_url(); ?>fake_resources">
-                                <i class="fa fa-arrow-circle-o-down"></i>
-                                <span>Fake resources</span>
-                            </a>
-                        </li>
-                    <?php endif; ?>
-                </ul>
-            </section>
-        </aside>
-    <?php endif; ?>
+                <?php if ($role == ROLE_ADMIN): ?>
+                    <li class="treeview">
+                        <a href="#" class="text-bold text-yellow">
+                            <i class="fa fa-warning"></i>FAKE DATA
+                        </a>
+                    </li>
+                    <li class="treeview">
+                        <a href="<?= base_url(); ?>fake_users">
+                            <i class="fa fa-arrow-circle-o-up"></i>
+                            <span>Fake users</span>
+                        </a>
+                    </li>
+                    <li class="treeview">
+                        <a href="<?= base_url(); ?>fake_categories">
+                            <i class="fa fa-area-chart"></i>
+                            <span>Fake resources categories</span>
+                        </a>
+                    </li>
+                    <li class="treeview">
+                        <a href="<?= base_url(); ?>fake_resources">
+                            <i class="fa fa-arrow-circle-o-down"></i>
+                            <span>Fake resources</span>
+                        </a>
+                    </li>
+                <?php endif; ?>
+            </ul>
+        </section>
+    </aside>
+<?php endif; ?>

@@ -35,6 +35,10 @@ class BaseController extends CI_Controller
     public $resourceAllocation_model;
     /** @var ResourceType_model $resourceType_model */
     public $resourceType_model;
+    /** @var Lesson_model $lesson_model */
+    public $lesson_model;
+    /** @var Level_model $level_model */
+    public $level_model;
     /** @var CI_Session $session */
     public $session;
     /** @var CI_Form_validation $form_validation */
@@ -54,6 +58,8 @@ class BaseController extends CI_Controller
         $this->load->model('login_model');
         $this->load->model('resourceAllocation_model');
         $this->load->model('resourceType_model');
+        $this->load->model('lesson_model');
+        $this->load->model('level_model');
         $this->datas();
     }
 

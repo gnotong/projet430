@@ -21,6 +21,17 @@ $route['edit_user/(:num)'] = "admin/editUser/$1";
 $route['delete_user'] = "admin/deleteUser";
 
 /*********** RESOURCE CONTROLLER ROUTES *******************/
+
+$route['lessons'] = "lesson/list";
+$route['add_lesson'] = "lesson/add";
+$route['edit_lesson/(:num)'] = "lesson/edit/$1";
+$route['delete_lesson/(:num)'] = "lesson/delete/$1";
+
+$route['levels'] = "level/list";
+$route['add_level'] = "level/add";
+$route['edit_level/(:num)'] = "level/edit/$1";
+$route['delete_level/(:num)'] = "level/delete/$1";
+
 $route['resources'] = "resource/list";
 $route['add_resource'] = "resource/create";
 $route['edit_resource/(:num)'] = "resource/editResource/$1";
