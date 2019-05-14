@@ -16,7 +16,7 @@ $success = $this->session->flashdata('success');
             <div class="col-md-8">
                 <div class="box box-primary">
                     <div class="box-header">
-                        <h3 class="box-title">Entrez les informations du cours <span class="text-danger"> (champs enseignant en cours de dev)</span>
+                        <h3 class="box-title">Entrez les informations du cours</span>
                         </h3>
                     </div>
 
@@ -39,7 +39,7 @@ $success = $this->session->flashdata('success');
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-12">
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="level">Niveaux d'études</label>
                                         <select class="form-control required" id="level" name="level" required>
@@ -48,6 +48,21 @@ $success = $this->session->flashdata('success');
                                                 <?php foreach ($levels as $level): ?>
                                                     <option value="<?= $level->id ?>">
                                                         <?= $level->name ?>
+                                                    </option>
+                                                <?php endforeach; ?>
+                                            <?php endif; ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="teacher">Enseignant</label>
+                                        <select class="form-control required" id="teacher" name="teacher" required>
+                                            <option value="">Sélectionnez l'enseignant</option>
+                                            <?php if (!empty($teachers)): ?>
+                                                <?php foreach ($teachers as $teacher): ?>
+                                                    <option value="<?= $teacher->id ?>">
+                                                        <?= $teacher->name ?>
                                                     </option>
                                                 <?php endforeach; ?>
                                             <?php endif; ?>

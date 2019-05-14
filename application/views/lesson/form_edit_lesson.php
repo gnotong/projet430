@@ -57,6 +57,23 @@ $success = $this->session->flashdata('success');
                                         </select>
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="teacher">Enseignant</label>
+                                        <select class="form-control required" id="teacher" name="teacher" required>
+                                            <option value="">Sélectionnez l'enseignant</option>
+                                            <?php if (!empty($teachers)): ?>
+                                                <?php foreach ($teachers as $teacher): ?>
+                                                    <option value="<?= $teacher->id; ?>"
+                                                        <?php if($teacher->id == $lesson->teacherId) {echo "selected=selected";} ?>
+                                                    >
+                                                        <?= $teacher->name ?>
+                                                    </option>
+                                                <?php endforeach; ?>
+                                            <?php endif; ?>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                             <div class="row">
                                 <div class="box-footer">

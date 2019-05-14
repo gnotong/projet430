@@ -44,6 +44,7 @@ class Lesson extends BaseController
     private function newLessonForm()
     {
         $data['levels'] = $this->level_model->getAll();
+        $data['teachers'] = $this->user_model->getTeachers();
 
         $this->global['pageTitle'] = 'UY1: Ajouter un cours';
 
@@ -59,6 +60,9 @@ class Lesson extends BaseController
 
         $this->form_validation->set_rules('label', 'Libellé', 'required');
         $this->form_validation->set_rules('level', 'Niveaux d\'études', 'required');
+        $this->form_validation->set_rules('teacher', 'Enseignant', 'required');
+        $this->form_validation->set_rules('code', 'Code', 'required');
+
 
         if ($this->form_validation->run() == FALSE) {
             $this->newLessonForm();
@@ -66,11 +70,13 @@ class Lesson extends BaseController
             $label = $this->input->post('label');
             $code = $this->input->post('code');
             $levelId = $this->input->post('level');
+            $teacherId = $this->input->post('teacher');
 
             $lessonId = $this->lesson_model->add(['label' => $label, 'code' => $code]);
 
             if ($lessonId > 0) {
                 $this->lesson_model->addLevelLesson(['level_id' => $levelId, 'lesson_id' => $lessonId]);
+                $this->lesson_model->addTeacherLesson(['teacher_id' => $teacherId, 'lesson_id' => $lessonId]);
 
                 $process = 'Ajouter un cours';
                 $processFunction = 'Lesson/add';
@@ -92,6 +98,7 @@ class Lesson extends BaseController
     {
         $data['lesson'] = $this->lesson_model->getLessonById($lessonId);
         $data['levels'] = $this->level_model->getAll();
+        $data['teachers'] = $this->user_model->getTeachers();
 
         $this->global['pageTitle'] = 'UY1 : Modifier la resource';
 
@@ -107,6 +114,8 @@ class Lesson extends BaseController
         $this->load->library('form_validation');
         $this->form_validation->set_rules('label', 'Libellé', 'required');
         $this->form_validation->set_rules('level', 'Niveaux d\'études', 'required');
+        $this->form_validation->set_rules('teacher', 'Enseignant', 'required');
+        $this->form_validation->set_rules('code', 'Code', 'required');
 
         if ($this->form_validation->run() == FALSE) {
             $this->editLessonForm($lessonId);
@@ -116,12 +125,13 @@ class Lesson extends BaseController
             $code = $this->input->post('code');
             $lessonId = $this->input->post('lessonId');
             $levelId = $this->input->post('level');
+            $teacherId = $this->input->post('teacher');
 
             $updated = $this->lesson_model->update(['label' => $label, 'code' => $code], $lessonId);
 
             if ($updated) {
-
                 $this->lesson_model->updateLevelLesson(['level_id' => $levelId, 'lesson_id' => $lessonId], $lessonId);
+                $this->lesson_model->updateTeacherLesson(['teacher_id' => $teacherId, 'lesson_id' => $lessonId], $lessonId);
 
                 $process = 'Edition d\'un cours';
                 $processFunction = 'Lesson/edit';
@@ -144,9 +154,12 @@ class Lesson extends BaseController
             redirect('lessons');
         }
 
-        $deleted = $this->lesson_model->delete($lessonId);
+        $this->lesson_model->deleteLevelLesson($lessonId);
+        $deleted = $this->lesson_model->deleteTeacherLesson($lessonId);
 
         if ($deleted) {
+            $deleted = $this->lesson_model->delete($lessonId);
+
             $process = 'Suprpession de cours';
             $processFunction = 'Lesson/delete';
             $this->log($process, $processFunction);

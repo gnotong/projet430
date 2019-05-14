@@ -53,11 +53,13 @@ class Fake extends BaseController
      */
     function _seed_users($limit)
     {
-        /** @var $data the first user is admin*/
+
+        /** ADMIN */
         $data = [
             'email' => 'dmla@projet430.com ',
             'password' => getHashedPassword('password'),
             'name' => 'Lin D',
+            'serial_number' => null,
             'mobile' => $this->faker->phoneNumber,
             'roleId' => 1,
             'isDeleted' => false,
@@ -69,11 +71,35 @@ class Fake extends BaseController
         ];
         $this->user_model->add($data);
 
+
+        /** STUDENTS */
         for ($i = 0; $i < $limit; $i++) {
+            $matricule = substr(strtoupper($this->faker->word) . $this->faker->dateTimeThisCentury->format('His'), 0, 19);
             $data = [
                 'email' => $this->faker->email,
                 'password' => getHashedPassword('password'),
-                'name' => $this->faker->unique()->userName,
+                'name' => $this->faker->unique()->name,
+                'serial_number' => $matricule,
+                'mobile' => $this->faker->phoneNumber,
+                'roleId' => 2,
+                'isDeleted' => false,
+                'status' => 0,
+                'createdBy' => 1,
+                'createdDtm' => $this->faker->dateTimeThisCentury->format('Y-m-d H:i:s'),
+                'updatedBy' => 1,
+                'updatedDtm' => $this->faker->dateTimeThisCentury->format('Y-m-d H:i:s')
+            ];
+            $this->user_model->add($data);
+        }
+
+        /** TEACHERS */
+        for ($i = 0; $i < ($limit-15); $i++) {
+            $matricule = substr(strtoupper($this->faker->word) . $this->faker->dateTimeThisCentury->format('His'), 0, 19);
+            $data = [
+                'email' => $this->faker->email,
+                'password' => getHashedPassword('password'),
+                'name' => $this->faker->unique()->name,
+                'serial_number' => $matricule,
                 'mobile' => $this->faker->phoneNumber,
                 'roleId' => 3,
                 'isDeleted' => false,
@@ -113,16 +139,10 @@ class Fake extends BaseController
     {
         $categories = [
             [
-                'label' => 'RESEAU'
+                'label' => 'SALLES'
             ],
             [
-                'label' => 'SALLE'
-            ],
-            [
-                'label' => 'VIDEO PROJECTEUR'
-            ],
-            [
-                'label' => 'GEOGRAPHIE'
+                'label' => 'APPAREILS'
             ]
         ];
 
@@ -152,6 +172,6 @@ class Fake extends BaseController
 
     private function getRandomCategory()
     {
-        return rand(1, 4);
+        return rand(1, 2);
     }
 }

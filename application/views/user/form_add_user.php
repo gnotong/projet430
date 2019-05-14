@@ -69,11 +69,24 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="box-footer">
-                            <input type="submit" class="btn btn-primary" value="Valider" />
-                            <input type="reset" class="btn btn-default" value="Annuler" />
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="serialNumber">Matricule</label>
+                                        <input type="text" class="form-control required" id="serialNumber" value="<?= set_value('serial_number'); ?>"
+                                               name="serialNumber"
+                                               maxlength="20">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="box-footer">
+                                        <input type="submit" class="btn btn-primary" value="Valider" />
+                                        <input type="reset" class="btn btn-default" value="Annuler" />
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </form>
                 </div>

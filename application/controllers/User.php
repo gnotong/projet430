@@ -35,7 +35,7 @@ class User extends BaseController
 
         $data['userInfo'] = $this->user_model->getUserById($this->userId);
 
-        $this->loadViews("form_user_profile", $this->global, $data, NULL);
+        $this->loadViews("user/form_user_profile", $this->global, $data, NULL);
     }
 
     /**
@@ -104,7 +104,7 @@ class User extends BaseController
     {
         $this->global['pageTitle'] = 'UY1 : Changer le mot de passe';
 
-        $this->loadViews("changePassword", $this->global, NULL, NULL);
+        $this->loadViews("user/change_password", $this->global, NULL, NULL);
     }
 
     /**
