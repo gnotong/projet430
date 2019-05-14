@@ -20,6 +20,22 @@ class User_model extends CI_Model
     }
 
     /**
+     * @return array $result : This is result
+     */
+    function getTeachers()
+    {
+        $this->db->select('u.userId as id, u.name');
+        $this->db->from('users as u');
+        $this->db->join('roles as r', 'r.roleId = u.roleId', 'left');
+        $this->db->where('u.isDeleted', 0);
+        $this->db->where('r.code', 'ROLE_TEACHER');
+        $query = $this->db->get();
+
+        $result = $query->result();
+        return $result;
+    }
+
+    /**
      * This function is used to get the user roles information
      * @return array $result : This is result of the query
      */

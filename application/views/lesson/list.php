@@ -63,7 +63,7 @@
                                             <td>
                                                 <?php echo $lesson->levelName ?>
                                             </td>
-                                            <td><i class="text-danger">A implémenter</i></td>
+                                            <td><?php echo $lesson->teacher ?></td>
                                             <td class="text-center">
                                                 <a class="btn btn-sm btn-info"
                                                    href="<?php echo base_url() . 'edit_lesson/' . $lesson->id; ?>"

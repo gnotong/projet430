@@ -29,7 +29,7 @@ class Admin extends BaseController
 
         $this->global['pageTitle'] = 'UY1 : liste d\'utilisateurs';
 
-        $this->loadViews("users", $this->global, $data, NULL);
+        $this->loadViews("user/list", $this->global, $data, NULL);
     }
 
     /**
@@ -41,7 +41,7 @@ class Admin extends BaseController
 
         $this->global['pageTitle'] = 'UY1 : Ajouter un utilisateur';
 
-        $this->loadViews("form_add_user", $this->global, $data, NULL);
+        $this->loadViews("user/form_add_user", $this->global, $data, NULL);
     }
 
     /**
@@ -57,6 +57,7 @@ class Admin extends BaseController
                 'password' => getHashedPassword($this->input->post('password')),
                 'roleId' => $this->input->post('role'),
                 'name' => ucwords(strtolower($this->security->xss_clean($this->input->post('fname')))),
+                'serial_number' => ucwords(strtoupper($this->security->xss_clean($this->input->post('serialNumber')))),
                 'mobile' => $this->security->xss_clean($this->input->post('mobile')),
                 'createdBy' => $this->userId,
                 'createdDtm' => date('Y-m-d H:i:s')
@@ -90,7 +91,7 @@ class Admin extends BaseController
 
         $this->global['pageTitle'] = 'UY1 : Modification d\'un utilisateur';
 
-        $this->loadViews("form_edit_user", $this->global, $data, NULL);
+        $this->loadViews("user/form_edit_user", $this->global, $data, NULL);
     }
 
     /**
@@ -109,6 +110,7 @@ class Admin extends BaseController
                 'password' => '',
                 'roleId' => $this->input->post('role'),
                 'name' => ucwords(strtolower($this->security->xss_clean($this->input->post('fname')))),
+                'serial_number' => ucwords(strtoupper($this->security->xss_clean($this->input->post('serialNumber')))),
                 'mobile' => $this->security->xss_clean($this->input->post('mobile')),
                 'status' => 0,
                 'updatedBy' => $this->userId,

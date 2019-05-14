@@ -13,10 +13,12 @@ class Lesson_model extends CI_Model
      */
     function getAll(): array
     {
-        $this->db->select('les.id, les.label, les.code, lev.name as levelName');
+        $this->db->select('les.id, les.label, les.code, lev.name as levelName, us.name as teacher');
         $this->db->from('lessons as les');
         $this->db->join('level_lesson as ll','les.id = ll.lesson_id');
         $this->db->join('levels as lev','lev.id = ll.level_id');
+        $this->db->join('teacher_lesson as tl','tl.lesson_id = les.id');
+        $this->db->join('users as us','us.userId = tl.teacher_id');
         $query = $this->db->get();
 
         return $query->result();
@@ -57,9 +59,10 @@ class Lesson_model extends CI_Model
      */
     function getLessonById(int $lessionId): ?object
     {
-        $this->db->select('les.id, les.label, les.code, lev.id as levelId, lev.name as levelName');
+        $this->db->select('les.id, les.label, les.code, lev.id as levelId, tl.teacher_id as teacherId, lev.name as levelName');
         $this->db->from('lessons as les');
         $this->db->join('level_lesson as ll','les.id = ll.lesson_id');
+        $this->db->join('teacher_lesson as tl','tl.lesson_id = ll.lesson_id', 'left');
         $this->db->join('levels as lev','lev.id = ll.level_id');
         $this->db->where('les.id', $lessionId);
         $query = $this->db->get();
@@ -82,6 +85,15 @@ class Lesson_model extends CI_Model
         $this->db->trans_complete();
     }
 
+    /**
+     * @param array $teacherLesson
+     */
+    function addTeacherLesson(array $teacherLesson): void
+    {
+        $this->db->trans_start();
+        $this->db->insert('teacher_lesson', $teacherLesson);
+        $this->db->trans_complete();
+    }
 
     /**
      * @param array $levelLessonInfo
@@ -91,6 +103,16 @@ class Lesson_model extends CI_Model
     {
         $this->db->where('lesson_id', $lessonId);
         $this->db->update('level_lesson', $levelLessonInfo);
+    }
+
+    /**
+     * @param array $teacherLesson
+     * @param int $lessonId
+     */
+    function updateTeacherLesson(array $teacherLesson, int $lessonId): void
+    {
+        $this->db->where('lesson_id', $lessonId);
+        $this->db->update('teacher_lesson', $teacherLesson);
     }
 
     /**
@@ -104,5 +126,24 @@ class Lesson_model extends CI_Model
         return true;
     }
 
+    /**
+     * @param int $lessonId
+     */
+    function deleteLevelLesson(int $lessonId): void
+    {
+        $this->db->where('lesson_id', $lessonId);
+        $this->db->delete('level_lesson');
+    }
+
+    /**
+     * @param int $lessonId
+     * @return bool
+     */
+    function deleteTeacherLesson(int $lessonId): bool
+    {
+        $this->db->where('lesson_id', $lessonId);
+        $this->db->delete('teacher_lesson');
+        return true;
+    }
 }
 
