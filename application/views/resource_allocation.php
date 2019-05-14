@@ -131,7 +131,16 @@
                 day: 'Jours'
             },
             events: $allocations,
-            editable: true
+            editable: true,
+            eventRender: function(event, element) {
+                element.find(".fc-title").remove();
+                element.find(".fc-time").remove();
+                let new_description =
+                    moment(event.start).format("HH:mm") + '-'
+                    + moment(event.end).format("HH:mm") + '<br/>'
+                    + '<strong>Title: </strong>' + event.title + '<br/>';
+                element.append(new_description);
+            }
         });
 
         /** ADD SELECTED COLOR TO THE ADD BUTTON **/
