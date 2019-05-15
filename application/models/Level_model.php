@@ -2,11 +2,9 @@
 
 
 /**
- * TODO: factoriser les méthodes add, delete, edit dans un BaseModel, comme ça uniquement les BaseModel sera
- * TODO: chargé au niveau du base controller
  * Class Level_model
  */
-class Level_model extends CI_Model
+class Level_model extends BaseModel
 {
     /**
      * @return array $result : This is result
@@ -37,47 +35,5 @@ class Level_model extends CI_Model
 
         return $query->result()[0];
     }
-
-
-    /**
-     * @param $levelInfo
-     * @return mixed
-     */
-    function add(array $levelInfo): int
-    {
-        $this->db->trans_start();
-        $this->db->insert('levels', $levelInfo);
-
-        $insert_id = $this->db->insert_id();
-
-        $this->db->trans_complete();
-
-        return $insert_id;
-    }
-
-    /**
-     * @param array $levelInfo
-     * @param int $levelId
-     * @return bool
-     */
-    function update(array $levelInfo, int $levelId): bool
-    {
-        $this->db->where('id', $levelId);
-        $this->db->update('levels', $levelInfo);
-
-        return true;
-    }
-
-    /**
-     * @param int $levelId
-     * @return bool
-     */
-    function delete(int $levelId): bool
-    {
-        $this->db->where('id', $levelId);
-        $this->db->delete('levels');
-        return true;
-    }
-
 }
 

@@ -34,7 +34,7 @@ class Fake extends BaseController
     function seedResource()
     {
         $this->_truncate_resource_db();
-        $this->_seed_resources(25);
+        $this->_seed_resources(20);
     }
 
     /**
@@ -119,11 +119,24 @@ class Fake extends BaseController
 
     function _seed_resources(int $limit)
     {
+        /** RESSOURCES TYPE SALLE */
         for ($i = 0; $i < $limit; $i++) {
             $data = [
-                'label' => 'RESSOURCE_'.($i + 1),
+                'label' => 'SALLE 10'.($i + 1),
                 'description' => $this->faker->word(),
-                'categoryId' => $this->getRandomCategory(),
+                'categoryId' => 1,
+                'createdBy' => 1,
+                'created' => $this->faker->dateTimeThisCentury->format('Y-m-d H:i:s')
+            ];
+            $this->resource_model->add($data);
+        }
+
+        /** RESSOURCES TYPE APPAREIL */
+        for ($i = 0; $i < ($limit-10); $i++) {
+            $data = [
+                'label' => 'APPAREIL MV'.($i + 1),
+                'description' => $this->faker->word(),
+                'categoryId' => 2,
                 'createdBy' => 1,
                 'created' => $this->faker->dateTimeThisCentury->format('Y-m-d H:i:s')
             ];
@@ -168,10 +181,5 @@ class Fake extends BaseController
     private function _truncate_category_db()
     {
         $this->resource_model->truncateCategory();
-    }
-
-    private function getRandomCategory()
-    {
-        return rand(1, 2);
     }
 }

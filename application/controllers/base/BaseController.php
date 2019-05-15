@@ -1,5 +1,6 @@
 <?php defined('BASEPATH') or exit ('No direct script access allowed');
 
+
 /**
  * Class : BaseController (BaseController)
  */
@@ -48,6 +49,9 @@ class BaseController extends CI_Controller
     /** @var CI_security $security */
     protected $security;
 
+    /** @var BaseModel $baseModel */
+    public $baseModel;
+
 
     public function __construct()
     {
@@ -60,6 +64,7 @@ class BaseController extends CI_Controller
         $this->load->model('resourceType_model');
         $this->load->model('lesson_model');
         $this->load->model('level_model');
+        $this->load->model('baseModel');
         $this->datas();
     }
 

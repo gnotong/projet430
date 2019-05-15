@@ -62,7 +62,7 @@ class Level extends BaseController
         } else {
             $name = $this->input->post('name');
 
-            $levelId = $this->level_model->add(['name' => $name]);
+            $levelId = $this->baseModel->add('levels', ['name' => $name]);
 
             if ($levelId > 0) {
                 $process = 'Ajouter un niveau d\'études';
@@ -106,7 +106,7 @@ class Level extends BaseController
             $name = $this->input->post('name');
             $levelId = $this->input->post('levelId');
 
-            $updated = $this->level_model->update(['name' => $name], $levelId);
+            $updated = $this->baseModel->update('levels', ['name' => $name], 'id', $levelId);
 
             if ($updated) {
                 $process = 'Edition d\'un niveai d\'études';
@@ -130,7 +130,7 @@ class Level extends BaseController
             redirect('levels');
         }
 
-        $deleted = $this->level_model->delete($levelId);
+        $deleted = $this->baseModel->delete('levels', 'id', $levelId);
 
         if ($deleted) {
             $process = 'Suprpession du niveau d\'études';

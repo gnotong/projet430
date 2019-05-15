@@ -72,11 +72,20 @@ class Lesson extends BaseController
             $levelId = $this->input->post('level');
             $teacherId = $this->input->post('teacher');
 
-            $lessonId = $this->lesson_model->add(['label' => $label, 'code' => $code]);
+            $lessonId = $this->baseModel->add('lessons', [
+                'label' => $label,
+                'code' => $code
+            ]);
 
             if ($lessonId > 0) {
-                $this->lesson_model->addLevelLesson(['level_id' => $levelId, 'lesson_id' => $lessonId]);
-                $this->lesson_model->addTeacherLesson(['teacher_id' => $teacherId, 'lesson_id' => $lessonId]);
+                $this->baseModel->add('level_lesson', [
+                    'level_id' => $levelId,
+                    'lesson_id' => $lessonId
+                ]);
+                $this->baseModel->add('teacher_lesson', [
+                    'teacher_id' => $teacherId,
+                    'lesson_id' => $lessonId
+                ]);
 
                 $process = 'Ajouter un cours';
                 $processFunction = 'Lesson/add';
@@ -127,11 +136,20 @@ class Lesson extends BaseController
             $levelId = $this->input->post('level');
             $teacherId = $this->input->post('teacher');
 
-            $updated = $this->lesson_model->update(['label' => $label, 'code' => $code], $lessonId);
+            $updated = $this->baseModel->update('lessons', [
+                'label' => $label,
+                'code' => $code
+            ], 'id', $lessonId);
 
             if ($updated) {
-                $this->lesson_model->updateLevelLesson(['level_id' => $levelId, 'lesson_id' => $lessonId], $lessonId);
-                $this->lesson_model->updateTeacherLesson(['teacher_id' => $teacherId, 'lesson_id' => $lessonId], $lessonId);
+                $this->baseModel->update('level_lesson', [
+                    'level_id' => $levelId,
+                    'lesson_id' => $lessonId
+                ], 'lesson_id', $lessonId);
+                $this->baseModel->update('teacher_lesson', [
+                    'teacher_id' => $teacherId,
+                    'lesson_id' => $lessonId
+                ], 'lesson_id', $lessonId);
 
                 $process = 'Edition d\'un cours';
                 $processFunction = 'Lesson/edit';
@@ -154,12 +172,11 @@ class Lesson extends BaseController
             redirect('lessons');
         }
 
-        $this->lesson_model->deleteLevelLesson($lessonId);
-        $deleted = $this->lesson_model->deleteTeacherLesson($lessonId);
+        $this->baseModel->delete('level_lesson', 'lesson_id', $lessonId);
+        $this->baseModel->delete('teacher_lesson', 'lesson_id', $lessonId);
+        $deleted = $this->baseModel->delete('lessons', 'id', $lessonId);
 
         if ($deleted) {
-            $deleted = $this->lesson_model->delete($lessonId);
-
             $process = 'Suprpession de cours';
             $processFunction = 'Lesson/delete';
             $this->log($process, $processFunction);

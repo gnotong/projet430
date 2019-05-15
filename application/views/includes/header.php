@@ -163,12 +163,6 @@
                         </a>
                     </li>
                     <li class="treeview">
-                        <a href="<?= base_url(); ?>resource_allocation">
-                            <i class="fa fa-dashboard"></i>
-                            <span>Affectation de ressources</span>
-                        </a>
-                    </li>
-                    <li class="treeview">
                         <a href="<?= base_url(); ?>resources">
                             <i class="fa fa-tasks"></i>
                             <span>Ressources</span>
@@ -192,6 +186,12 @@
                             <span>Les niveaux d'études</span>
                         </a>
                     </li>
+                    <li class="treeview">
+                        <a href="<?= base_url(); ?>resource_allocation">
+                            <i class="fa fa-arrow-right"></i>
+                            <span>Affectation de ressources</span>
+                        </a>
+                    </li>
                 <?php endif; ?>
 
                 <?php if ($role == ROLE_ADMIN): ?>
@@ -202,19 +202,19 @@
                     </li>
                     <li class="treeview">
                         <a href="<?= base_url(); ?>fake_users">
-                            <i class="fa fa-arrow-circle-o-up"></i>
+                            <i class="fa fa-database text-success"></i>
                             <span>Fake users</span>
                         </a>
                     </li>
                     <li class="treeview">
                         <a href="<?= base_url(); ?>fake_categories">
-                            <i class="fa fa-area-chart"></i>
+                            <i class="fa fa-database text-danger"></i>
                             <span>Fake resources categories</span>
                         </a>
                     </li>
                     <li class="treeview">
                         <a href="<?= base_url(); ?>fake_resources">
-                            <i class="fa fa-arrow-circle-o-down"></i>
+                            <i class="fa fa-database text-yellow"></i>
                             <span>Fake resources</span>
                         </a>
                     </li>
