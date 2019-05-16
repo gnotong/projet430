@@ -55,6 +55,7 @@ class ResourceAllocation extends BaseController
             $events = [
                 'resource_id' => $this->input->post('resource'),
                 'level_id' => $this->input->post('level'),
+                'lesson_id' => $this->input->post('lesson'),
                 'teacher_id' => $this->input->post('teacher'),
                 'background_color ' => $this->input->post('backgroundColor'),
                 'border_color ' => $this->input->post('borderColor'),
@@ -70,32 +71,27 @@ class ResourceAllocation extends BaseController
         }
 
         if($lastId) {
-            echo json_encode(array('success' => 1, 'result' => $message));
+            echo json_encode(array('success' => 1, 'result' => $message, 'eventId' => $lastId));
         } else {
             echo json_encode(array('success' => 0, 'error' => $message));
         }
     }
 
-
-    function validateUserForm(bool $isProfile = false): bool
+    /**
+     * @param int $event
+     */
+    public function delete(int $event)
     {
-        $this->load->library('form_validation');
+        $isDeleted = $this->resourceAllocation_model->delete('resource_allocation', 'id', $event);
 
-        $this->form_validation->set_rules('fname', 'Full Name', 'trim|required|max_length[128]');
-        $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email|max_length[128]');
-        $this->form_validation->set_rules('mobile', 'Mobile Number', 'required|min_length[10]');
+        if ($isDeleted) {
+            $process = 'Suprpession des affectation';
+            $processFunction = 'RessourceAllocation/delete';
+            $this->log($process, $processFunction);
 
-        if ($isProfile) {
-            $this->form_validation->set_rules('oldpassword', 'Old password', 'max_length[20]');
-            $this->form_validation->set_rules('cpassword', 'Password', 'matches[cpassword2]|max_length[20]');
-            $this->form_validation->set_rules('cpassword2', 'Confirm Password', 'matches[cpassword]|max_length[20]');
+            echo json_encode(array('success' => 1, 'result' => 'Affectation supprimée !'));
         } else {
-            $this->form_validation->set_rules('role', 'Role', 'trim|required|numeric');
-            $this->form_validation->set_rules('password', 'Password', 'matches[cpassword]|max_length[20]');
-            $this->form_validation->set_rules('cpassword', 'Confirm Password', 'matches[password]|max_length[20]');
+            echo json_encode(array('success' => 0, 'result' => 'Erreur de suppression de l\'affectation !'));
         }
-
-        return $this->form_validation->run();
     }
-
 }

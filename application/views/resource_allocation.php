@@ -156,14 +156,14 @@ $lessonsAreEmpty = empty($lessons);
     var $levelIdIsSet = <?= $levelIdIsSet ? '1' : '0' ?>;
 </script>
 <script>
-    // TODO: https://fullcalendar.io/docs/event-dragging-resizing
-    // TODO: When drag stops => update the events
-    // TODO: When resize stops => update the events
     $(function () {
 
         if ($lessonsAreEmpty && $levelIdIsSet) {
-            alert("/!\\ Aucune unité d'enseignement n'a été trouvée pour cette filière. Veuillez contacter l'administrateur");
-            // $('.hiddenField').addClass('display-none');
+            Swal.fire({
+                type: 'error',
+                title: 'Attention...',
+                text: "Aucune unité d'enseignement n'a été trouvée pour cette filière. Veuillez contacter l'administrateur",
+            });
         }
 
         /** DATETIME PICKER **/
@@ -191,14 +191,43 @@ $lessonsAreEmpty = empty($lessons);
             eventRender: function (event, element) {
                 element.find(".fc-title").remove();
                 element.find(".fc-time").remove();
-                let new_description =
+                let eventDetail =
                     moment(event.start).format("HH:mm") + '-'
                     + moment(event.end).format("HH:mm") + '<br/>'
-                    + '<strong>Title: </strong>' + event.title + '<br/>'
-                    + '<strong>Teacher: </strong>' + event.teacherName + '<br/>'
-                    + '<strong>Class: </strong>' + event.levelName + '<br/>';
-                element.append(new_description);
-            }
+                    + '<strong>' + event.title + '</strong><br/>'
+                    + '<i>' + event.teacherName + '</i><br/>'
+                    + '<i>' + event.levelName + '</i><br/>'
+                    + '<i>' + event.lessonName + '</i><br/>'
+                ;
+                element.append(eventDetail);
+            },
+            eventClick: function(calEvent, jsEvent, view) {
+                Swal.fire({
+                    title: 'Êtes-vous certain ?',
+                    text:  calEvent.title + " - " + calEvent.lessonName,
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d62522',
+                    cancelButtonColor: '#9eecff',
+                    confirmButtonText: 'Supprimer',
+                    cancelButtonText: 'Annuler',
+                    preConfirm: function (e) {
+                        let $url = "<?= base_url() ?>delete_allocation/" + calEvent.eventId;
+                        deleteEvent($url, calEvent)
+                    }
+                }).then((result) => {
+                    if (result.value) {
+
+                        $('#calendar').fullCalendar('removeEvents', calEvent._id);
+
+                        Swal.fire(
+                            'Supprimé!',
+                            'Affectation enlevée du calendrier.',
+                            'success'
+                        )
+                    }
+                })
+            },
         });
 
         /** ADD SELECTED COLOR TO THE ADD BUTTON **/
@@ -222,6 +251,8 @@ $lessonsAreEmpty = empty($lessons);
             let teacherName = $('#teacher option:selected').text();
             let levelId = $('#level').val();
             let levelName = $('#level option:selected').text();
+            let lessonId = $('#lesson').val();
+            let lessonName = $('#lesson option:selected').text();
 
             // TODO: Vérifier que les champs obligatoires sont remplis
 
@@ -247,50 +278,23 @@ $lessonsAreEmpty = empty($lessons);
             originalEventObject.levelId = levelId;
             originalEventObject.teacherName = teacherName.trim();
             originalEventObject.teacherId = teacherId;
+            originalEventObject.lessonName = lessonName.trim();
+            originalEventObject.lessonId = lessonId;
 
             updateEvents($url, originalEventObject);
 
+        });
+
+        $("#btnDeleteEvent").click(function(e){
+            e.preventDefault();
+            console.log(e);
+            $('#calendar').fullCalendar('removeEvent', event._id);
         });
 
 
         $(".searchForm").change(function () {
             $('#search').submit();
         });
-
-        /** SELECTED RESOURCE TYPE LOADS THE CORRESPONDING RESOURCES **/
-
-        //$("#resource-type").change(function () {
-        //
-        //    let resourceTypeId = $(this).val();
-        //
-        //    if (resourceTypeId == 0) {
-        //        $(".hiddenField").addClass('display-none');
-        //        $("#field-teacher").addClass('display-none');
-        //        return;
-        //    }
-        //
-        //    $(".hiddenField").removeClass('display-none');
-        //
-        //    $.ajax({
-        //        url: "<?//= base_url() ?>//allocation_data/" + resourceTypeId,
-        //        method: "GET",
-        //        dataType: 'json'
-        //    })
-        //        .done(function (data) {
-        //            $("#resource").empty()
-        //                .prepend("<option value=''>Sélectionnez la ressource</option>").val('');
-        //            $.each(data.resources, function (index, resource) {
-        //                $("#resource").append($("<option>", {
-        //                    value: resource.id,
-        //                    text: resource.name
-        //                }));
-        //            });
-        //        })
-        //        .fail(function (xhr) {
-        //            //  TODO: afficher le message de confirmation dans une div alert error
-        //            console.log('error callback 2', xhr);
-        //        });
-        //});
 
     });
 
@@ -301,6 +305,7 @@ $lessonsAreEmpty = empty($lessons);
         $.ajax({
             url: $url,
             method: "POST",
+            dataType: 'json',
             data: {
                 resource: $calendarObject.resourceId,
                 start: $calendarObject.rowStart,
@@ -309,19 +314,33 @@ $lessonsAreEmpty = empty($lessons);
                 backgroundColor: $calendarObject.backgroundColor,
                 borderColor: $calendarObject.borderColor,
                 level: $calendarObject.levelId,
+                lesson: $calendarObject.lessonId,
                 teacher: $calendarObject.teacherId
-
             }
         })
-            .done(function (data) {
-                //  TODO: afficher le message de confirmation dans une div alert success
-                console.log('success callback 1', data);
-                // the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
-                $('#calendar').fullCalendar('renderEvent', $calendarObject, true);
-            })
-            .fail(function (xhr) {
-                //  TODO: afficher le message de confirmation dans une div alert error
-                console.log('error callback 2', xhr);
-            });
+        .done(function (data) {
+            //  TODO: afficher le message de confirmation dans une div alert success
+            console.log('success callback 1', data.eventId);
+            $calendarObject.eventId = data.eventId;
+            // the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
+            $('#calendar').fullCalendar('renderEvent', $calendarObject, true);
+        })
+        .fail(function (xhr) {
+            //  TODO: afficher le message de confirmation dans une div alert error
+            console.log('error callback 2', xhr);
+        });
+    }
+
+    /** DELETE ALLOCATION FROM THE CALENDAR AND FROM THE DATABASE **/
+
+    function deleteEvent($url, $calEvent) {
+        $.ajax({
+            url: $url,
+            method: "POST",
+            dataType: 'json',
+            data: {
+                event: $calEvent.eventId
+            }
+        });
     }
 </script>

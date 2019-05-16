@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
 
 <head>
@@ -18,6 +18,8 @@
     <link rel="stylesheet" href="<?= base_url(); ?>assets/fullcalendar/dist/fullcalendar.print.min.css" media="print">
     <!-- datetime picker-->
     <link rel="stylesheet" href="<?= base_url(); ?>assets/fullcalendar/dist/bootstrap-datetimepicker.min.css"/>
+    <!-- Dialog Event calendar -->
+    <link rel="stylesheet" href="<?= base_url(); ?>assets/node_modules/sweetalert2/dist/sweetalert2.min.css">
 
     <style>
         .error {
@@ -50,6 +52,9 @@
     <!-- datetime picker-->
     <script type="text/javascript"
             src="<?= base_url(); ?>assets/fullcalendar/dist/bootstrap-datetimepicker.min.js"></script>
+    <!-- Dialog Event calendar -->
+    <script src="<?= base_url(); ?>assets/node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
+    <script src="<?= base_url(); ?>assets/node_modules/sweetalert2/dist/sweetalert2.min.js"></script>
 
     <!--[if lt IE 9]>
     <script src="<?= base_url(); ?>assets/dist/js/html5shiv.min.js"></script>

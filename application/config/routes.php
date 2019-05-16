@@ -45,12 +45,15 @@ $route['endResource/(:num)'] = "user/endResource/$1";
 $route['eresource'] = "user/eresource";
 $route['user_edit_profile'] = "user/editProfile";
 
-/*********** FAKER *******************/
-$route['fake_users'] = "fake/seedUser";
-$route['fake_resources'] = "fake/seedResource";
-$route['fake_categories'] = "fake/seedCategory";
 
+/*********** CALENDAR EVENTS *******************/
 $route['resource_allocation'] = 'resourceAllocation';
 $route['allocation_data'] = 'resourceAllocation/loadData';
 $route['allocation_data/(:num)'] = 'resourceAllocation/loadData/$1';
 $route['add_allocation'] = 'resourceAllocation/add';
+$route['delete_allocation/(:num)'] = 'resourceAllocation/delete/$1';
+
+/*********** FAKER *******************/
+$route['fake_users'] = "fake/seedUser";
+$route['fake_resources'] = "fake/seedResource";
+$route['fake_categories'] = "fake/seedCategory";
