@@ -21,7 +21,7 @@ class Lesson extends BaseController
         if (!isset($isLoggedIn) || $isLoggedIn != TRUE) {
             redirect('login');
         } else {
-            if ($this->isManagerOrTeacher() == TRUE) {
+            if (!$this->isAdmin()) {
                 $this->accesslogincontrol();
             }
         }

@@ -46,7 +46,6 @@
                                    id="dataTables-example">
                                 <thead>
                                 <tr>
-                                    <th>ID</th>
                                     <th>Nom</th>
                                     <th>Email</th>
                                     <th>Numéro de téléphone</th>
@@ -59,9 +58,6 @@
                                 <?php if (!empty($users)): ?>
                                     <?php foreach ($users as $user): ?>
                                         <tr>
-                                            <td>
-                                                <?php echo $user->userId ?>
-                                            </td>
                                             <td>
                                                 <?php echo $user->name ?>
                                             </td>

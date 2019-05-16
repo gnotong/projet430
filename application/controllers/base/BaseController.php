@@ -83,16 +83,11 @@ class BaseController extends CI_Controller
     }
 
     /**
-     * This function is used to check the manager access
-     * Rol definetions in application/config/constants.php
+     * @return bool
      */
-    function isManagerOrTeacher()
+    function isTeacher(): bool
     {
-        if ($this->roleCode == ROLE_ADMIN || $this->roleCode == ROLE_TEACHER) {
-            return false;
-        } else {
-            return true;
-        }
+        return $this->roleCode == ROLE_TEACHER;
     }
 
     /**

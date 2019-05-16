@@ -2,10 +2,7 @@
 
 require 'base/BaseController.php';
 
-/**
- * Class : Resource (ResourceController)
- * Manager class to control to authenticate manager credentials and include manager functions.
- */
+
 class Resource extends BaseController
 {
     /**
@@ -15,7 +12,6 @@ class Resource extends BaseController
     {
         parent::__construct();
 
-        // Datas -> libraries ->BaseController / This function used load user sessions
         $this->datas();
 
         $isLoggedIn = $this->session->userdata('isLoggedIn');
@@ -23,7 +19,7 @@ class Resource extends BaseController
         if (!isset($isLoggedIn) || $isLoggedIn != TRUE) {
             redirect('login');
         } else {
-            if ($this->isManagerOrTeacher() == TRUE) {
+            if (!$this->isAdmin()) {
                 $this->accesslogincontrol();
             }
         }

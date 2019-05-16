@@ -13,6 +13,7 @@ class User_model extends CI_Model
         $this->db->from('users as u');
         $this->db->join('roles as r', 'r.roleId = u.roleId', 'left');
         $this->db->where('u.isDeleted', 0);
+        $this->db->order_by("u.createdDtm", "desc");
         $query = $this->db->get();
 
         $result = $query->result();
@@ -32,6 +33,25 @@ class User_model extends CI_Model
         $query = $this->db->get();
 
         $result = $query->result();
+        return $result;
+    }
+
+    /**
+     * @param int $lessonId
+     * @return array $result : This is result
+     */
+    function getTeacherByLesson(int $lessonId)
+    {
+        $this->db->select('u.userId as id, u.name');
+        $this->db->from('users as u');
+        $this->db->join('roles as r', 'r.roleId = u.roleId', 'left');
+        $this->db->join('teacher_lesson as tl', 'tl.teacher_id = u.userId');
+        $this->db->where('u.isDeleted', 0);
+        $this->db->where('r.code', 'ROLE_TEACHER');
+        $this->db->where('tl.lesson_id', $lessonId);
+        $query = $this->db->get();
+
+        $result = $query->result()[0];
         return $result;
     }
 

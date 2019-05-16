@@ -181,6 +181,17 @@
                         </a>
                     </li>
                     <li class="treeview">
+                        <a href="<?= base_url(); ?>resource_allocation">
+                            <i class="fa fa-arrow-right"></i>
+                            <span>Affectation de ressources</span>
+                        </a>
+                    </li>
+                    <li class="treeview">
+                        <a href="#" class="text-bold text-yellow">
+                            <i class="fa fa-warning"></i>Gestion des cours
+                        </a>
+                    </li>
+                    <li class="treeview">
                         <a href="<?= base_url(); ?>lessons">
                             <i class="fa fa-plus-circle"></i>
                             <span>Liste de cours</span>
