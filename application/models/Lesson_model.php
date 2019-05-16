@@ -75,6 +75,7 @@ class Lesson_model extends CI_Model
     }
 
     /**
+<<<<<<< Updated upstream
      * @param $levelLesson
      * @return mixed
      */
@@ -145,5 +146,25 @@ class Lesson_model extends CI_Model
         $this->db->delete('teacher_lesson');
         return true;
     }
+=======
+     * @param int $levelId
+     * @return null|array $result
+     */
+    function getLessonsByLevelId(int $levelId): ?array
+    {
+        $this->db->select('*');
+        $this->db->from('lessons as les');
+        $this->db->join('level_lesson as ll','les.id = ll.lesson_id');
+        $this->db->where('ll.level_id', $levelId);
+        $query = $this->db->get();
+
+        if (!$query->num_rows()) {
+            return null;
+        }
+
+        return $query->result();
+    }
+
+>>>>>>> Stashed changes
 }
 

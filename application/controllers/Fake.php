@@ -130,6 +130,18 @@ class Fake extends BaseController
             $this->resource_model->add($data);
         }
 
+        /** RESSOURCES TYPE COURS */
+        for ($i = 0; $i < ($limit-10); $i++) {
+            $data = [
+                'label' => 'COURS'.($i + 1),
+                'description' => $this->faker->word(),
+                'categoryId' => 3,
+                'createdBy' => 1,
+                'created' => $this->faker->dateTimeThisCentury->format('Y-m-d H:i:s')
+            ];
+            $this->resource_model->add($data);
+        }
+
         $this->session->set_flashdata('success', 'Database Successfully Seeded 25 resources added in the database');
 
         redirect('dashboard');
@@ -143,6 +155,9 @@ class Fake extends BaseController
             ],
             [
                 'label' => 'APPAREILS'
+            ],
+            [
+                'label' => 'COURS'
             ]
         ];
 

@@ -7,24 +7,9 @@ require 'base/BaseController.php';
  */
 class Level extends BaseController
 {
-    /**
-     * This is default constructor of the class
-     */
     public function __construct()
     {
         parent::__construct();
-
-        $this->datas();
-
-        $isLoggedIn = $this->session->userdata('isLoggedIn');
-
-        if (!isset($isLoggedIn) || $isLoggedIn != TRUE) {
-            redirect('login');
-        } else {
-            if ($this->isManagerOrTeacher() == TRUE) {
-                $this->accesslogincontrol();
-            }
-        }
     }
 
     /**
@@ -117,7 +102,6 @@ class Level extends BaseController
                 $this->session->set_flashdata('error', 'La modification niveau d\'études a échoué');
             }
             redirect('levels');
-
         }
     }
 

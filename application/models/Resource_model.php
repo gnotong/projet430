@@ -1,5 +1,6 @@
 <?php if(!defined('BASEPATH')) exit('No direct script access allowed');
 
+
 class Resource_model extends CI_Model
 {
     /**
@@ -20,8 +21,26 @@ class Resource_model extends CI_Model
         $this->db->join('categories as cat','cat.id = res.categoryId');
         $this->db->join('users as usr','usr.userId = res.createdBy');
         $this->db->join('roles as rol','rol.roleId = usr.roleId');
+        $this->db->order_by("res.created", "desc");
         $query = $this->db->get();
         $result = $query->result();        
+        return $result;
+    }
+    /**
+     * This function is used to get lessons rooms
+     */
+    function getRooms()
+    {
+        $this->db->select('
+            res.id, 
+            res.label as name, 
+            res.description
+        ');
+        $this->db->from('resources as res');
+        $this->db->join('categories as cat','cat.id = res.categoryId');
+        $this->db->where("cat.label", "SALLES");
+        $query = $this->db->get();
+        $result = $query->result();
         return $result;
     }
 
@@ -48,11 +67,13 @@ class Resource_model extends CI_Model
         
         return $query->result();
     }
-    
+
     /**
      * This function is used to add a new task
+     * @param array $resourceInfo
+     * @return
      */
-    function add($resourceInfo)
+    function add(array $resourceInfo)
     {
         $this->db->trans_start();
         $this->db->insert('resources', $resourceInfo);
