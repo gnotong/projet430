@@ -5,9 +5,9 @@
     <meta charset="UTF-8">
     <title><?= $pageTitle; ?></title>
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
-    <link href="<?= base_url(); ?>assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
-    <link href="<?= base_url(); ?>assets/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
-    <link href="<?= base_url(); ?>assets/dist/css/ionicons.min.css" rel="stylesheet" type="text/css"/>
+    <link href="<?= base_url(); ?>assets/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="<?= base_url(); ?>assets/bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+    <link href="<?= base_url(); ?>assets/bower_components/Ionicons/css/ionicons.min.css" rel="stylesheet" type="text/css"/>
     <link href="<?= base_url(); ?>assets/dist/css/AdminLTE.min.css" rel="stylesheet" type="text/css"/>
     <link rel="stylesheet" type="text/css" href="<?= base_url(); ?>assets/dist/css/datatables.min.css" rel="stylesheet"
           type="text/css"/>
@@ -34,7 +34,7 @@
     <script type="text/javascript">
         var baseURL = "<?= base_url(); ?>";
     </script>
-    <script src="<?= base_url(); ?>assets/js/jQuery-2.1.4.min.js"></script>
+    <script src="<?= base_url(); ?>assets/bower_components/jquery/dist/jquery.min.js"></script>
     <!-- Bootstrap 3.3.7 -->
     <script src="<?= base_url(); ?>assets/fullcalendar/bootstrap/dist/js/bootstrap.min.js"></script>
     <!-- jQuery UI 1.11.4 -->
@@ -165,12 +165,6 @@
                     <li class="treeview">
                         <a href="#" class="text-bold text-yellow">
                             <i class="fa fa-warning"></i>Gestion des ressources
-                        </a>
-                    </li>
-                    <li class="treeview">
-                        <a href="<?= base_url(); ?>resource_allocation">
-                            <i class="fa fa-dashboard"></i>
-                            <span>Affectation de ressources</span>
                         </a>
                     </li>
                     <li class="treeview">
