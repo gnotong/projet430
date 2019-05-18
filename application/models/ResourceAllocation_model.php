@@ -19,6 +19,19 @@ class ResourceAllocation_model extends CI_Model {
         return NULL;
     }
 
+    public function getById(int $id)
+    {
+        $qb = $this->getBaseQuery();
+        $qb->where('ra.id', $id);
+        $query = $qb->get();
+
+        if ($query) {
+            return $query->result();
+        }
+
+        return NULL;
+    }
+
     function getAll() {
         $qb = $this->getBaseQuery();
         $query = $qb->get();

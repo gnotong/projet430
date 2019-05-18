@@ -27,14 +27,14 @@
             font-weight: normal;
         }
 
-        .display-none {
+        .hiddenField {
             display: none;
         }
     </style>
     <script type="text/javascript">
         var baseURL = "<?= base_url(); ?>";
     </script>
-    <script src="<?= base_url(); ?>assets/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="<?= base_url(); ?>assets/js/jQuery-2.1.4.min.js"></script>
     <!-- Bootstrap 3.3.7 -->
     <script src="<?= base_url(); ?>assets/fullcalendar/bootstrap/dist/js/bootstrap.min.js"></script>
     <!-- jQuery UI 1.11.4 -->

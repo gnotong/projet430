@@ -174,4 +174,19 @@ class Resource extends BaseController
         redirect('resources');
     }
 
+    public function getRoomsAjax()
+    {
+        $rooms = $this->resource_model->getRooms();
+
+        try {
+            if ($rooms) {
+                echo json_encode(array('success' => 1, 'json' => $rooms, 'placeholder' => 'Sélectionnez le salle'));
+            } else {
+                throw new \Exception('Aucune salle n\'a été trouvée');
+            }
+        } catch (\Exception $exception) {
+            echo $exception->getMessage();
+        }
+    }
+
 }

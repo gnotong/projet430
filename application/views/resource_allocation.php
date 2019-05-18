@@ -1,7 +1,3 @@
-<?php
-$levelIdIsSet = isset($levelId);
-$lessonsAreEmpty = empty($lessons);
-?>
 <div class="content-wrapper">
     <section class="content-header">
         <h1 class="text-primary text-bold">
@@ -15,127 +11,145 @@ $lessonsAreEmpty = empty($lessons);
                 <div class="box box-solid">
 
                     <div class="box-body">
-                        <label for="">Choisir un code couleur</label>
-                        <div class="btn-group" style="width: 100%; margin-bottom: 10px;">
-                            <ul class="fc-color-picker" id="color-chooser">
-                                <li><a class="text-aqua" href="#"><i class="fa fa-square"></i></a></li>
-                                <li><a class="text-blue" href="#"><i class="fa fa-square"></i></a></li>
-                                <li><a class="text-light-blue" href="#"><i class="fa fa-square"></i></a></li>
-                                <li><a class="text-teal" href="#"><i class="fa fa-square"></i></a></li>
-                                <li><a class="text-yellow" href="#"><i class="fa fa-square"></i></a></li>
-                                <li><a class="text-orange" href="#"><i class="fa fa-square"></i></a></li>
-                                <li><a class="text-green" href="#"><i class="fa fa-square"></i></a></li>
-                                <li><a class="text-lime" href="#"><i class="fa fa-square"></i></a></li>
-                                <li><a class="text-red" href="#"><i class="fa fa-square"></i></a></li>
-                                <li><a class="text-purple" href="#"><i class="fa fa-square"></i></a></li>
-                                <li><a class="text-fuchsia" href="#"><i class="fa fa-square"></i></a></li>
-                                <li><a class="text-muted" href="#"><i class="fa fa-square"></i></a></li>
-                                <li><a class="text-navy" href="#"><i class="fa fa-square"></i></a></li>
-                            </ul>
-                        </div>
-
                         <!-- SELECT CLASS CALENDAR -->
                         <form id="search" name="search" method="post" action="<?= base_url() ?>resource_allocation">
-                            <?php if (!empty($levels)): ?>
-                                <div class="form-group">
-                                    <label for="level">Classes</label>
-                                    <select class="form-control searchForm required" id="level" name="level">
-                                        <option value="0">Sélectionnez le niveau d'études</option>
-                                        <?php foreach ($levels as $level): ?>
-                                            <option value="<?= $level->id ?>" <?php if (isset($levelId) && $level->id == $levelId) {
-                                                echo 'selected=selected';
-                                            } ?>>
-                                                <?= $level->name ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </select>
+
+                            <div class="form-group">
+                                <label for="color">Couleur</label>
+                                <select name="color" class="form-control" id="color">
+                                    <option value="">Choisir un code couleur</option>
+                                    <?php foreach ($colors as $label => $colorValue): ?>
+                                        <option style="color:<?= $colorValue ?>;"
+                                                value="<?= $colorValue ?>"
+                                            <?= isset($color) && $color == $colorValue ? 'selected=selected' : '' ?>
+                                        ><?= $label ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+
+                            <div class="form-group ">
+                                <label for="level">Classes</label>
+                                <select class="form-control searchForm required" id="level" name="level">
+                                    <option value="0">Sélectionnez le niveau d'études</option>
+                                    <?php foreach ($levels as $level): ?>
+                                        <option value="<?= $level->id ?>" <?php if (isset($levelId) && $level->id == $levelId) {
+                                            echo 'selected=selected';
+                                        } ?>>
+                                            <?= $level->name ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+
+                            <div class="form-group hiddenField lesson">
+                                <label for="lesson">Unité d'enseignement</label>
+                                <select class="form-control searchForm required" id="lesson" name="lesson"></select>
+                            </div>
+
+                            <div class="form-group hiddenField dates">
+                                <label for="start">Date de début</label>
+                                <div class='input-group datetimepicker'>
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar text-primary"></span>
+                                    </span>
+                                    <input type='text' class="form-control" id="start" name="start" />
                                 </div>
-                            <?php endif; ?>
+                            </div>
 
-                            <?php if ($levelIdIsSet): ?>
-
-                                <?php if (!$lessonsAreEmpty): ?>
-                                    <div class="form-group hiddenField">
-                                        <label for="lesson">Unité d'enseignement</label>
-                                        <select class="form-control searchForm required" id="lesson" name="lesson">
-                                            <option value="">Sélectionnez l'unité d'enseignement</option>
-                                            <?php foreach ($lessons as $lesson): ?>
-                                                <option value="<?= $lesson->id ?>" <?php if (isset($lessonId) && $lesson->id == $lessonId) {
-                                                    echo 'selected=selected';
-                                                } ?>>
-                                                    <?= $lesson->label ?>
-                                                </option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                    </div>
-                                <?php endif; ?>
-
-                                <div class="form-group hiddenField">
-                                    <label for="start">Date de début</label>
-                                    <div class='input-group datetimepicker'>
-                                        <span class="input-group-addon">
-                                            <span class="glyphicon glyphicon-calendar text-primary"></span>
-                                        </span>
-                                        <input type='text'
-                                               class="form-control"
-                                               id="start"
-                                               name="start"
-                                               value="<?= isset($tart) ? $tart : '' ?>"
-                                        />
-                                    </div>
+                            <div class="form-group hiddenField dates">
+                                <label for="end">Date de fin</label>
+                                <div class='input-group datetimepicker'>
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar text-primary"></span>
+                                    </span>
+                                    <input type='text' class="form-control" id="end" name="end" />
                                 </div>
-                                <div class="form-group hiddenField">
-                                    <label for="end">Date de fin</label>
-                                    <div class='input-group datetimepicker'>
-                                        <span class="input-group-addon">
-                                            <span class="glyphicon glyphicon-calendar text-primary"></span>
-                                        </span>
-                                        <input type='text'
-                                               class="form-control"
-                                               id="end"
-                                               name="end"
-                                               value="<?= isset($end) ? $end : '' ?>"
-                                        />
-                                    </div>
-                                </div>
+                            </div>
 
-                                <?php if (!empty($teacherInfo)): ?>
-                                    <div class="form-group hiddenField">
-                                        <label for="teacher">Enseignant</label>
-                                        <select class="form-control required" id="teacher" name="teacher">
-                                            <option value="<?= $teacherInfo->id ?>" selected=selected>
-                                                <?= $teacherInfo->name ?>
-                                            </option>
-                                        </select>
-                                    </div>
-                                <?php endif; ?>
+                            <div class="form-group hiddenField teacher">
+                                <label for="teacher">Enseignant</label>
+                                <select class="form-control required" id="teacher" name="teacher"></select>
+                            </div>
 
-                                <?php if (!empty($rooms)): ?>
-                                    <div class="form-group hiddenField">
-                                        <label for="room">Salles</label>
-                                        <select class="form-control required" id="room" name="room">
-                                            <option value="">Sélectionnez une salle</option>
-                                            <?php foreach ($rooms as $room): ?>
-                                                <option value="<?= $room->id ?>"
-                                                        title="<?= $room->description ?>"
-                                                    <?php if (isset($roomId) && $room->id == $roomId) {
-                                                        echo 'selected=selected';
-                                                    } ?>
-                                                >
-                                                    <?= $room->name ?>
-                                                </option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                    </div>
-                                <?php endif; ?>
-                                <hr>
-                                <div class="input-group-btn hiddenField">
-                                    <button id="add-new-event" type="button" class="btn btn-primary btn-flat">
-                                        Ajouter
-                                    </button>
-                                </div>
-                            <?php endif; ?>
+                            <div class="form-group hiddenField room">
+                                <label for="room">Salles</label>
+                                <select class="form-control required" id="room" name="room"></select>
+                            </div>
+
+                            <hr>
+
+                            <div class="input-group-btn hiddenField submitBtn">
+                                <button id="add-new-event" type="button" class="btn btn-primary btn-flat">
+                                    Ajouter
+                                </button>
+                            </div>
                         </form>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="ModalEdit" tabindex="-1" role="dialog"
+                             aria-labelledby="myModalLabel">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <form class="form-horizontal" method="POST" action="editEventTitle.php">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title" id="myModalLabel">Edit Event</h4>
+                                        </div>
+                                        <div class="modal-body">
+
+                                            <div class="form-group">
+                                                <label for="title" class="col-sm-2 control-label">Title</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" name="title" class="form-control" id="title"
+                                                           placeholder="Title">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="color" class="col-sm-2 control-label">Color</label>
+                                                <div class="col-sm-10">
+                                                    <select name="color" class="form-control" id="color">
+                                                        <option value="">Choose</option>
+                                                        <option style="color:#0071c5;" value="#0071c5">&#9724; Dark
+                                                            blue
+                                                        </option>
+                                                        <option style="color:#40E0D0;" value="#40E0D0">&#9724;
+                                                            Turquoise
+                                                        </option>
+                                                        <option style="color:#008000;" value="#008000">&#9724; Green
+                                                        </option>
+                                                        <option style="color:#FFD700;" value="#FFD700">&#9724; Yellow
+                                                        </option>
+                                                        <option style="color:#FF8C00;" value="#FF8C00">&#9724; Orange
+                                                        </option>
+                                                        <option style="color:#FF0000;" value="#FF0000">&#9724; Red
+                                                        </option>
+                                                        <option style="color:#000;" value="#000">&#9724; Black</option>
+
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-sm-offset-2 col-sm-10">
+                                                    <div class="checkbox">
+                                                        <label class="text-danger"><input type="checkbox" name="delete">
+                                                            Delete event</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <input type="hidden" name="id" class="form-control" id="id">
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close
+                                            </button>
+                                            <button type="submit" class="btn btn-primary">Save changes</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+
                     </div>
                 </div>
             </div>
@@ -152,19 +166,10 @@ $lessonsAreEmpty = empty($lessons);
 </div>
 <script>
     var $allocations = <?= $allocations ?>;
-    var $lessonsAreEmpty = <?= $lessonsAreEmpty ? '1' : '0' ?>;
-    var $levelIdIsSet = <?= $levelIdIsSet ? '1' : '0' ?>;
+    var baseUrl = '<?= base_url(); ?>';
 </script>
 <script>
     $(function () {
-
-        if ($lessonsAreEmpty && $levelIdIsSet) {
-            Swal.fire({
-                type: 'error',
-                title: 'Attention...',
-                text: "Aucune unité d'enseignement n'a été trouvée pour cette filière. Veuillez contacter l'administrateur",
-            });
-        }
 
         /** DATETIME PICKER **/
         $('.datetimepicker').datetimepicker({
@@ -188,6 +193,13 @@ $lessonsAreEmpty = empty($lessons);
             },
             events: $allocations,
             editable: true,
+            eventLimit: true,
+            selectable: true,
+            selectHelper: true,
+            select: function (start, end) {
+                $('#start').val(moment(start).format('YYYY-MM-DD HH:mm:ss'));
+                $('#end').val(moment(end).format('YYYY-MM-DD HH:mm:ss'));
+            },
             eventRender: function (event, element) {
                 element.find(".fc-title").remove();
                 element.find(".fc-time").remove();
@@ -200,44 +212,27 @@ $lessonsAreEmpty = empty($lessons);
                     + '<i>' + event.lessonName + '</i><br/>'
                 ;
                 element.append(eventDetail);
-            },
-            eventClick: function(calEvent, jsEvent, view) {
-                Swal.fire({
-                    title: 'Êtes-vous certain ?',
-                    text:  calEvent.title + " - " + calEvent.lessonName,
-                    type: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#d62522',
-                    cancelButtonColor: '#9eecff',
-                    confirmButtonText: 'Supprimer',
-                    cancelButtonText: 'Annuler',
-                    preConfirm: function (e) {
-                        let $url = "<?= base_url() ?>delete_allocation/" + calEvent.eventId;
-                        deleteEvent($url, calEvent)
-                    }
-                }).then((result) => {
-                    if (result.value) {
 
-                        $('#calendar').fullCalendar('removeEvents', calEvent._id);
-
-                        Swal.fire(
-                            'Supprimé!',
-                            'Affectation enlevée du calendrier.',
-                            'success'
-                        )
-                    }
-                })
-            },
+                element.bind('dblclick', function () {
+                    $('#ModalEdit #id').val(event.eventId);
+                    $('#ModalEdit #title').val(event.title);
+                    $('#ModalEdit #color').val(event.backgroundColor);
+                    $('#ModalEdit').modal('show');
+                });
+            }
         });
 
         /** ADD SELECTED COLOR TO THE ADD BUTTON **/
 
-        let currColor = '#3c8dbc';
+        let defaultColor = '#3c8dbc';
 
-        $('#color-chooser > li > a').click(function (e) {
+        $('#color').change(function (e) {
             e.preventDefault();
-            currColor = $(this).css('color');
-            $('#add-new-event').css({'background-color': currColor, 'border-color': currColor})
+            let color = $(this).val();
+            if (!color) {
+                color = defaultColor;
+            }
+            $('#add-new-event').css({'background-color': color, 'border-color': color})
         });
 
         /** ADD NEW ALLOCATION TO THE CALENDAR **/
@@ -281,26 +276,46 @@ $lessonsAreEmpty = empty($lessons);
             originalEventObject.lessonName = lessonName.trim();
             originalEventObject.lessonId = lessonId;
 
-            updateEvents($url, originalEventObject);
+            addEvents($url, originalEventObject);
 
         });
 
-        $("#btnDeleteEvent").click(function(e){
-            e.preventDefault();
-            console.log(e);
-            $('#calendar').fullCalendar('removeEvent', event._id);
+        $("#level").change(function () {
+            let $level = $(this).val();
+            let $classes = ['.lesson', '.teacher', '.dates', '.submitBtn', '.room'];
+
+            buildSelectOptions(
+                getUrl($level, 'load_lesson_ajax'),
+                $('#lesson'),
+                $classes,
+                $level
+            );
         });
 
+        $("#lesson").change(function () {
+            let $lesson = $(this).val();
+            let $classes = ['.teacher', '.dates', '.submitBtn', '.room'];
 
-        $(".searchForm").change(function () {
-            $('#search').submit();
+            buildSelectOptions(
+                getUrl($lesson, 'load_user_ajax'),
+                $('#teacher'),
+                $classes,
+                $lesson
+            );
+
+            buildSelectOptions(
+                getUrl($lesson, 'load_rooms_ajax'),
+                $('#room'),
+                [],
+                $lesson
+            );
         });
 
     });
 
     /** ADD NEW ALLOCATION TO THE CALENDAR AND SAVE IT TO THE DATABASE **/
 
-    function updateEvents($url, $calendarObject) {
+    function addEvents($url, $calendarObject) {
 
         $.ajax({
             url: $url,
@@ -319,15 +334,12 @@ $lessonsAreEmpty = empty($lessons);
             }
         })
         .done(function (data) {
-            //  TODO: afficher le message de confirmation dans une div alert success
-            console.log('success callback 1', data.eventId);
             $calendarObject.eventId = data.eventId;
             // the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
             $('#calendar').fullCalendar('renderEvent', $calendarObject, true);
         })
         .fail(function (xhr) {
-            //  TODO: afficher le message de confirmation dans une div alert error
-            console.log('error callback 2', xhr);
+            fireDialog('error', 'Erreur', xhr.responseText);
         });
     }
 
@@ -341,6 +353,90 @@ $lessonsAreEmpty = empty($lessons);
             data: {
                 event: $calEvent.eventId
             }
+        });
+    }
+
+    /**
+     * Clear all the hidden select and hides the divs that contain them => if option is null
+     * Show all fields => if option is not null
+     * @param $classes
+     * @param $value
+     * @param $dataFound
+     */
+    function showHideFields($classes, $value, $dataFound) {
+        if ($classes && ($value == 0 || !$dataFound)) {
+            $.each( $classes, function( index, $class ){
+                $($class).each(function () {
+                    $(this).addClass('hiddenField');
+                    $(this).find('select').empty();
+                });
+            });
+            return;
+        }
+
+        $.each( $classes, function( index, $class ){
+            $($class).each(function () {
+                $(this).removeClass('hiddenField');
+            });
+        });
+    }
+
+    /**
+     * Build and return the url used to get data
+     * @param $id
+     * @param $uri
+     * @returns {string}
+     */
+    function getUrl($id, $uri) {
+        return baseUrl + $uri + '/' + $id;
+    }
+
+    /**
+     *
+     * @param $url
+     * @param $select
+     * @param $classes
+     * @param $valueToCheck
+     */
+    function buildSelectOptions($url, $select, $classes, $valueToCheck) {
+
+        $.ajax({
+            url: $url,
+            method: "POST",
+            dataType: 'json'
+        })
+        .done(function (data) {
+
+            $select.empty();
+
+            if (data.placeholder) {
+                $select.append('<option value="0">' + data.placeholder + '</option>');
+            }
+
+            showHideFields($classes, $valueToCheck, data.json);
+
+            if (data.json) {
+                $.each(data.json, function (index, table) {
+                    $select.append($("<option></option>").attr("value", table.id).text(table.name));
+                });
+            }
+
+        })
+        .fail(function (xhr) {
+            // Error dialog shows only if no data found and user have selected a value
+            if ($valueToCheck != 0) {
+                fireDialog('error', 'Erreur', xhr.responseText);
+            }
+
+            showHideFields($classes, $valueToCheck, false);
+        });
+    }
+
+    function fireDialog($type, $title, $msg) {
+        Swal.fire({
+            type: $type,
+            title: $title,
+            text: $msg,
         });
     }
 </script>

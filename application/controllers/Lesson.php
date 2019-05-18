@@ -171,4 +171,26 @@ class Lesson extends BaseController
         redirect('lessons');
     }
 
+
+    /**
+     * @param int $level
+     */
+    public function getDataAjax(int $level)
+    {
+        $lessons = null;
+        if ($level) {
+            $lessons = $this->lesson_model->getLessonsByLevelId($level);
+        }
+
+        try {
+            if ($lessons) {
+                echo json_encode(array('success' => 1, 'json' => $lessons, 'placeholder' => 'Sélectionnez le niveau d\'enseignement'));
+            } else {
+                throw new \Exception('Aucune lesson n\'a été trouvée');
+            }
+        } catch (\Exception $exception) {
+            echo $exception->getMessage();
+        }
+    }
+
 }
