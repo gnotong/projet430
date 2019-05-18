@@ -243,14 +243,37 @@
                     + '<i>' + event.lessonName + '</i><br/>'
                 ;
                 element.append(eventDetail);
-
-                element.bind('dblclick', function () {
-                    $('#ModalEdit #id').val(event.eventId);
-                    $('#ModalEdit #title').val(event.title);
-                    $('#ModalEdit #color').val(event.backgroundColor);
-                    $('#ModalEdit').modal('show');
+            },
+            eventClick: function(calEvent, jsEvent, view) {
+                swal.fire({
+                    title: '<strong><i>Que voulez-vous réaliser comme action ?</i></strong>',
+                    type: 'info',
+                    html: '<span class="text-danger">Cliquez sur bouton rouge pour supprimer</span> <b>ET</b> ' +
+                        '<span class="text-success">sur le bouton vert pour éditer</span>',
+                    showCloseButton: true,
+                    showCancelButton: true,
+                    focusConfirm: false,
+                    confirmButtonText:'Supprimer',
+                    confirmButtonColor: '#d62522',
+                    cancelButtonText: 'Editer',
+                    cancelButtonColor: '#2b803a',
+                    preConfirm: function (e) {
+                        let $url = "<?= base_url() ?>delete_allocation/" + calEvent.eventId;
+                        deleteEvent($url, calEvent)
+                    }
+                }).then((result) => {
+                    if (result.value) {
+                        $('#calendar').fullCalendar('removeEvents', calEvent._id);
+                        Swal.fire(
+                            'Supprimé!',
+                            'Affectation enlevée du calendrier.',
+                            'success'
+                        )
+                    } else {
+                        console.log('cancel'); // TODO: mettre la requête ajax qui va récupérer les évènements correspondants à l'id de l'évènement sélectionné
+                    }
                 });
-            }
+            },
         });
 
         /** ADD SELECTED COLOR TO THE ADD BUTTON **/
@@ -281,7 +304,6 @@
             let lessonName = $('#lesson option:selected').text();
 
             // TODO: Vérifier que les champs obligatoires sont remplis
-
             if (resourceName.length == 0) {
                 return
             }
@@ -351,7 +373,6 @@
     });
 
     /** ADD NEW ALLOCATION TO THE CALENDAR AND SAVE IT TO THE DATABASE **/
-
     function addEvents($url, $calendarObject) {
 
         $.ajax({
@@ -381,7 +402,6 @@
     }
 
     /** DELETE ALLOCATION FROM THE CALENDAR AND FROM THE DATABASE **/
-
     function deleteEvent($url, $calEvent) {
         $.ajax({
             url: $url,
