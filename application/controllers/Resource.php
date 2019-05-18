@@ -146,7 +146,6 @@ class Resource extends BaseController
                 $this->session->set_flashdata('error', 'La modification de la ressource a échoué');
             }
             redirect('resources');
-
         }
     }
 
