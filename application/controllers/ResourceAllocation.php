@@ -9,7 +9,13 @@ class ResourceAllocation extends BaseController
         $this->global['pageTitle'] = 'Events';
         $data['colors'] = $this->getColors();
         $data['levels'] = $this->level_model->getAll();
-        $data['allocations'] = json_encode($this->resourceAllocation_model->getAll());
+
+        if ($levelId = $this->input->post('filiere')){
+            $data['allocations'] = json_encode($this->resourceAllocation_model->getByLevel($levelId));
+            $data['levelId'] = $levelId;
+        } else {
+            $data['allocations'] = json_encode($this->resourceAllocation_model->getAll());
+        }
 
         $this->loadViews("resource_allocation", $this->global, $data, NULL);
     }
