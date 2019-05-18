@@ -1,9 +1,30 @@
 <div class="content-wrapper">
     <section class="content-header">
-        <h1 class="text-primary text-bold">
-            Affectation des ressources
-            <small>IN430</small>
-        </h1>
+        <div class="row">
+            <div class="col-md-3">
+                <h3 class="text-primary text-bold">
+                    Affectation des ressources
+                    <small>IN430</small>
+                </h3>
+            </div>
+            <div class="col-md-9">
+                <form name="search" id="search" action="<?= base_url()?>resource_allocation" method="post">
+                    <div class="form-group">
+                        <label for="filiere">Choisir la classe à visualiser</label>
+                        <select name="filiere" id="filiere" class="form-control">
+                            <option value="">Sélectionnez la filière</option>
+                            <?php foreach ($levels as $level): ?>
+                                <option value="<?= $level->id ?>" <?php if (isset($levelId) && $level->id == $levelId) {
+                                    echo 'selected=selected';
+                                } ?>>
+                                    <?= $level->name ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </form>
+            </div>
+        </div>
     </section>
     <section class="content">
         <div class="row">
@@ -11,6 +32,15 @@
                 <div class="box box-solid">
 
                     <div class="box-body">
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h3 class="text-yellow text-bold">Effectuer une affectation</h3>
+                            </div>
+                        </div>
+
+                        <hr>
+
                         <!-- SELECT CLASS CALENDAR -->
                         <form id="search" name="search" method="post" action="<?= base_url() ?>resource_allocation">
 
@@ -28,7 +58,7 @@
                             </div>
 
                             <div class="form-group ">
-                                <label for="level">Classes</label>
+                                <label for="level">Niveau d'études</label>
                                 <select class="form-control searchForm required" id="level" name="level">
                                     <option value="0">Sélectionnez le niveau d'études</option>
                                     <?php foreach ($levels as $level): ?>
@@ -167,6 +197,7 @@
 <script>
     var $allocations = <?= $allocations ?>;
     var baseUrl = '<?= base_url(); ?>';
+    var $levelId = '<?= isset($levelId) ? $levelId : 0; ?>';
 </script>
 <script>
     $(function () {
@@ -280,16 +311,17 @@
 
         });
 
+        /**
+         * LOAD THE CALENDAR WE WANT TO SEE WHEN CHOOSING STUDY LEVEL AT THE TOP OF THE PAGE and
+         * ACTIVATES SOME FIELDS NEEDED TO CREATE EVENTS
+         */
+        if ($levelId) {
+            activateLessonsField($levelId);
+        }
+
         $("#level").change(function () {
             let $level = $(this).val();
-            let $classes = ['.lesson', '.teacher', '.dates', '.submitBtn', '.room'];
-
-            buildSelectOptions(
-                getUrl($level, 'load_lesson_ajax'),
-                $('#lesson'),
-                $classes,
-                $level
-            );
+            activateLessonsField($level);
         });
 
         $("#lesson").change(function () {
@@ -309,6 +341,11 @@
                 [],
                 $lesson
             );
+        });
+
+        /** FETCHES THE CALENDAR BASE ON STUDY LEVEL **/
+        $("#filiere").change(function () {
+            $('#search').submit();
         });
 
     });
@@ -425,7 +462,7 @@
         .fail(function (xhr) {
             // Error dialog shows only if no data found and user have selected a value
             if ($valueToCheck != 0) {
-                fireDialog('error', 'Erreur', xhr.responseText);
+                fireDialog('info', 'Information', xhr.responseText);
             }
 
             showHideFields($classes, $valueToCheck, false);
@@ -436,7 +473,18 @@
         Swal.fire({
             type: $type,
             title: $title,
-            text: $msg,
+            html: '<h4 class="text-danger text-center">'+$msg+'</h4>',
         });
+    }
+
+    function activateLessonsField($level) {
+        let $classes = ['.lesson', '.teacher', '.dates', '.submitBtn', '.room'];
+
+        buildSelectOptions(
+            getUrl($level, 'load_lesson_ajax'),
+            $('#lesson'),
+            $classes,
+            $level
+        );
     }
 </script>
