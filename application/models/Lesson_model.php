@@ -52,7 +52,7 @@ class Lesson_model extends BaseModel
      */
     function getLessonsByLevelId(int $levelId): ?array
     {
-        $this->db->select('*');
+        $this->db->select('les.id, les.label as name');
         $this->db->from('lessons as les');
         $this->db->join('level_lesson as ll','les.id = ll.lesson_id');
         $this->db->where('ll.level_id', $levelId);

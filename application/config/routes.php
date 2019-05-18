@@ -15,7 +15,7 @@ $route['logout'] = 'login/logout';
 /*********** ADMIN CONTROLLER ROUTES *******************/
 $route['noaccess'] = 'login/noaccess';
 $route['user_list'] = 'admin/userList';
-$route['user_list/(:num)'] = "admin/userList/$1";
+$route['load_user_ajax/(:num)'] = "admin/userAjax/$1";
 $route['add_user'] = "admin/addUser";
 $route['edit_user/(:num)'] = "admin/editUser/$1";
 $route['delete_user'] = "admin/deleteUser";
@@ -24,6 +24,7 @@ $route['delete_user'] = "admin/deleteUser";
 
 $route['lessons'] = "lesson/list";
 $route['add_lesson'] = "lesson/add";
+$route['load_lesson_ajax/(:num)'] = "lesson/getDataAjax/$1";
 $route['edit_lesson/(:num)'] = "lesson/edit/$1";
 $route['delete_lesson/(:num)'] = "lesson/delete/$1";
 
@@ -34,6 +35,7 @@ $route['delete_level/(:num)'] = "level/delete/$1";
 
 $route['resources'] = "resource/list";
 $route['add_resource'] = "resource/create";
+$route['load_rooms_ajax/(:num)'] = "resource/getRoomsAjax/$1";
 $route['edit_resource/(:num)'] = "resource/editResource/$1";
 $route['deleteResource/(:num)'] = "resource/deleteResource/$1";
 

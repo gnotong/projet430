@@ -7,31 +7,17 @@ class ResourceAllocation extends BaseController
 {
     public function index() {
         $this->global['pageTitle'] = 'Events';
-        $data['resourcesType'] = $this->resourceType_model->getResourceTypes();
+        $data['colors'] = $this->getColors();
         $data['levels'] = $this->level_model->getAll();
-        $data['teachers'] = $this->user_model->getTeachers();
-
-        if ($levelId = $this->input->post('level')){
-            $data['allocations'] = json_encode($this->resourceAllocation_model->getByLevel($levelId));
-            $data['lessons'] = $this->lesson_model->getLessonsByLevelId($levelId);
-            $data['levelId'] = $levelId;
-            $data['lessonId'] = $this->input->post('lesson');
-            $data['teacherInfo'] = !empty($data['lessonId']) ? $this->user_model->getTeacherByLesson($data['lessonId']) : null;
-            $data['rooms'] = !empty($data['teacherInfo']) ? $this->resource_model->getRooms() : null;
-            $data['roomId'] = $this->input->post('room');
-            $data['start'] = $this->input->post('start');
-            $data['end'] = $this->input->post('end');
-        } else {
-            $data['allocations'] = json_encode($this->resourceAllocation_model->getAll());
-        }
+        $data['allocations'] = json_encode($this->resourceAllocation_model->getAll());
 
         $this->loadViews("resource_allocation", $this->global, $data, NULL);
     }
 
-    public function loadData(int $resourceTypeId = null)
+    public function loadData(int $allocationId = null)
     {
-        if ($resourceTypeId) {
-            $resources = $this->resource_model->getResourceByCategory($resourceTypeId);
+        if ($allocationId) {
+            $resources = $this->resourceAllocation_model->getById($allocationId);
         } else {
             $resources = $this->resourceAllocation_model->getAll();
         }
@@ -67,13 +53,11 @@ class ResourceAllocation extends BaseController
             $lastId = $this->resourceAllocation_model->insert($events);
             $message = 'OK';
         } catch (\Exception $exception) {
-            $message = $exception->getMessage();
+            echo $exception->getMessage();
         }
 
         if($lastId) {
             echo json_encode(array('success' => 1, 'result' => $message, 'eventId' => $lastId));
-        } else {
-            echo json_encode(array('success' => 0, 'error' => $message));
         }
     }
 
@@ -93,5 +77,18 @@ class ResourceAllocation extends BaseController
         } else {
             echo json_encode(array('success' => 0, 'result' => 'Erreur de suppression de l\'affectation !'));
         }
+    }
+
+    private function getColors():array
+    {
+        return [
+            '&#9724; Dark blue' => '#0071c5',
+            '&#9724; Turquoise' => '#40E0D0',
+            '&#9724; Green' => '#008000',
+            '&#9724; Yellow' => '#FFD700',
+            '&#9724; Orange' => '#FF8C00',
+            '&#9724; Red' => '#FF0000',
+            '&#9724; Black' => '#000'
+        ];
     }
 }

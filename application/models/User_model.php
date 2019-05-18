@@ -44,7 +44,7 @@ class User_model extends CI_Model
     {
         $this->db->select('u.userId as id, u.name');
         $this->db->from('users as u');
-        $this->db->join('roles as r', 'r.roleId = u.roleId', 'left');
+        $this->db->join('roles as r', 'r.roleId = u.roleId');
         $this->db->join('teacher_lesson as tl', 'tl.teacher_id = u.userId');
         $this->db->where('u.isDeleted', 0);
         $this->db->where('r.code', 'ROLE_TEACHER');

@@ -156,4 +156,22 @@ class Admin extends BaseController
             echo(json_encode(array('status' => FALSE)));
         }
     }
+
+
+    /**
+     * @param int $lesson
+     */
+    function userAjax(int $lesson)
+    {
+        $teacher = null;
+        if ($lesson) {
+            $teacher = $this->user_model->getTeacherByLesson($lesson);
+        }
+
+        if ($teacher) {
+            echo json_encode(array('success' => 1, 'json' => [$teacher]));
+        } else {
+            echo(json_encode(array('success' => 0, 'error' => 'Aucun enseignant n\'a été trouvé.')));
+        }
+    }
 }
