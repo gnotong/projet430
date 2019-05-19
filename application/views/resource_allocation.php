@@ -192,7 +192,7 @@
                     cancelButtonText: 'Editer',
                     cancelButtonColor: '#2b803a',
                     preConfirm: function (e) {
-                        let $url = "<?= base_url() ?>delete_allocation/" + calEvent.eventId;
+                        let $url = baseUrl + "delete_allocation/" + calEvent.eventId;
                         deleteEvent($url, calEvent)
                     }
                 }).then((result) => {
@@ -209,13 +209,12 @@
                 });
             },
             eventDrop: function($calEvent, delta, revertFunc) {
-                let $url = "<?= base_url() ?>add_allocation";
+                let $url = baseUrl + "add_allocation";
                 addUpdateEvents($url, $calEvent, $calEvent.eventId);
             },
         });
 
         /** ADD SELECTED COLOR TO THE ADD BUTTON **/
-
         let defaultColor = '#3c8dbc';
 
         $('#color').change(function (e) {
@@ -249,7 +248,7 @@
                 return
             }
             
-            let $url = "<?= base_url() ?>add_allocation";
+            let $url = baseUrl + "add_allocation";
             let originalEventObject = {};
 
             originalEventObject.rowStart = start;

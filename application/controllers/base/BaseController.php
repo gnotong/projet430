@@ -1,5 +1,6 @@
 <?php defined('BASEPATH') or exit ('No direct script access allowed');
 
+
 /**
  * Class : BaseController (BaseController)
  */
@@ -39,6 +40,8 @@ class BaseController extends CI_Controller
     public $lesson_model;
     /** @var Level_model $level_model */
     public $level_model;
+    /** @var Semester_model $semester_model */
+    public $semester_model;
     /** @var CI_Session $session */
     public $session;
     /** @var CI_Form_validation $form_validation */
@@ -60,6 +63,7 @@ class BaseController extends CI_Controller
         $this->load->model('resourceType_model');
         $this->load->model('lesson_model');
         $this->load->model('level_model');
+        $this->load->model('semester_model');
         $this->datas();
     }
 
