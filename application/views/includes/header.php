@@ -197,6 +197,12 @@
                         </a>
                     </li>
                     <li class="treeview">
+                        <a href="<?= base_url(); ?>semesters">
+                            <i class="fa fa-plus-circle"></i>
+                            <span>Liste des semestres</span>
+                        </a>
+                    </li>
+                    <li class="treeview">
                         <a href="<?= base_url(); ?>levels">
                             <i class="fa fa-plus-circle"></i>
                             <span>Les niveaux d'études</span>
