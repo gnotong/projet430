@@ -35,7 +35,7 @@ $route['delete_level/(:num)'] = "level/delete/$1";
 
 $route['resources'] = "resource/list";
 $route['add_resource'] = "resource/create";
-$route['load_rooms_ajax/(:num)'] = "resource/getRoomsAjax/$1";
+$route['load_rooms_ajax'] = "resource/getRoomsAjax";
 $route['edit_resource/(:num)'] = "resource/editResource/$1";
 $route['deleteResource/(:num)'] = "resource/deleteResource/$1";
 
@@ -50,8 +50,7 @@ $route['user_edit_profile'] = "user/editProfile";
 
 /*********** CALENDAR EVENTS *******************/
 $route['resource_allocation'] = 'resourceAllocation';
-$route['allocation_data'] = 'resourceAllocation/loadData';
-$route['allocation_data/(:num)'] = 'resourceAllocation/loadData/$1';
+$route['edit_allocation'] = 'resourceAllocation/edit';
 $route['add_allocation'] = 'resourceAllocation/add';
 $route['delete_allocation/(:num)'] = 'resourceAllocation/delete/$1';
 

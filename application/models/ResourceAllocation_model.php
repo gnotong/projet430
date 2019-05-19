@@ -51,15 +51,20 @@ class ResourceAllocation_model extends CI_Model {
         $this->db->select("
             ra.id as eventId,
             re.label as title,
+            re.id as roomId,
+            re.label as name,
             start_date as start,
             end_date as end,
             all_day as allDay,
             background_color as backgroundColor,
             border_color as borderColor,
             ra.resource_id as resourceId,
+            us.userId as teacherId,
             us.name as teacherName,
             le.name as levelName,
+            le.id as levelId,
             ls.label as lessonName,
+            ls.id as lessonId,
         ");
         $this->db->from("$this->event as ra");
         $this->db->join('resources as re','re.id = ra.resource_id');
@@ -78,6 +83,22 @@ class ResourceAllocation_model extends CI_Model {
         $this->db->trans_complete();
 
         return $insert_id;
+    }
+
+    /**
+     * @param array $allocation
+     * @param int $allocationId
+     * @return mixed
+     */
+    function update(array $allocation, int $allocationId)
+    {
+        $this->db->trans_start();
+        $this->db->where('id', $allocationId);
+        $this->db->update($this->event, $allocation);
+
+        $this->db->trans_complete();
+
+        return true;
     }
 
     /**

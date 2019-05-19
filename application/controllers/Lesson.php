@@ -184,7 +184,7 @@ class Lesson extends BaseController
 
         try {
             if ($lessons) {
-                echo json_encode(array('success' => 1, 'json' => $lessons, 'placeholder' => 'Sélectionnez le niveau d\'enseignement'));
+                echo json_encode(array('success' => 1, 'json' => $lessons, 'placeholder' => 'Sélectionnez l\'unité d\'enseignement'));
             } else {
                 throw new \Exception('Le niveau d\'étude que vous avez sélectionné n\'a pas de cours enregistrés pour le moment. <br><br>Veuillez contacter votre administrateur.');
             }

@@ -10,8 +10,8 @@
             <div class="col-md-9">
                 <form name="search" id="search" action="<?= base_url()?>resource_allocation" method="post">
                     <div class="form-group">
-                        <label for="filiere">Choisir la classe à visualiser</label>
-                        <select name="filiere" id="filiere" class="form-control">
+                        <label for="globalLevel">Choisir la classe à visualiser</label>
+                        <select name="globalLevel" id="globalLevel" class="form-control">
                             <option value="">Sélectionnez la filière</option>
                             <?php foreach ($levels as $level): ?>
                                 <option value="<?= $level->id ?>" <?php if (isset($levelId) && $level->id == $levelId) {
@@ -109,6 +109,7 @@
                             <hr>
 
                             <div class="input-group-btn hiddenField submitBtn">
+                                <input type='hidden' id="eventId" name="eventId" />
                                 <button id="add-new-event" type="button" class="btn btn-primary btn-flat">
                                     Ajouter
                                 </button>
@@ -138,12 +139,11 @@
 
         /** DATETIME PICKER **/
         $('.datetimepicker').datetimepicker({
-            format: 'YYYY-MM-DD H:m',
+            format: 'YYYY-MM-DD H:mm',
             locale: 'fr'
         });
 
         /** THE CALENDAR **/
-
         $('#calendar').fullCalendar({
             header: {
                 left: 'prev,next today',
@@ -204,9 +204,13 @@
                             'success'
                         )
                     } else {
-                        console.log('cancel'); // TODO: mettre la requête ajax qui va récupérer les évènements correspondants à l'id de l'évènement sélectionné
+                        hydrateEditForm(calEvent);
                     }
                 });
+            },
+            eventDrop: function($calEvent, delta, revertFunc) {
+                let $url = "<?= base_url() ?>add_allocation";
+                addUpdateEvents($url, $calEvent, $calEvent.eventId);
             },
         });
 
@@ -224,7 +228,6 @@
         });
 
         /** ADD NEW ALLOCATION TO THE CALENDAR **/
-
         $('#add-new-event').click(function (e) {
             e.preventDefault();
 
@@ -236,14 +239,16 @@
             let levelName = $('#level option:selected').text();
             let lessonId = $('#lesson').val();
             let lessonName = $('#lesson option:selected').text();
-
-            // TODO: Vérifier que les champs obligatoires sont remplis
-            if (resourceName.length == 0) {
-                return
-            }
-
+            let eventId = $('#eventId').val();
             let start = $('#start').val();
             let end = $('#end').val();
+
+            // TODO: Vérifier que les champs obligatoires sont remplis côté PHP
+            if (!resourceName || !teacherName || !levelName || !lessonName || !start || !end) {
+                fireDialog('error', 'Erreur', 'Tous les champs sont obligatoires');
+                return
+            }
+            
             let $url = "<?= base_url() ?>add_allocation";
             let originalEventObject = {};
 
@@ -251,7 +256,7 @@
             originalEventObject.rowEnd = end;
             originalEventObject.start = new Date(start);
             originalEventObject.end = new Date(end);
-            originalEventObject.title = resourceName;
+            originalEventObject.title = resourceName.trim();
             originalEventObject.resourceId = resourceId;
             originalEventObject.allDay = false;
             originalEventObject.backgroundColor = $(this).css('background-color');
@@ -262,9 +267,9 @@
             originalEventObject.teacherId = teacherId;
             originalEventObject.lessonName = lessonName.trim();
             originalEventObject.lessonId = lessonId;
+            originalEventObject.eventId = eventId;
 
-            addEvents($url, originalEventObject);
-
+            addUpdateEvents($url, originalEventObject, eventId);
         });
 
         /**
@@ -285,14 +290,14 @@
             let $classes = ['.teacher', '.dates', '.submitBtn', '.room'];
 
             buildSelectOptions(
-                getUrl($lesson, 'load_user_ajax'),
+                getUrl('load_user_ajax', $lesson),
                 $('#teacher'),
                 $classes,
                 $lesson
             );
 
             buildSelectOptions(
-                getUrl($lesson, 'load_rooms_ajax'),
+                getUrl('load_rooms_ajax'),
                 $('#room'),
                 [],
                 $lesson
@@ -300,35 +305,50 @@
         });
 
         /** FETCHES THE CALENDAR BASE ON STUDY LEVEL **/
-        $("#filiere").change(function () {
+        $("#globalLevel").change(function () {
             $('#search').submit();
         });
 
     });
 
     /** ADD NEW ALLOCATION TO THE CALENDAR AND SAVE IT TO THE DATABASE **/
-    function addEvents($url, $calendarObject) {
+    function addUpdateEvents($url, $calEvent, $isEdit) {
+        /**
+         * Date needs to be stringify in order to be sent to the database
+         * $calEvent.rowStart => date come from add form
+         * $calEvent.start => date come from event drop = update
+         */
+        let start = $calEvent.rowStart ? $calEvent.rowStart : $calEvent.start.format('YYYY-MM-DD HH:mm');
+        let end = $calEvent.rowEnd ? $calEvent.rowEnd : $calEvent.end.format('YYYY-MM-DD HH:mm');
 
         $.ajax({
             url: $url,
             method: "POST",
             dataType: 'json',
             data: {
-                resource: $calendarObject.resourceId,
-                start: $calendarObject.rowStart,
-                end: $calendarObject.rowEnd,
-                allDay: $calendarObject.allDay,
-                backgroundColor: $calendarObject.backgroundColor,
-                borderColor: $calendarObject.borderColor,
-                level: $calendarObject.levelId,
-                lesson: $calendarObject.lessonId,
-                teacher: $calendarObject.teacherId
+                eventId: $calEvent.eventId,
+                resource: $calEvent.resourceId,
+                start: start,
+                end: end,
+                allDay: $calEvent.allDay,
+                backgroundColor: $calEvent.backgroundColor,
+                borderColor: $calEvent.borderColor,
+                level: $calEvent.levelId,
+                lesson: $calEvent.lessonId,
+                teacher: $calEvent.teacherId
             }
         })
         .done(function (data) {
-            $calendarObject.eventId = data.eventId;
-            // the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
-            $('#calendar').fullCalendar('renderEvent', $calendarObject, true);
+            fireDialog('success', 'Success', data.result);
+
+            $calEvent.eventId = data.eventId;
+            /**
+             * Date needs to be a Moment date in order to be added the the calendar
+             */
+            $calEvent.start = new Date(start);
+            $calEvent.end = new Date(end);
+
+            $('#calendar').fullCalendar($isEdit ? 'updateEvent' : 'renderEvent', $calEvent, true);
         })
         .fail(function (xhr) {
             fireDialog('error', 'Erreur', xhr.responseText);
@@ -378,8 +398,11 @@
      * @param $uri
      * @returns {string}
      */
-    function getUrl($id, $uri) {
-        return baseUrl + $uri + '/' + $id;
+    function getUrl($uri, $id) {
+        if ($id) {
+            return baseUrl + $uri + '/' + $id;
+        }
+        return baseUrl + $uri;
     }
 
     /**
@@ -434,10 +457,72 @@
         let $classes = ['.lesson', '.teacher', '.dates', '.submitBtn', '.room'];
 
         buildSelectOptions(
-            getUrl($level, 'load_lesson_ajax'),
+            getUrl('load_lesson_ajax', $level),
             $('#lesson'),
             $classes,
             $level
         );
+    }
+
+    function hydrateEditForm($calEvent) {
+
+        let $data = {
+            level: $calEvent.levelId,
+            lesson: $calEvent.lessonId,
+            teacher: $calEvent.teacherId,
+        };
+
+        $.ajax({
+            url: baseUrl + 'edit_allocation',
+            method: "POST",
+            dataType: 'json',
+            data: $data
+        })
+        .done(function (data) {
+            let $teacher = $("#teacher");
+
+            buildEditFormOptions($("#level"), data.result.levels, $calEvent.levelId, 'Sélectionnez le niveau d\'études');
+
+            buildEditFormOptions($("#lesson"), data.result.lessons, $calEvent.lessonId, 'Sélectionnez l\'unité d\'enseignement');
+
+            $teacher.empty();
+            if ($calEvent.teacherId === data.result.teacher.id) {
+                $teacher.append($("<option></option>").attr({"value": data.result.teacher.id, 'selected': true}).text(data.result.teacher.name));
+            } else {
+                $teacher.append($("<option></option>").attr("value", data.result.teacher.id).text(data.result.teacher.name));
+            }
+
+            buildEditFormOptions($("#room"), data.result.rooms, $calEvent.roomId, 'Sélectionnez la salle');
+
+            $("#start").val($calEvent.start.format('Y-MM-DD H:m'));
+            $("#end").val($calEvent.end.format('Y-MM-DD H:m'));
+            $("#eventId").val($calEvent.eventId);
+            $('#add-new-event').css({'background-color': $calEvent.backgroundColor, 'border-color': $calEvent.borderColor});
+
+            $.each(['.teacher', '.dates', '.submitBtn', '.room', '.lesson'], function( index, $class ){
+                $($class).removeClass('hiddenField');
+            });
+
+        });
+    }
+
+    /**
+     * Builds form options of the resources allocation on edit mode
+     * @param $select
+     * @param $data
+     * @param $idToFind
+     * @param $placeholder
+     */
+    function buildEditFormOptions($select, $data, $idToFind, $placeholder) {
+        $select.empty();
+        $select.append('<option value="0">'+$placeholder+'</option>');
+        $.each($data, function (index, $object) {
+            if ($idToFind === $object.id) {
+                $select.append($("<option></option>").attr({"value": $object.id, 'selected': true}).text($object.name));
+            } else {
+                $select.append($("<option></option>").attr("value", $object.id).text($object.name));
+            }
+        });
+
     }
 </script>
