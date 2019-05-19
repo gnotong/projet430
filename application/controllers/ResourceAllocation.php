@@ -5,12 +5,13 @@ require 'base/BaseController.php';
 
 class ResourceAllocation extends BaseController
 {
-    public function index() {
+    public function index()
+    {
         $this->global['pageTitle'] = 'Events';
         $data['colors'] = $this->getColors();
         $data['levels'] = $this->level_model->getAll();
 
-        if ($levelId = $this->input->post('filiere')){
+        if ($levelId = $this->input->post('globalLevel')) {
             $data['allocations'] = json_encode($this->resourceAllocation_model->getByLevel($levelId));
             $data['levelId'] = $levelId;
         } else {
@@ -20,51 +21,56 @@ class ResourceAllocation extends BaseController
         $this->loadViews("resource_allocation", $this->global, $data, NULL);
     }
 
-    public function loadData(int $allocationId = null)
-    {
-        if ($allocationId) {
-            $resources = $this->resourceAllocation_model->getById($allocationId);
-        } else {
-            $resources = $this->resourceAllocation_model->getAll();
-        }
-
-        if ($resources !== NULL) {
-            echo json_encode(array('success' => 1, 'resources' => $resources));
-        } else {
-            echo json_encode(array('success' => 0, 'error' => 'Event not found'));
-        }
-    }
-
     /**
-     * @throws Exception
+     * ADD and UPDATE EVENTS
      */
     public function add()
     {
         $message = null;
         $lastId = null;
+        $eventId = $this->input->post('eventId');
 
-        try {
-            $events = [
-                'resource_id' => $this->input->post('resource'),
-                'level_id' => $this->input->post('level'),
-                'lesson_id' => $this->input->post('lesson'),
-                'teacher_id' => $this->input->post('teacher'),
-                'background_color ' => $this->input->post('backgroundColor'),
-                'border_color ' => $this->input->post('borderColor'),
-                'start_date' => $this->input->post('start'),
-                'end_date' => $this->input->post('end'),
-                'all_day ' => $this->input->post('allDay'),
-            ];
+        $events = [
+            'resource_id' => $this->input->post('resource'),
+            'level_id' => $this->input->post('level'),
+            'lesson_id' => $this->input->post('lesson'),
+            'teacher_id' => $this->input->post('teacher'),
+            'background_color ' => $this->input->post('backgroundColor'),
+            'border_color ' => $this->input->post('borderColor'),
+            'start_date' => $this->input->post('start'),
+            'end_date' => $this->input->post('end'),
+            'all_day ' => $this->input->post('allDay'),
+        ];
 
-            $lastId = $this->resourceAllocation_model->insert($events);
-            $message = 'OK';
+        try
+        {
+            if ($eventId) {
+                $this->resourceAllocation_model->update($events, $eventId);
+                $message = 'Affectation mise à jour avec succès';
+            } else {
+                $lastId = $this->resourceAllocation_model->insert($events);
+                $message = 'Affectation ajoutée avec succès';
+            }
         } catch (\Exception $exception) {
             echo $exception->getMessage();
         }
 
-        if($lastId) {
-            echo json_encode(array('success' => 1, 'result' => $message, 'eventId' => $lastId));
+        if ($lastId or $eventId) {
+            echo json_encode(array('success' => 1, 'result' => $message, 'eventId' => $lastId ?? $eventId));
         }
+    }
+
+    public function edit()
+    {
+        echo json_encode([
+            'success' => 1,
+            'result' => [
+                'levels' => $this->level_model->getAll(),
+                'lessons' => $this->lesson_model->getLessonsByLevelId($this->input->post('level')),
+                'teacher' => $this->user_model->getTeacherByLesson($this->input->post('lesson')),
+                'rooms' => $this->resource_model->getRooms(),
+            ]
+        ]);
     }
 
     /**
@@ -85,7 +91,7 @@ class ResourceAllocation extends BaseController
         }
     }
 
-    private function getColors():array
+    private function getColors(): array
     {
         return [
             '&#9724; Dark blue' => '#0071c5',
