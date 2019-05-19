@@ -139,12 +139,11 @@
 
         /** DATETIME PICKER **/
         $('.datetimepicker').datetimepicker({
-            format: 'YYYY-MM-DD H:m',
+            format: 'YYYY-MM-DD H:mm',
             locale: 'fr'
         });
 
         /** THE CALENDAR **/
-
         $('#calendar').fullCalendar({
             header: {
                 left: 'prev,next today',
@@ -229,7 +228,6 @@
         });
 
         /** ADD NEW ALLOCATION TO THE CALENDAR **/
-
         $('#add-new-event').click(function (e) {
             e.preventDefault();
 
@@ -242,14 +240,15 @@
             let lessonId = $('#lesson').val();
             let lessonName = $('#lesson option:selected').text();
             let eventId = $('#eventId').val();
-
-            // TODO: Vérifier que les champs obligatoires sont remplis
-            if (resourceName.length == 0) {
-                return
-            }
-
             let start = $('#start').val();
             let end = $('#end').val();
+
+            // TODO: Vérifier que les champs obligatoires sont remplis côté PHP
+            if (!resourceName || !teacherName || !levelName || !lessonName || !start || !end) {
+                fireDialog('error', 'Erreur', 'Tous les champs sont obligatoires');
+                return
+            }
+            
             let $url = "<?= base_url() ?>add_allocation";
             let originalEventObject = {};
 
@@ -257,7 +256,7 @@
             originalEventObject.rowEnd = end;
             originalEventObject.start = new Date(start);
             originalEventObject.end = new Date(end);
-            originalEventObject.title = resourceName;
+            originalEventObject.title = resourceName.trim();
             originalEventObject.resourceId = resourceId;
             originalEventObject.allDay = false;
             originalEventObject.backgroundColor = $(this).css('background-color');
@@ -314,7 +313,8 @@
 
     /** ADD NEW ALLOCATION TO THE CALENDAR AND SAVE IT TO THE DATABASE **/
     function addUpdateEvents($url, $calEvent, $isEdit) {
-        /** Date needs to be stringify in order to be sent to the database
+        /**
+         * Date needs to be stringify in order to be sent to the database
          * $calEvent.rowStart => date come from add form
          * $calEvent.start => date come from event drop = update
          */
@@ -481,9 +481,9 @@
         .done(function (data) {
             let $teacher = $("#teacher");
 
-            builEditFormOptions($("#level"), data.result.levels, $calEvent.levelId, 'Sélectionnez le niveau d\'études');
+            buildEditFormOptions($("#level"), data.result.levels, $calEvent.levelId, 'Sélectionnez le niveau d\'études');
 
-            builEditFormOptions($("#lesson"), data.result.lessons, $calEvent.lessonId, 'Sélectionnez l\'unité d\'enseignement');
+            buildEditFormOptions($("#lesson"), data.result.lessons, $calEvent.lessonId, 'Sélectionnez l\'unité d\'enseignement');
 
             $teacher.empty();
             if ($calEvent.teacherId === data.result.teacher.id) {
@@ -492,7 +492,7 @@
                 $teacher.append($("<option></option>").attr("value", data.result.teacher.id).text(data.result.teacher.name));
             }
 
-            builEditFormOptions($("#room"), data.result.rooms, $calEvent.roomId, 'Sélectionnez la salle');
+            buildEditFormOptions($("#room"), data.result.rooms, $calEvent.roomId, 'Sélectionnez la salle');
 
             $("#start").val($calEvent.start.format('Y-MM-DD H:m'));
             $("#end").val($calEvent.end.format('Y-MM-DD H:m'));
@@ -513,7 +513,7 @@
      * @param $idToFind
      * @param $placeholder
      */
-    function builEditFormOptions($select, $data, $idToFind, $placeholder) {
+    function buildEditFormOptions($select, $data, $idToFind, $placeholder) {
         $select.empty();
         $select.append('<option value="0">'+$placeholder+'</option>');
         $.each($data, function (index, $object) {
