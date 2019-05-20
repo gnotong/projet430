@@ -44,6 +44,7 @@ class Lesson extends BaseController
     private function newLessonForm()
     {
         $data['levels'] = $this->level_model->getAll();
+        $data['semesters'] = $this->semester_model->getAll();
         $data['teachers'] = $this->user_model->getTeachers();
 
         $this->global['pageTitle'] = 'UY1: Ajouter un cours';
@@ -71,12 +72,14 @@ class Lesson extends BaseController
             $code = $this->input->post('code');
             $levelId = $this->input->post('level');
             $teacherId = $this->input->post('teacher');
+            $semesterId = $this->input->post('semester');
 
             $lessonId = $this->lesson_model->add('lessons', ['label' => $label, 'code' => $code]);
 
             if ($lessonId > 0) {
                 $this->lesson_model->add('level_lesson', ['level_id' => $levelId, 'lesson_id' => $lessonId]);
                 $this->lesson_model->add('teacher_lesson', ['teacher_id' => $teacherId, 'lesson_id' => $lessonId]);
+                $this->lesson_model->add('semester_lesson', ['semester_id' => $semesterId, 'lesson_id' => $lessonId]);
 
                 $process = 'Ajouter un cours';
                 $processFunction = 'Lesson/add';
@@ -98,6 +101,7 @@ class Lesson extends BaseController
     {
         $data['lesson'] = $this->lesson_model->getLessonById($lessonId);
         $data['levels'] = $this->level_model->getAll();
+        $data['semesters'] = $this->semester_model->getAll();
         $data['teachers'] = $this->user_model->getTeachers();
 
         $this->global['pageTitle'] = 'UY1 : Modifier la resource';
@@ -126,12 +130,14 @@ class Lesson extends BaseController
             $lessonId = $this->input->post('lessonId');
             $levelId = $this->input->post('level');
             $teacherId = $this->input->post('teacher');
+            $semesterId = $this->input->post('semester');
 
             $updated = $this->lesson_model->update('lessons', ['label' => $label, 'code' => $code], 'id', $lessonId);
 
             if ($updated) {
                 $this->lesson_model->update('level_lesson', ['level_id' => $levelId, 'lesson_id' => $lessonId], 'lesson_id', $lessonId);
                 $this->lesson_model->update('teacher_lesson', ['teacher_id' => $teacherId, 'lesson_id' => $lessonId], 'lesson_id', $lessonId);
+                $this->lesson_model->update('semester_lesson', ['semester_id' => $semesterId, 'lesson_id' => $lessonId], 'lesson_id', $lessonId);
 
                 $process = 'Edition d\'un cours';
                 $processFunction = 'Lesson/edit';
