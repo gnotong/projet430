@@ -70,6 +70,23 @@ $success = $this->session->flashdata('success');
                                     </div>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="semester">Semestre</label>
+                                        <select class="form-control required" id="semester" name="semester" required>
+                                            <option value="">Sélectionnez le semestre</option>
+                                            <?php if (!empty($semesters)): ?>
+                                                <?php foreach ($semesters as $semester): ?>
+                                                    <option value="<?= $semester->id ?>">
+                                                        <?= $semester->year . ' - ' . $semester->name ?>
+                                                    </option>
+                                                <?php endforeach; ?>
+                                            <?php endif; ?>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="box-footer">
                                 <input type="submit" class="btn btn-primary" value="Valider"/>
                                 <input type="reset" class="btn btn-default" value="Annuler"/>
