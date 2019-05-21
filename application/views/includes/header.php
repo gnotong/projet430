@@ -26,10 +26,10 @@
             color: red;
             font-weight: normal;
         }
-
+/*
         .hiddenField {
             display: none;
-        }
+        }*/
     </style>
     <script type="text/javascript">
         var baseURL = "<?= base_url(); ?>";

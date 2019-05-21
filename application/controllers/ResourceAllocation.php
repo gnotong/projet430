@@ -10,6 +10,8 @@ class ResourceAllocation extends BaseController
         $this->global['pageTitle'] = 'Events';
         $data['colors'] = $this->getColors();
         $data['levels'] = $this->level_model->getAll();
+        $data['days'] = $this->daysOfTheWeek();
+        $data['semesters'] = $this->semester_model->getAll();
 
         if ($levelId = $this->input->post('globalLevel')) {
             $data['allocations'] = json_encode($this->resourceAllocation_model->getByLevel($levelId));
@@ -35,6 +37,7 @@ class ResourceAllocation extends BaseController
             'level_id' => $this->input->post('level'),
             'lesson_id' => $this->input->post('lesson'),
             'teacher_id' => $this->input->post('teacher'),
+            'semester_id' => $this->input->post('semester'),
             'background_color ' => $this->input->post('backgroundColor'),
             'border_color ' => $this->input->post('borderColor'),
             'start_date' => $this->input->post('start'),
@@ -102,5 +105,16 @@ class ResourceAllocation extends BaseController
             '&#9724; Red' => '#FF0000',
             '&#9724; Black' => '#000'
         ];
+    }
+
+    private function daysOfTheWeek(): array
+    {
+        return [
+            '1' => 'Lundi',
+            '2' => 'Mardi',
+            '3' => 'Mercredi',
+            '4' => 'Jeudi',
+            '5' => 'Vendredi',
+            '6' => 'Samedi'        ];
     }
 }

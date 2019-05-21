@@ -36,6 +36,7 @@ $route['delete_level/(:num)'] = "level/delete/$1";
 $route['semesters'] = "semester/list";
 $route['add_semester'] = "semester/add";
 $route['edit_semester/(:num)'] = "semester/edit/$1";
+$route['data_semester/(:num)'] = "semester/getSemesterDatesAjax/$1";
 $route['delete_semester/(:num)'] = "semester/delete/$1";
 
 $route['resources'] = "resource/list";

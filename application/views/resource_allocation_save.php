@@ -118,8 +118,6 @@
                                         </option>
                                     <?php endforeach; ?>
                                 </select>
-                                <input type='hidden' id="dateStart" name="dateStart" />
-                                <input type='hidden' id="dateEnd" name="dateEnd" />
                             </div>
 
                             <div class="form-group hiddenField teacher">
@@ -198,7 +196,6 @@
                     moment(event.start).format("HH:mm") + '-'
                     + moment(event.end).format("HH:mm") + '<br/>'
                     + '<strong>' + event.title + '</strong><br/>'
-                    + '<strong>' + event.semesterName + '</strong><br/>'
                     + '<i>' + event.teacherName + '</i><br/>'
                     + '<i>' + event.levelName + '</i><br/>'
                     + '<i>' + event.lessonName + '</i><br/>'
@@ -265,56 +262,37 @@
             let levelName = $('#level option:selected').text();
             let lessonId = $('#lesson').val();
             let lessonName = $('#lesson option:selected').text();
-            let semesterId = $('#semester').val();
-            let semesterName = $('#semester option:selected').text();
             let eventId = $('#eventId').val();
-            let dayOfTheWeekNumber = parseInt($('#day').val());
-            let hourStart = $('#start').val() ? $('#start').val().split(':') : [];
-            let hourEnd = $('#end').val() ? $('#end').val().split(':') : [];
-            let dateStart = $('#dateStart').val();
-            let dateEnd = $('#dateEnd').val();
-            let saveButton = $(this);
+            let start = $('#start').val();
+            let end = $('#end').val();
 
-            let $url = baseUrl + "add_allocation";
-
-            //TODO: Vérifier que les champs obligatoires sont remplis côté PHP
-            if (!resourceId || !teacherId || !levelId
-                || !lessonId || hourStart.length < 1 || hourEnd.length < 1
-                || !dayOfTheWeekNumber || !semesterId
-            ) {
+            // TODO: Vérifier que les champs obligatoires sont remplis côté PHP
+            if (!resourceName || !teacherName || !levelName || !lessonName || !start || !end) {
                 fireDialog('error', 'Erreur', 'Tous les champs sont obligatoires');
                 return
             }
+            
+            let $url = baseUrl + "add_allocation";
+            let originalEventObject = {};
 
-            let $dates = getDaysBetweenDates(new Date(dateStart), new Date(dateEnd), dayOfTheWeekNumber);
+            originalEventObject.rowStart = start;
+            originalEventObject.rowEnd = end;
+            originalEventObject.start = new Date(start);
+            originalEventObject.end = new Date(end);
+            originalEventObject.title = resourceName.trim();
+            originalEventObject.resourceId = resourceId;
+            originalEventObject.allDay = false;
+            originalEventObject.backgroundColor = $(this).css('background-color');
+            originalEventObject.borderColor = $(this).css('border-color');
+            originalEventObject.levelName = levelName.trim();
+            originalEventObject.levelId = levelId;
+            originalEventObject.teacherName = teacherName.trim();
+            originalEventObject.teacherId = teacherId;
+            originalEventObject.lessonName = lessonName.trim();
+            originalEventObject.lessonId = lessonId;
+            originalEventObject.eventId = eventId;
 
-            $.each($dates, function ($key, $date) {
-                let originalEventObject = {};
-
-                let $rowStart = new Date($date.setHours(hourStart[0], hourStart[1]));
-                let $rowEnd = new Date($date.setHours(hourEnd[0], hourEnd[1]));
-
-                originalEventObject.rowStart = moment($rowStart).format('YYYY-MM-DD HH:mm');
-                originalEventObject.rowEnd = moment($rowEnd).format('YYYY-MM-DD HH:mm');
-                originalEventObject.start = $rowStart;
-                originalEventObject.end = $rowEnd;
-                originalEventObject.title = resourceName.trim();
-                originalEventObject.resourceId = resourceId;
-                originalEventObject.allDay = false;
-                originalEventObject.backgroundColor = saveButton.css('background-color');
-                originalEventObject.borderColor = saveButton.css('border-color');
-                originalEventObject.levelName = levelName.trim();
-                originalEventObject.levelId = levelId;
-                originalEventObject.teacherName = teacherName.trim();
-                originalEventObject.teacherId = teacherId;
-                originalEventObject.lessonName = lessonName.trim();
-                originalEventObject.lessonId = lessonId;
-                originalEventObject.eventId = eventId;
-                originalEventObject.semesterName = semesterName;
-                originalEventObject.semesterId = semesterId;
-
-                addUpdateEvents($url, originalEventObject, eventId);
-            });
+            addUpdateEvents($url, originalEventObject, eventId);
         });
 
         /**
@@ -329,27 +307,6 @@
             let $level = $(this).val();
             activateLessonsField($level);
         });
-
-        /**
-         * WE SEEK FOR SEMESTER PERIODS (START and END)
-         */
-        $("#semester").change(function () {
-            let $url = baseUrl + 'data_semester/' + $(this).val();
-
-            $.ajax({
-                url: $url,
-                method: "POST",
-                dataType: 'json'
-            })
-            .done(function (data) {
-                $('#dateStart').val(data.json.start);
-                $('#dateEnd').val(data.json.end);
-            })
-            .fail(function (xhr) {
-                fireDialog('info', 'Information', xhr.responseText);
-            });
-        });
-
 
         $("#lesson").change(function () {
             let $lesson = $(this).val();
@@ -379,6 +336,14 @@
 
     /** ADD NEW ALLOCATION TO THE CALENDAR AND SAVE IT TO THE DATABASE **/
     function addUpdateEvents($url, $calEvent, $isEdit) {
+        /**
+         * Date needs to be stringify in order to be sent to the database
+         * $calEvent.rowStart => date come from add form
+         * $calEvent.start => date come from event drop = update
+         */
+        let start = $calEvent.rowStart ? $calEvent.rowStart : $calEvent.start.format('YYYY-MM-DD HH:mm');
+        let end = $calEvent.rowEnd ? $calEvent.rowEnd : $calEvent.end.format('YYYY-MM-DD HH:mm');
+
         $.ajax({
             url: $url,
             method: "POST",
@@ -386,19 +351,25 @@
             data: {
                 eventId: $calEvent.eventId,
                 resource: $calEvent.resourceId,
-                start: $calEvent.rowStart,
-                end: $calEvent.rowEnd,
+                start: start,
+                end: end,
                 allDay: $calEvent.allDay,
                 backgroundColor: $calEvent.backgroundColor,
                 borderColor: $calEvent.borderColor,
                 level: $calEvent.levelId,
                 lesson: $calEvent.lessonId,
-                teacher: $calEvent.teacherId,
-                semester: $calEvent.semesterId
+                teacher: $calEvent.teacherId
             }
         })
         .done(function (data) {
+            fireDialog('success', 'Success', data.result);
+
             $calEvent.eventId = data.eventId;
+            /**
+             * Date needs to be a Moment date in order to be added the the calendar
+             */
+            $calEvent.start = new Date(start);
+            $calEvent.end = new Date(end);
 
             $('#calendar').fullCalendar($isEdit ? 'updateEvent' : 'renderEvent', $calEvent, true);
         })
@@ -575,29 +546,6 @@
                 $select.append($("<option></option>").attr("value", $object.id).text($object.name));
             }
         });
-    }
 
-
-    /** Given a start date, end date and day name, return
-    ** an array of dates between the two dates for the
-    ** given day inclusive
-    ** @param {Date} start - date to start from
-    ** @param {Date} end - date to end on
-    ** @param {number} dayNumber - number of day
-     * @returns {Array} array of Dates
-    */
-    function getDaysBetweenDates(start, end, dayNumber) {
-        var result = [];
-        var day = parseInt(dayNumber);
-        // Copy start date
-        var current = new Date(start);
-        // Shift to next of required days
-        current.setDate(current.getDate() + (day - current.getDay() + 7) % 7);
-        // While less than end date, add dates to result array
-        while (current < end) {
-            result.push(new Date(+current));
-            current.setDate(current.getDate() + 7);
-        }
-        return result;
     }
 </script>
