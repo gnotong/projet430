@@ -155,4 +155,25 @@ class Semester extends BaseController
         redirect('semesters');
     }
 
+    /**
+     * @param int $semesterId
+     */
+    public function getSemesterDatesAjax(int $semesterId)
+    {
+        $semester = null;
+        if ($semesterId) {
+            $semester = $this->semester_model->getById($semesterId);
+        }
+
+        try {
+            if ($semester) {
+                echo json_encode(array('success' => 1, 'json' => $semester, 'placeholder' => 'Sélectionnez l\'unité d\'enseignement'));
+            } else {
+                throw new \Exception('Le niveau d\'étude que vous avez sélectionné n\'a pas de cours enregistrés pour le moment. <br><br>Veuillez contacter votre administrateur.');
+            }
+        } catch (\Exception $exception) {
+            echo $exception->getMessage();
+        }
+    }
+
 }

@@ -65,12 +65,14 @@ class ResourceAllocation_model extends CI_Model {
             le.id as levelId,
             ls.label as lessonName,
             ls.id as lessonId,
+            CONCAT(se.year,' - ', se.name) as semesterName
         ");
         $this->db->from("$this->event as ra");
         $this->db->join('resources as re','re.id = ra.resource_id');
         $this->db->join('users as us', 'us.userId = ra.teacher_id');
         $this->db->join('levels as le', 'le.id = ra.level_id');
-        return $this->db->join('lessons as ls', 'ls.id = ra.lesson_id');
+        $this->db->join('lessons as ls', 'ls.id = ra.lesson_id');
+        return $this->db->join('semesters as se', 'se.id = ra.semester_id');
     }
 
     function insert($allocation)
