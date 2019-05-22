@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="<?= base_url(); ?>assets/fullcalendar/dist/fullcalendar.min.css">
     <link rel="stylesheet" href="<?= base_url(); ?>assets/fullcalendar/dist/fullcalendar.print.min.css" media="print">
     <!-- datetime picker-->
-    <link rel="stylesheet" href="<?= base_url(); ?>assets/fullcalendar/dist/bootstrap-datetimepicker.min.css"/>
+    <link rel="stylesheet" href="<?= base_url(); ?>assets/fullcalendar/datetimepicker/jquery.datetimepicker.min.css"/>
     <!-- Dialog Event calendar -->
     <link rel="stylesheet" href="<?= base_url(); ?>assets/node_modules/sweetalert2/dist/sweetalert2.min.css">
 
@@ -26,10 +26,9 @@
             color: red;
             font-weight: normal;
         }
-/*
         .hiddenField {
             display: none;
-        }*/
+        }
     </style>
     <script type="text/javascript">
         var baseURL = "<?= base_url(); ?>";
@@ -50,8 +49,7 @@
     <script src="<?= base_url(); ?>assets/fullcalendar/dist/fullcalendar.min.js"></script>
     <script src="<?= base_url(); ?>assets/fullcalendar/dist/locale/fr.js"></script>
     <!-- datetime picker-->
-    <script type="text/javascript"
-            src="<?= base_url(); ?>assets/fullcalendar/dist/bootstrap-datetimepicker.min.js"></script>
+    <script type="text/javascript" src="<?= base_url(); ?>assets/fullcalendar/datetimepicker/jquery.datetimepicker.full.min.js"></script>
     <!-- Dialog Event calendar -->
     <script src="<?= base_url(); ?>assets/node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
     <script src="<?= base_url(); ?>assets/node_modules/sweetalert2/dist/sweetalert2.min.js"></script>

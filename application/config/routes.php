@@ -37,6 +37,7 @@ $route['semesters'] = "semester/list";
 $route['add_semester'] = "semester/add";
 $route['edit_semester/(:num)'] = "semester/edit/$1";
 $route['data_semester/(:num)'] = "semester/getSemesterDatesAjax/$1";
+$route['data_semesters'] = "semester/getSemestersAjax";
 $route['delete_semester/(:num)'] = "semester/delete/$1";
 
 $route['resources'] = "resource/list";
@@ -58,6 +59,7 @@ $route['user_edit_profile'] = "user/editProfile";
 $route['resource_allocation'] = 'resourceAllocation';
 $route['edit_allocation'] = 'resourceAllocation/edit';
 $route['add_allocation'] = 'resourceAllocation/add';
+$route['days_of_week'] = 'resourceAllocation/getDaysAjax';
 $route['delete_allocation/(:num)'] = 'resourceAllocation/delete/$1';
 
 /*********** FAKER *******************/

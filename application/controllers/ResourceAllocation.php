@@ -72,6 +72,9 @@ class ResourceAllocation extends BaseController
                 'lessons' => $this->lesson_model->getLessonsByLevelId($this->input->post('level')),
                 'teacher' => $this->user_model->getTeacherByLesson($this->input->post('lesson')),
                 'rooms' => $this->resource_model->getRooms(),
+                'semesters' => $this->semester_model->getAll(),
+                'event' => $this->resourceAllocation_model->getById($this->input->post('event'))[0],
+                'daysOfTheWeek' => $this->daysOfTheWeek(),
             ]
         ]);
     }
@@ -110,11 +113,30 @@ class ResourceAllocation extends BaseController
     private function daysOfTheWeek(): array
     {
         return [
-            '1' => 'Lundi',
-            '2' => 'Mardi',
-            '3' => 'Mercredi',
-            '4' => 'Jeudi',
-            '5' => 'Vendredi',
-            '6' => 'Samedi'        ];
+            [
+                'id' => 1,
+                'name' => 'Lundi'
+            ], [
+                'id' => 2,
+                'name' => 'Mardi'
+            ], [
+                'id' => 3,
+                'name' => 'Mercredi'
+            ], [
+                'id' => 4,
+                'name' => 'Jeudi'
+            ], [
+                'id' => 5,
+                'name' => 'Vendredi'
+            ], [
+                'id' => 6,
+                'name' => 'Samedi'
+            ],
+        ];
+    }
+
+    public function getDaysAjax(): void
+    {
+        echo json_encode(array('success' => 1, 'json' => $this->daysOfTheWeek(), 'placeholder' => 'Choisir le jour'));
     }
 }

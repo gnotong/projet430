@@ -176,4 +176,9 @@ class Semester extends BaseController
         }
     }
 
+    public function getSemestersAjax()
+    {
+        echo json_encode(array('success' => 1, 'json' => $this->semester_model->getAll(), 'placeholder' => 'Sélectionnez le semestre'));
+    }
+
 }
