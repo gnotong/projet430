@@ -81,8 +81,8 @@
                                 <select class="form-control required" id="day" name="day">
                                     <option value="0">Choisir le jour</option>
                                     <?php foreach ($days as $key => $day): ?>
-                                        <option value="<?= $key?>">
-                                            <?= $day ?>
+                                        <option value="<?= $day['id']; ?>">
+                                            <?= $day['name']; ?>
                                         </option>
                                     <?php endforeach; ?>
                                 </select>
@@ -90,31 +90,31 @@
 
                             <div class="form-group hiddenField dates">
                                 <label for="start">Heure de début</label>
-                                <div class='input-group datetimepicker'>
+                                <div class='input-group'>
                                     <span class="input-group-addon">
                                         <i class="fa fa-calendar-times-o text-primary"></i>
                                     </span>
-                                    <input type='text' class="form-control" id="start" name="start" />
+                                    <input type='text' class="form-control datetimepicker" id="start" name="start" />
                                 </div>
                             </div>
 
                             <div class="form-group hiddenField dates">
                                 <label for="end">Heure de fin</label>
-                                <div class='input-group datetimepicker'>
+                                <div class='input-group'>
                                     <span class="input-group-addon">
                                         <i class="fa fa-calendar-times-o text-primary"></i>
                                     </span>
-                                    <input type='text' class="form-control" id="end" name="end" />
+                                    <input type='text' class="form-control datetimepicker" id="end" name="end" />
                                 </div>
                             </div>
 
-                            <div class="form-group hiddenField day">
+                            <div class="form-group hiddenField semester">
                                 <label for="semester">Semestre</label>
                                 <select class="form-control required" id="semester" name="semester">
                                     <option value="0">Choisir le semestre</option>
                                     <?php foreach ($semesters as $key => $semester): ?>
                                         <option value="<?= $semester->id ?>">
-                                            <?= $semester->year . ' - ' . $semester->name ?>
+                                            <?= $semester->name ?>
                                         </option>
                                     <?php endforeach; ?>
                                 </select>
@@ -165,9 +165,13 @@
 
         /** DATETIME PICKER **/
         $('.datetimepicker').datetimepicker({
-            format: 'H:mm',
-            locale: 'fr'
+            datepicker:false,
+            format:'H:i'
         });
+        // $('.datetimepicker').datetimepicker({
+        //     format: 'H:mm',
+        //     locale: 'fr'
+        // });
 
         /** THE CALENDAR **/
         $('#calendar').fullCalendar({
@@ -185,12 +189,7 @@
             events: $allocations,
             editable: true,
             eventLimit: true,
-            selectable: true,
             selectHelper: true,
-            select: function (start, end) {
-                $('#start').val(moment(start).format('YYYY-MM-DD HH:mm:ss'));
-                $('#end').val(moment(end).format('YYYY-MM-DD HH:mm:ss'));
-            },
             eventRender: function (event, element) {
                 element.find(".fc-title").remove();
                 element.find(".fc-time").remove();
@@ -314,6 +313,11 @@
                 originalEventObject.semesterId = semesterId;
 
                 addUpdateEvents($url, originalEventObject, eventId);
+
+                /** IN THE EDITION, WE ONLY UPDATE THE SELECTED EVENT **/
+                if (eventId) {
+                    return false;
+                }
             });
         });
 
@@ -379,6 +383,15 @@
 
     /** ADD NEW ALLOCATION TO THE CALENDAR AND SAVE IT TO THE DATABASE **/
     function addUpdateEvents($url, $calEvent, $isEdit) {
+
+        /**
+         * Date needs to be stringify in order to be sent to the database
+         * $calEvent.rowStart => date come from add form
+         * $calEvent.start => date come from event drop = update
+         */
+        let start = $calEvent.rowStart ? $calEvent.rowStart : $calEvent.start.format('YYYY-MM-DD HH:mm');
+        let end = $calEvent.rowEnd ? $calEvent.rowEnd : $calEvent.end.format('YYYY-MM-DD HH:mm');
+
         $.ajax({
             url: $url,
             method: "POST",
@@ -386,8 +399,8 @@
             data: {
                 eventId: $calEvent.eventId,
                 resource: $calEvent.resourceId,
-                start: $calEvent.rowStart,
-                end: $calEvent.rowEnd,
+                start: start,
+                end: end,
                 allDay: $calEvent.allDay,
                 backgroundColor: $calEvent.backgroundColor,
                 borderColor: $calEvent.borderColor,
@@ -398,7 +411,18 @@
             }
         })
         .done(function (data) {
+
+            if ($calEvent.eventId) {
+                fireDialog('success', 'Success', data.result);
+            }
+
             $calEvent.eventId = data.eventId;
+
+            /**
+            * Date needs to be a Moment date in order to be added the the calendar
+            */
+           $calEvent.start = new Date(start);
+           $calEvent.end = new Date(end);
 
             $('#calendar').fullCalendar($isEdit ? 'updateEvent' : 'renderEvent', $calEvent, true);
         })
@@ -506,7 +530,7 @@
     }
 
     function activateLessonsField($level) {
-        let $classes = ['.lesson', '.teacher', '.dates', '.submitBtn', '.room'];
+        let $classes = ['.lesson', '.teacher', '.dates', '.submitBtn', '.room', '.day', '.semester'];
 
         buildSelectOptions(
             getUrl('load_lesson_ajax', $level),
@@ -514,14 +538,31 @@
             $classes,
             $level
         );
+
+        buildSelectOptions(
+            getUrl('days_of_week'),
+            $('#day'),
+            [],
+            $level
+        );
+
+        buildSelectOptions(
+            getUrl('data_semesters'),
+            $('#semester'),
+            [],
+            $level
+        );
     }
 
+    /**
+     * Rebuilds the formin the édit mod
+     */
     function hydrateEditForm($calEvent) {
 
         let $data = {
             level: $calEvent.levelId,
             lesson: $calEvent.lessonId,
-            teacher: $calEvent.teacherId,
+            event: $calEvent.eventId,
         };
 
         $.ajax({
@@ -531,27 +572,40 @@
             data: $data
         })
         .done(function (data) {
+
             let $teacher = $("#teacher");
+            let $data = data.result;
+            let $dayOfTheWeekDigit = (new Date($data.event.start)).getDay();
+            let $hourStart = moment($data.event.start).format('H:mm');
+            let $hourEnd = moment($data.event.end).format('H:mm');
+            let $dateStart = $calEvent.start.format('YYYY-MM-DD HH:mm');
+            let $dateEnd = $calEvent.end.format('YYYY-MM-DD HH:mm');
 
-            buildEditFormOptions($("#level"), data.result.levels, $calEvent.levelId, 'Sélectionnez le niveau d\'études');
+            buildEditFormOptions($("#level"), $data.levels, $calEvent.levelId, 'Sélectionnez le niveau d\'études');
 
-            buildEditFormOptions($("#lesson"), data.result.lessons, $calEvent.lessonId, 'Sélectionnez l\'unité d\'enseignement');
+            buildEditFormOptions($("#lesson"), $data.lessons, $calEvent.lessonId, 'Sélectionnez l\'unité d\'enseignement');
 
-            $teacher.empty();
-            if ($calEvent.teacherId === data.result.teacher.id) {
-                $teacher.append($("<option></option>").attr({"value": data.result.teacher.id, 'selected': true}).text(data.result.teacher.name));
-            } else {
-                $teacher.append($("<option></option>").attr("value", data.result.teacher.id).text(data.result.teacher.name));
-            }
+            buildEditFormOptions($("#day"), $data.daysOfTheWeek, $dayOfTheWeekDigit, 'Choisir le jour');
 
-            buildEditFormOptions($("#room"), data.result.rooms, $calEvent.roomId, 'Sélectionnez la salle');
-
-            $("#start").val($calEvent.start.format('Y-MM-DD H:m'));
-            $("#end").val($calEvent.end.format('Y-MM-DD H:m'));
+            $("#start").val($hourStart);
+            $("#end").val($hourEnd);
             $("#eventId").val($calEvent.eventId);
+            $('#dateStart').val($dateStart);
+            $('#dateEnd').val($dateEnd);
             $('#add-new-event').css({'background-color': $calEvent.backgroundColor, 'border-color': $calEvent.borderColor});
 
-            $.each(['.teacher', '.dates', '.submitBtn', '.room', '.lesson'], function( index, $class ){
+            buildEditFormOptions($("#semester"), $data.semesters, $calEvent.semesterId, 'Choisir le semestre');
+
+            $teacher.empty();
+            if ($calEvent.teacherId === $data.teacher.id) {
+                $teacher.append($("<option></option>").attr({"value": $data.teacher.id, 'selected': true}).text($data.teacher.name));
+            } else {
+                $teacher.append($("<option></option>").attr("value", $data.teacher.id).text($data.teacher.name));
+            }
+
+            buildEditFormOptions($("#room"), $data.rooms, $calEvent.roomId, 'Sélectionnez la salle');
+
+            $.each(['.teacher', '.dates', '.submitBtn', '.room', '.lesson', '.day'], function( index, $class ){
                 $($class).removeClass('hiddenField');
             });
 

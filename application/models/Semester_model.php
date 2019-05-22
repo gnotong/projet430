@@ -12,7 +12,7 @@ class Semester_model extends BaseModel
      */
     function getAll()
     {
-        $this->db->select('*');
+        $this->db->select('id, CONCAT(year, " - ", name) as name, start, end');
         $this->db->from($this->table);
         $this->db->order_by('year', 'desc');
         $query = $this->db->get();

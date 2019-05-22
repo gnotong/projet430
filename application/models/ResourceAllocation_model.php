@@ -65,7 +65,8 @@ class ResourceAllocation_model extends CI_Model {
             le.id as levelId,
             ls.label as lessonName,
             ls.id as lessonId,
-            CONCAT(se.year,' - ', se.name) as semesterName
+            CONCAT(se.year,' - ', se.name) as semesterName,
+            se.id as semesterId
         ");
         $this->db->from("$this->event as ra");
         $this->db->join('resources as re','re.id = ra.resource_id');
