@@ -76,6 +76,25 @@ class ResourceAllocation_model extends CI_Model {
         return $this->db->join('semesters as se', 'se.id = ra.semester_id');
     }
 
+    public function getAvailableRooms(array $datesToCheck): ?array
+    {
+        $where_au = '';
+        $this->db->select("*");
+        $this->db->from("$this->event as ra");
+
+        $len = count($datesToCheck);
+
+        foreach ($datesToCheck as $index => $date) {
+            if ($index < $len - 1) {
+                $where_au .= "(ra.start_date < '{$date}' AND '{$date}' < ra.end_date) OR ";
+            } else {
+                $where_au .= "(ra.start_date < '{$date}' AND '{$date}' < ra.end_date) ";
+            }
+        }
+        $this->db->where($where_au);
+        return $this->db->get()->result();
+    }
+
     function insert($allocation)
     {
         $this->db->trans_start();

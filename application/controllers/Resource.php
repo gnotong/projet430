@@ -188,4 +188,12 @@ class Resource extends BaseController
         }
     }
 
+    public function check()
+    {
+        $datesToCheck = $this->input->post('dates');
+        $rooms = $this->resourceAllocation_model->getAvailableRooms($datesToCheck);
+
+        echo json_encode($rooms);
+    }
+
 }

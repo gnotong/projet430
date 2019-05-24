@@ -7,6 +7,24 @@ require 'base/BaseController.php';
  */
 class Home extends BaseController
 {
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->datas();
+
+        $isLoggedIn = $this->session->userdata('isLoggedIn');
+
+        if (!isset($isLoggedIn) || $isLoggedIn != TRUE) {
+            redirect('login');
+        } else {
+            if (!$this->isAdmin()) {
+                $this->accesslogincontrol();
+            }
+        }
+    }
+
     /**
      * shows the site dashboard
      */

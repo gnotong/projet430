@@ -76,6 +76,20 @@
                                 <select class="form-control searchForm required" id="lesson" name="lesson"></select>
                             </div>
 
+                            <div class="form-group hiddenField semester">
+                                <label for="semester">Semestre</label>
+                                <select class="form-control required" id="semester" name="semester">
+                                    <option value="0">Choisir le semestre</option>
+                                    <?php foreach ($semesters as $key => $semester): ?>
+                                        <option value="<?= $semester->id ?>">
+                                            <?= $semester->name ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                                <input type='hidden' id="dateStart" name="dateStart" />
+                                <input type='hidden' id="dateEnd" name="dateEnd" />
+                            </div>
+
                             <div class="form-group hiddenField day">
                                 <label for="day">Jour de la semaine</label>
                                 <select class="form-control required" id="day" name="day">
@@ -106,20 +120,6 @@
                                     </span>
                                     <input type='text' class="form-control datetimepicker" id="end" name="end" />
                                 </div>
-                            </div>
-
-                            <div class="form-group hiddenField semester">
-                                <label for="semester">Semestre</label>
-                                <select class="form-control required" id="semester" name="semester">
-                                    <option value="0">Choisir le semestre</option>
-                                    <?php foreach ($semesters as $key => $semester): ?>
-                                        <option value="<?= $semester->id ?>">
-                                            <?= $semester->name ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
-                                <input type='hidden' id="dateStart" name="dateStart" />
-                                <input type='hidden' id="dateEnd" name="dateEnd" />
                             </div>
 
                             <div class="form-group hiddenField teacher">
@@ -168,10 +168,39 @@
             datepicker:false,
             format:'H:i'
         });
-        // $('.datetimepicker').datetimepicker({
-        //     format: 'H:mm',
-        //     locale: 'fr'
-        // });
+
+        $("#end").focusout(function() {
+            let $url = baseUrl + 'check_resource';
+            let hourStart = $('#start').val() ? $('#start').val().split(':') : [];
+            let hourEnd = $('#end').val() ? $('#end').val().split(':') : [];
+            let dateStart = $('#dateStart').val();
+            let dateEnd = $('#dateEnd').val();
+            let dayOfTheWeekNumber = parseInt($('#day').val());
+            let semesterId = $('#semester').val();
+            let $dates = getDaysBetweenDates(new Date(dateStart), new Date(dateEnd), dayOfTheWeekNumber);
+            let postDates = [];
+
+            $.each($dates, function ($key, $date) {
+                let $rowStart = new Date($date.setHours(hourStart[0], hourStart[1]));
+                postDates.push(moment($rowStart).format('YYYY-MM-DD HH:mm'));
+            });
+
+            $.ajax({
+                url: $url,
+                method: "POST",
+                dataType: 'json',
+                data: {
+                    dates: postDates,
+                    semester: semesterId
+                }
+            })
+            .done(function (data) {
+                console.log(data);
+            })
+            .fail(function (xhr) {
+                fireDialog('info', 'Information', xhr.responseText);
+            });
+        });
 
         /** THE CALENDAR **/
         $('#calendar').fullCalendar({
