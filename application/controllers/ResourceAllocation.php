@@ -71,7 +71,7 @@ class ResourceAllocation extends BaseController
                 'levels' => $this->level_model->getAll(),
                 'lessons' => $this->lesson_model->getLessonsByLevelId($this->input->post('level')),
                 'teacher' => $this->user_model->getTeacherByLesson($this->input->post('lesson')),
-                'rooms' => $this->resource_model->getRooms(),
+                'rooms' => $this->room_model->getRooms(),
                 'semesters' => $this->semester_model->getAll(),
                 'event' => $this->resourceAllocation_model->getById($this->input->post('event'))[0],
                 'daysOfTheWeek' => $this->daysOfTheWeek(),

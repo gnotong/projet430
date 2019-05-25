@@ -79,7 +79,7 @@ $success = $this->session->flashdata('success');
                                             <?php if (!empty($semesters)): ?>
                                                 <?php foreach ($semesters as $semester): ?>
                                                     <option value="<?= $semester->id ?>">
-                                                        <?= $semester->year . ' - ' . $semester->name ?>
+                                                        <?= $semester->name ?>
                                                     </option>
                                                 <?php endforeach; ?>
                                             <?php endif; ?>

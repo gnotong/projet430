@@ -76,6 +76,25 @@
                                 <select class="form-control searchForm required" id="lesson" name="lesson"></select>
                             </div>
 
+                            <div class="form-group hiddenField teacher">
+                                <label for="teacher">Enseignant</label>
+                                <select class="form-control required" id="teacher" name="teacher"></select>
+                            </div>
+
+                            <div class="form-group hiddenField semester">
+                                <label for="semester">Semestre</label>
+                                <select class="form-control required" id="semester" name="semester">
+                                    <option value="0">Choisir le semestre</option>
+                                    <?php foreach ($semesters as $key => $semester): ?>
+                                        <option value="<?= $semester->id ?>">
+                                            <?= $semester->name ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                                <input type='hidden' id="dateStart" name="dateStart" />
+                                <input type='hidden' id="dateEnd" name="dateEnd" />
+                            </div>
+
                             <div class="form-group hiddenField day">
                                 <label for="day">Jour de la semaine</label>
                                 <select class="form-control required" id="day" name="day">
@@ -106,25 +125,6 @@
                                     </span>
                                     <input type='text' class="form-control datetimepicker" id="end" name="end" />
                                 </div>
-                            </div>
-
-                            <div class="form-group hiddenField semester">
-                                <label for="semester">Semestre</label>
-                                <select class="form-control required" id="semester" name="semester">
-                                    <option value="0">Choisir le semestre</option>
-                                    <?php foreach ($semesters as $key => $semester): ?>
-                                        <option value="<?= $semester->id ?>">
-                                            <?= $semester->name ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
-                                <input type='hidden' id="dateStart" name="dateStart" />
-                                <input type='hidden' id="dateEnd" name="dateEnd" />
-                            </div>
-
-                            <div class="form-group hiddenField teacher">
-                                <label for="teacher">Enseignant</label>
-                                <select class="form-control required" id="teacher" name="teacher"></select>
                             </div>
 
                             <div class="form-group hiddenField room">
@@ -168,10 +168,11 @@
             datepicker:false,
             format:'H:i'
         });
-        // $('.datetimepicker').datetimepicker({
-        //     format: 'H:mm',
-        //     locale: 'fr'
-        // });
+
+        /** FETCHES THE CALENDAR BASE ON STUDY LEVEL **/
+        $("#globalLevel").change(function () {
+            $('#search').submit();
+        });
 
         /** THE CALENDAR **/
         $('#calendar').fullCalendar({
@@ -276,9 +277,10 @@
 
             let $url = baseUrl + "add_allocation";
 
+            console.log(resourceId);
             //TODO: Vérifier que les champs obligatoires sont remplis côté PHP
-            if (!resourceId || !teacherId || !levelId
-                || !lessonId || hourStart.length < 1 || hourEnd.length < 1
+            if (resourceId == 0 || teacherId == 0 || levelId == 0
+                || lessonId == 0 || hourStart.length < 1 || hourEnd.length < 1
                 || !dayOfTheWeekNumber || !semesterId
             ) {
                 fireDialog('error', 'Erreur', 'Tous les champs sont obligatoires');
@@ -338,7 +340,13 @@
          * WE SEEK FOR SEMESTER PERIODS (START and END)
          */
         $("#semester").change(function () {
-            let $url = baseUrl + 'data_semester/' + $(this).val();
+            let $semester = $(this).val();
+
+            if ($semester == 0) {
+                return;
+            }
+
+            let $url = baseUrl + 'data_semester/' + $semester;
 
             $.ajax({
                 url: $url,
@@ -348,38 +356,76 @@
             .done(function (data) {
                 $('#dateStart').val(data.json.start);
                 $('#dateEnd').val(data.json.end);
+
+                buildSelectOptions(
+                    getUrl('days_of_week'),
+                    $('#day'),
+                    ['.day']
+                );
             })
             .fail(function (xhr) {
                 fireDialog('info', 'Information', xhr.responseText);
             });
         });
 
-
         $("#lesson").change(function () {
             let $lesson = $(this).val();
-            let $classes = ['.teacher', '.dates', '.submitBtn', '.room'];
 
             buildSelectOptions(
                 getUrl('load_user_ajax', $lesson),
                 $('#teacher'),
-                $classes,
+                ['.teacher', '.semester'],
                 $lesson
             );
 
             buildSelectOptions(
-                getUrl('load_rooms_ajax'),
-                $('#room'),
-                [],
-                $lesson
+                getUrl('data_semesters'),
+                $('#semester'),
+                ['.semester']
             );
         });
 
-        /** FETCHES THE CALENDAR BASE ON STUDY LEVEL **/
-        $("#globalLevel").change(function () {
-            $('#search').submit();
+        $("#day").change(function () {
+            let $day = $(this).val();
+            if ($day != 0) {
+                $(".dates").removeClass('hiddenField');
+                return;
+            }
+            $(".dates").addClass('hiddenField');
         });
 
+        $("#end").focusout(function() {
+            getAvailableRooms();
+        });
     });
+
+    function getAvailableRooms() {
+        let $url = baseUrl + 'check_resource';
+        let hourStart = $('#start').val() ? $('#start').val().split(':') : [];
+        let hourEnd = $('#end').val() ? $('#end').val().split(':') : [];
+        let dateStart = $('#dateStart').val();
+        let dateEnd = $('#dateEnd').val();
+        let dayOfTheWeekNumber = parseInt($('#day').val());
+        let semesterId = $('#semester').val();
+        let $dates = getDaysBetweenDates(new Date(dateStart), new Date(dateEnd), dayOfTheWeekNumber);
+        let postDates = [];
+
+        $.each($dates, function ($key, $date) {
+            let $rowStart = new Date($date.setHours(hourStart[0], hourStart[1]));
+            let $rowEnd = new Date($date.setHours(hourEnd[0], hourEnd[1]));
+            postDates.push({
+                'start' : moment($rowStart).format('YYYY-MM-DD HH:mm'),
+                'end' : moment($rowEnd).format('YYYY-MM-DD HH:mm')
+            });
+        });
+
+        let $data = {
+            dates: postDates,
+            semester: semesterId
+        };
+
+        buildSelectOptions($url, $("#room"), ['.submitBtn', '.room'], 1, $data);
+    }
 
     /** ADD NEW ALLOCATION TO THE CALENDAR AND SAVE IT TO THE DATABASE **/
     function addUpdateEvents($url, $calEvent, $isEdit) {
@@ -450,7 +496,7 @@
      * @param $value
      * @param $dataFound
      */
-    function showHideFields($classes, $value, $dataFound) {
+    function showHideFields($classes, $value = null, $dataFound = null) {
         if ($classes && ($value == 0 || !$dataFound)) {
             $.each( $classes, function( index, $class ){
                 $($class).each(function () {
@@ -486,14 +532,16 @@
      * @param $url
      * @param $select
      * @param $classes
-     * @param $valueToCheck
+     * @param $selectedValue
+     * @param $data
      */
-    function buildSelectOptions($url, $select, $classes, $valueToCheck) {
+    function buildSelectOptions($url, $select, $classes, $selectedValue = null, $data = null) {
 
         $.ajax({
             url: $url,
             method: "POST",
-            dataType: 'json'
+            dataType: 'json',
+            data: $data
         })
         .done(function (data) {
 
@@ -503,7 +551,7 @@
                 $select.append('<option value="0">' + data.placeholder + '</option>');
             }
 
-            showHideFields($classes, $valueToCheck, data.json);
+            showHideFields($classes, $selectedValue, data.json);
 
             if (data.json) {
                 $.each(data.json, function (index, table) {
@@ -513,11 +561,11 @@
         })
         .fail(function (xhr) {
             // Error dialog shows only if no data found and user have selected a value
-            if ($valueToCheck != 0) {
+            if ($selectedValue != 0) {
                 fireDialog('info', 'Information', xhr.responseText);
             }
 
-            showHideFields($classes, $valueToCheck, false);
+            showHideFields($classes, $selectedValue, false);
         });
     }
 
@@ -530,26 +578,11 @@
     }
 
     function activateLessonsField($level) {
-        let $classes = ['.lesson', '.teacher', '.dates', '.submitBtn', '.room', '.day', '.semester'];
 
         buildSelectOptions(
             getUrl('load_lesson_ajax', $level),
             $('#lesson'),
-            $classes,
-            $level
-        );
-
-        buildSelectOptions(
-            getUrl('days_of_week'),
-            $('#day'),
-            [],
-            $level
-        );
-
-        buildSelectOptions(
-            getUrl('data_semesters'),
-            $('#semester'),
-            [],
+            ['.lesson'],
             $level
         );
     }

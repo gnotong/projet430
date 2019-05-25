@@ -86,7 +86,7 @@ $success = $this->session->flashdata('success');
                                                     <option value="<?= $semester->id ?>"
                                                         <?php if($semester->id == $lesson->semesterId) {echo "selected=selected";} ?>
                                                     >
-                                                        <?= $semester->year . ' - ' . $semester->name ?>
+                                                        <?= $semester->name ?>
                                                     </option>
                                                 <?php endforeach; ?>
                                             <?php endif; ?>

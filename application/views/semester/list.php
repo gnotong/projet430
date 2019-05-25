@@ -62,7 +62,7 @@
                                                 <?php echo $semester->name ?>
                                             </td>
                                             <td>
-                                                <?php echo $semester->year ?>
+                                                <?php echo substr($semester->name, 0, 4) ?>
                                             </td>
                                             <td>
                                                 <?php echo date_format(date_create($semester->start), 'd/m/Y') ?>

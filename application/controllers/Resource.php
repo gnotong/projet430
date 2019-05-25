@@ -173,13 +173,17 @@ class Resource extends BaseController
         redirect('resources');
     }
 
-    public function getRoomsAjax()
+    public function check()
     {
-        $rooms = $this->resource_model->getRooms();
+        $datesToCheck = $this->input->post('dates');
+
+        $semester = $this->input->post('semester');
+
+        $rooms = $this->room_model->getAvailableRoomsForSemester($datesToCheck, $semester);
 
         try {
             if ($rooms) {
-                echo json_encode(array('success' => 1, 'json' => $rooms, 'placeholder' => 'Sélectionnez le salle'));
+                echo json_encode(array('success' => 1, 'json' => $rooms, 'placeholder' => 'Sélectionnez la salle'));
             } else {
                 throw new \Exception('Aucune salle n\'a été trouvée');
             }
