@@ -42,21 +42,21 @@ $issetSemester = isset($semester);
                             <div class="row">
                                 <div class="col-md-6">
                                     <label for="start">Date de début</label>
-                                    <div class='input-group datetimepicker'>
+                                    <div class='input-group'>
                                         <span class="input-group-addon">
                                             <span class="glyphicon glyphicon-calendar text-primary"></span>
                                         </span>
-                                        <input type="text" class="form-control required"
+                                        <input type="text" class="form-control datetimepicker required"
                                                value="<?= !$issetSemester ? set_value('start') : $semester->start; ?>" id="start" name="start">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="year">Date de fin</label>
-                                    <div class='input-group datetimepicker'>
+                                    <div class='input-group'>
                                         <span class="input-group-addon">
                                             <span class="glyphicon glyphicon-calendar text-primary"></span>
                                         </span>
-                                        <input type="text" class="form-control required"
+                                        <input type="text" class="form-control datetimepicker required"
                                                value="<?= !$issetSemester ? set_value('end') : $semester->end; ?>" id="end" name="end">
                                     </div>
                                 </div>
@@ -96,8 +96,8 @@ $issetSemester = isset($semester);
 <script>
     $(function () {
         $('.datetimepicker').datetimepicker({
-            format: 'YYYY-MM-DD',
-            locale: 'fr'
+            format: 'Y-m-d H:i',
+            lang: 'fr'
         });
     });
 </script>

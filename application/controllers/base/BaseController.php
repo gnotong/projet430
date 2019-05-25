@@ -42,6 +42,8 @@ class BaseController extends CI_Controller
     public $level_model;
     /** @var Semester_model $semester_model */
     public $semester_model;
+    /** @var Room_model $room_model */
+    public $room_model;
     /** @var CI_Session $session */
     public $session;
     /** @var CI_Form_validation $form_validation */
@@ -64,6 +66,7 @@ class BaseController extends CI_Controller
         $this->load->model('lesson_model');
         $this->load->model('level_model');
         $this->load->model('semester_model');
+        $this->load->model('room_model');
         $this->datas();
     }
 

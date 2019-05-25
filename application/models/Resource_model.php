@@ -26,23 +26,6 @@ class Resource_model extends CI_Model
         $result = $query->result();        
         return $result;
     }
-    /**
-     * This function is used to get lessons rooms
-     */
-    function getRooms()
-    {
-        $this->db->select('
-            res.id, 
-            res.label as name, 
-            res.description
-        ');
-        $this->db->from('resources as res');
-        $this->db->join('categories as cat','cat.id = res.categoryId');
-        $this->db->where("cat.label", "SALLES");
-        $query = $this->db->get();
-        $result = $query->result();
-        return $result;
-    }
 
     /**
      * This function is used to get resource categories

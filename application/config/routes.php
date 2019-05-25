@@ -42,9 +42,9 @@ $route['delete_semester/(:num)'] = "semester/delete/$1";
 
 $route['resources'] = "resource/list";
 $route['add_resource'] = "resource/create";
-$route['load_rooms_ajax'] = "resource/getRoomsAjax";
 $route['edit_resource/(:num)'] = "resource/editResource/$1";
 $route['deleteResource/(:num)'] = "resource/deleteResource/$1";
+$route['check_resource'] = "resource/check";
 
 /*********** USER CONTROLLER ROUTES *******************/
 $route['changePassword'] = "user/changePassword";
