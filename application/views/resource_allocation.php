@@ -638,7 +638,7 @@
 
             buildEditFormOptions($("#room"), $data.rooms, $calEvent.roomId, 'Sélectionnez la salle');
 
-            $.each(['.teacher', '.dates', '.submitBtn', '.room', '.lesson', '.day'], function( index, $class ){
+            $.each(['.teacher', '.dates', '.submitBtn', '.room', '.lesson', '.day', '.semester'], function( index, $class ){
                 $($class).removeClass('hiddenField');
             });
 
