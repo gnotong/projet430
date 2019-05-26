@@ -342,7 +342,8 @@
         $("#semester").change(function () {
             let $semester = $(this).val();
 
-            if ($semester == 0) {
+            if (parseInt($semester) === 0) {
+                showHideFields(['.day', '.dates', '.room'], 0);
                 return;
             }
 
@@ -362,6 +363,7 @@
                     $('#day'),
                     ['.day']
                 );
+                getAvailableRooms();
             })
             .fail(function (xhr) {
                 fireDialog('info', 'Information', xhr.responseText);
@@ -370,11 +372,12 @@
 
         $("#lesson").change(function () {
             let $lesson = $(this).val();
+            let $classes = parseInt($lesson) !== 0 ? ['.teacher', '.semester']: ['.teacher', '.semester', '.room', '.day', '.dates', '.submitBtn'];
 
             buildSelectOptions(
                 getUrl('load_user_ajax', $lesson),
                 $('#teacher'),
-                ['.teacher', '.semester'],
+                $classes,
                 $lesson
             );
 
@@ -386,33 +389,80 @@
         });
 
         $("#day").change(function () {
-            let $day = $(this).val();
-            if ($day != 0) {
+            let $day = parseInt($(this).val());
+            if ($day !== 0) {
                 $(".dates").removeClass('hiddenField');
+                getAvailableRooms();
                 return;
             }
             $(".dates").addClass('hiddenField');
+            showHideFields(['.dates', '.room', '.submitBtn'], 0);
         });
 
-        $("#end").focusout(function() {
+        $("#end, #start").focusout(function() {
+            checkHours();
             getAvailableRooms();
         });
     });
 
+    /**
+     * CHECKS IF WE CAN GET ROOMS
+     */
+    function getRoomRequestParameters() {
+        let params = {
+            dateStart : $('#dateStart').val(),
+            dateEnd : $('#dateEnd').val(),
+            dayOfTheWeekNumber : parseInt($('#day').val()),
+            semesterId : parseInt($('#semester').val()),
+            hourStart : $('#start').val() ? $('#start').val().split(':') : [],
+            hourEnd : $('#end').val() ? $('#end').val().split(':') : []
+        };
+
+        if (params.hourStart.length && params.hourEnd.length && params.semesterId !== 0 && params.dayOfTheWeekNumber !== 0 && params.dateStart && params.dateEnd) {
+          return params;
+        }
+
+        return {};
+    }
+
+    /**
+     * CHECKS IF START < END
+     */
+    function checkHours() {
+
+        let $start = $('#start');
+        let $end =  $('#end');
+        let hourStart = $start.val() ? $start.val().split(':') : [];
+        let hourEnd = $end.val() ? $end.val().split(':') : [];
+
+        if (!hourStart.length || !hourEnd.length) {
+            return;
+        }
+
+        if (hourEnd[0] < hourStart[0]) {
+            $start.val(hourEnd[0] + ':' + hourEnd[1]);
+            $end.val(hourStart[0] + ':' + hourStart[1]);
+        }
+    }
+
+    /**
+     * GETS ALL AVAILABLE ROOMS WITHIN A PERIOD and BUILD CLASS SELECT
+     * IF and ONLY IF, ALL PARAMETERS ARE CORRECTLY SET
+     */
     function getAvailableRooms() {
+        let $params = getRoomRequestParameters();
+
+        if ($.isEmptyObject($params)) {
+            return;
+        }
+
         let $url = baseUrl + 'check_resource';
-        let hourStart = $('#start').val() ? $('#start').val().split(':') : [];
-        let hourEnd = $('#end').val() ? $('#end').val().split(':') : [];
-        let dateStart = $('#dateStart').val();
-        let dateEnd = $('#dateEnd').val();
-        let dayOfTheWeekNumber = parseInt($('#day').val());
-        let semesterId = $('#semester').val();
-        let $dates = getDaysBetweenDates(new Date(dateStart), new Date(dateEnd), dayOfTheWeekNumber);
+        let $dates = getDaysBetweenDates(new Date($params.dateStart), new Date($params.dateEnd), $params.dayOfTheWeekNumber);
         let postDates = [];
 
         $.each($dates, function ($key, $date) {
-            let $rowStart = new Date($date.setHours(hourStart[0], hourStart[1]));
-            let $rowEnd = new Date($date.setHours(hourEnd[0], hourEnd[1]));
+            let $rowStart = new Date($date.setHours($params.hourStart[0], $params.hourStart[1]));
+            let $rowEnd = new Date($date.setHours($params.hourEnd[0], $params.hourEnd[1]));
             postDates.push({
                 'start' : moment($rowStart).format('YYYY-MM-DD HH:mm'),
                 'end' : moment($rowEnd).format('YYYY-MM-DD HH:mm')
@@ -421,7 +471,7 @@
 
         let $data = {
             dates: postDates,
-            semester: semesterId
+            semester: $params.semesterId
         };
 
         buildSelectOptions($url, $("#room"), ['.submitBtn', '.room'], 1, $data);
@@ -504,6 +554,7 @@
                     $(this).find('select').empty();
                 });
             });
+            $(".dates").find('input').val('');
             return;
         }
 
@@ -569,6 +620,9 @@
         });
     }
 
+    /**
+     * POPS UP A DIALOG
+     */
     function fireDialog($type, $title, $msg) {
         Swal.fire({
             type: $type,
@@ -579,16 +633,18 @@
 
     function activateLessonsField($level) {
 
+        let $classes = parseInt($level) !== 0 ? ['.lesson'] : ['.lesson', '.teacher', '.semester', '.room', '.day', '.dates', '.submitBtn'];
+
         buildSelectOptions(
             getUrl('load_lesson_ajax', $level),
             $('#lesson'),
-            ['.lesson'],
+            $classes,
             $level
         );
     }
 
     /**
-     * Rebuilds the formin the édit mod
+     * REBUILDS THE FORM WHEN EDITING ALLOCATION
      */
     function hydrateEditForm($calEvent) {
 
