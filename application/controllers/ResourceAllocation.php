@@ -5,6 +5,24 @@ require 'base/BaseController.php';
 
 class ResourceAllocation extends BaseController
 {
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->datas();
+
+        $isLoggedIn = $this->session->userdata('isLoggedIn');
+
+        if (!isset($isLoggedIn) || $isLoggedIn != TRUE) {
+            redirect('login');
+        } else {
+            if (!$this->isAdmin()) {
+                $this->accesslogincontrol();
+            }
+        }
+    }
+
     public function index()
     {
         $this->global['pageTitle'] = 'Events';
