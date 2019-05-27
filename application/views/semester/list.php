@@ -76,9 +76,10 @@
                                                    title="Editer">
                                                     <i class="fa fa-pencil"></i>
                                                 </a>
-                                                <a class="btn btn-sm btn-danger"
+                                                <a class="btn btn-sm btn-danger fire-delete-alert"
                                                    href="<?php echo base_url() . 'delete_semester/' . $semester->id; ?>"
-                                                   data-levelId="<?php echo $semester->id; ?>"
+                                                   data-alert-title="Êtes-vous certains de vouloir supprimer ce semestre ?"
+                                                   data-alert-text="Cette action est irréversible!"
                                                    title="Supprimer">
                                                     <i class="fa fa-trash"></i>
                                                 </a>

@@ -135,23 +135,33 @@ class Semester extends BaseController
     /**
      * @param int|null $semesterId
      */
-    public function delete(int $semesterId = NULL): void
+    public function delete(int $semesterId): void
     {
-        if ($semesterId == null) {
+        if ($this->resourceAllocation_model->semesterHasLessons($semesterId)) {
+            $this->session->set_flashdata('error', 'Des cours ont déjà été programmés pour ce semestre');
             redirect('semesters');
         }
 
-        $deleted = $this->semester_model->delete('semesters', 'id', $semesterId);
+        try {
+            $deleted = $this->semester_model->delete('semesters', 'id', $semesterId);
 
-        if ($deleted) {
-            $process = 'Suprpession de semestre';
-            $processFunction = 'Semester/delete';
-            $this->log($process, $processFunction);
+            if ($deleted) {
+                $message['text'] = "Semestre supprimées avec succès!";
+                $message['code'] = 'success';
 
-            $this->session->set_flashdata('success', 'Semestre supprimées avec succès');
-        } else {
-            $this->session->set_flashdata('error', 'Erreur de suppression du semestre');
+                $process = 'Suprpession de semestre';
+                $processFunction = 'Semester/delete';
+                $this->log($process, $processFunction);
+            } else {
+                $message['text'] = "Erreur de suppression du semestre. Veuillez contacter l'administrateur.";
+                $message['code'] = 'success';
+            }
+
+        } catch (\Exception $exception) {
+            $message['text'] = $exception->getMessage();
+            $message['code'] = 'error';
         }
+        $this->session->set_flashdata($message['code'], $message['text']);
         redirect('semesters');
     }
 

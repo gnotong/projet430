@@ -116,4 +116,60 @@ class ResourceAllocation_model extends CI_Model {
         $this->db->delete($table);
         return true;
     }
+
+    /**
+     * @param int $teacherId
+     * @return bool
+     */
+    function teacherIsInClass(int $teacherId): bool
+    {
+        $this->db->select('ra.*');
+        $this->db->from("$this->event as ra");
+        $this->db->where('ra.teacher_id', $teacherId);
+        $query = $this->db->get();
+
+        return $query->num_rows() > 0;
+    }
+
+    /**
+     * @param int $lessonId
+     * @return bool
+     */
+    function lessonIsBeingTeached(int $lessonId): bool
+    {
+        $this->db->select('ra.*');
+        $this->db->from("$this->event as ra");
+        $this->db->where('ra.lesson_id', $lessonId);
+        $query = $this->db->get();
+
+        return $query->num_rows() > 0;
+    }
+
+    /**
+     * @param int $semesterId
+     * @return bool
+     */
+    function semesterHasLessons(int $semesterId): bool
+    {
+        $this->db->select('ra.*');
+        $this->db->from("$this->event as ra");
+        $this->db->where('ra.semester_id', $semesterId);
+        $query = $this->db->get();
+
+        return $query->num_rows() > 0;
+    }
+
+    /**
+     * @param int $levelId
+     * @return bool
+     */
+    function levelHasBeenAllocated(int $levelId): bool
+    {
+        $this->db->select('ra.*');
+        $this->db->from("$this->event as ra");
+        $this->db->where('ra.level_id', $levelId);
+        $query = $this->db->get();
+
+        return $query->num_rows() > 0;
+    }
 }

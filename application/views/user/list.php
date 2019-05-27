@@ -76,8 +76,11 @@
                                                    title="Modifier">
                                                     <i class="fa fa-pencil"></i>
                                                 </a>
-                                                <a class="btn btn-sm btn-danger deleteUser" href="#"
-                                                   data-userid="<?php echo $user->userId; ?>" title="Supprimer">
+                                                <a class="btn btn-sm btn-danger fire-delete-alert"
+                                                   href="<?php echo base_url() . 'delete_user/' . $user->userId; ?>"
+                                                   data-alert-title="Êtes-vous certains de vouloir supprimer cet utilisateur ?"
+                                                   data-alert-text="Cette action est irréversible!"
+                                                   title="Supprimer">
                                                     <i class="fa fa-trash"></i>
                                                 </a>
                                             </td
@@ -93,4 +96,3 @@
         </div>
     </section>
 </div>
-<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/common.js" charset="utf-8"></script>
