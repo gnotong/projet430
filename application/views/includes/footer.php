@@ -7,6 +7,8 @@
                 </strong> Projet430: Gestion des ressources
             </footer>
 
+
+            <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/common.js" charset="utf-8"></script>
             <script src="<?= base_url(); ?>assets/dist/js/app.min.js" type="text/javascript"></script>
             <script src="<?= base_url(); ?>assets/js/jquery.validate.js" type="text/javascript"></script>
             <script src="<?= base_url(); ?>assets/js/validation.js" type="text/javascript"></script>

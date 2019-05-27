@@ -137,26 +137,39 @@ class Admin extends BaseController
 
     /**
      * This function is used to delete the user using userId
+     * @param int $userId
      */
-    function deleteUser()
+    function deleteUser(int $userId)
     {
-        $userId = $this->input->post('userId');
+        if ($this->resourceAllocation_model->teacherIsInClass($userId)) {
+            $this->session->set_flashdata('error', 'Impossible de supprimer cet enseignant. Il a été affecté à un cours.');
+            redirect('user_list');
+        }
+
         $userInfo = array('isDeleted' => 1, 'updatedBy' => $this->userId, 'updatedDtm' => date('Y-m-d H:i:s'));
 
-        $result = $this->user_model->deleteUser($userId, $userInfo);
+        try {
+            $result = $this->user_model->deleteUser($userId, $userInfo);
 
-        if ($result > 0) {
-            echo(json_encode(array('status' => TRUE)));
+            if ($result > 0) {
+                $message['text'] = "L'utilisateur a été supprimé avec succès !";
+                $message['code'] = 'success';
 
-            $process = 'Supprimer l\'utilisateur';
-            $processFunction = 'Admin/deleteUser';
-            $this->log($process,$processFunction);
+                $process = 'Supprimer l\'utilisateur';
+                $processFunction = 'Admin/deleteUser';
+                $this->log($process,$processFunction);
+            } else {
+                $message['text'] = "Une erreur est survenue lors de la suppression de l'utilisateur. Veuillez contacter l'administrateur.";
+                $message['code'] = 'success';
+            }
 
-        } else {
-            echo(json_encode(array('status' => FALSE)));
+        } catch (\Exception $exception) {
+            $message['text'] = $exception->getMessage();
+            $message['code'] = 'error';
         }
+        $this->session->set_flashdata($message['code'], $message['text']);
+        redirect('user_list');
     }
-
 
     /**
      * @param int $lesson

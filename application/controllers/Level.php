@@ -108,24 +108,34 @@ class Level extends BaseController
     /**
      * @param int $levelId
      */
-    public function delete(int $levelId = NULL): void
+    public function delete(int $levelId): void
     {
-        if ($levelId == null) {
+        if ($this->resourceAllocation_model->levelHasBeenAllocated($levelId)) {
+            $this->session->set_flashdata('error', 'Des cours ont déjà été affectés à ce niveau d\'études.');
             redirect('levels');
         }
 
-        $deleted = $this->level_model->delete($levelId);
 
-        if ($deleted) {
-            $process = 'Suprpession du niveau d\'études';
-            $processFunction = 'Level/delete';
-            $this->log($process, $processFunction);
+        try {
+            $deleted = $this->level_model->delete($levelId);
 
-            $this->session->set_flashdata('success', 'Niveau d\'études supprimée avec succès');
-        } else {
-            $this->session->set_flashdata('error', 'Erreur de suppression du Niveau d\'études ');
+            if ($deleted) {
+                $message['text'] = "Niveau d'études supprimée avec succès !";
+                $message['code'] = 'success';
+
+                $process = 'Suprpession du niveau d\'études';
+                $processFunction = 'Level/delete';
+                $this->log($process, $processFunction);
+            } else {
+                $message['text'] = "Erreur de suppression du Niveau d'études. Veuillez contacter l'administrateur.";
+                $message['code'] = 'success';
+            }
+
+        } catch (\Exception $exception) {
+            $message['text'] = $exception->getMessage();
+            $message['code'] = 'error';
         }
+        $this->session->set_flashdata($message['code'], $message['text']);
         redirect('levels');
     }
-
 }

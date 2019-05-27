@@ -70,9 +70,10 @@
                                                    title="Editer">
                                                     <i class="fa fa-pencil"></i>
                                                 </a>
-                                                <a class="btn btn-sm btn-danger deleteLesson"
+                                                <a class="btn btn-sm btn-danger fire-delete-alert"
                                                    href="<?php echo base_url() . 'delete_lesson/' . $lesson->id; ?>"
-                                                   data-lessonid="<?php echo $lesson->id; ?>"
+                                                   data-alert-title="Êtes-vous certains de vouloir supprimer ce cours ?"
+                                                   data-alert-text="Cette action est irréversible!"
                                                    title="Supprimer">
                                                     <i class="fa fa-trash"></i>
                                                 </a>

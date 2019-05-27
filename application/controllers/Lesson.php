@@ -147,36 +147,44 @@ class Lesson extends BaseController
                 $this->session->set_flashdata('error', 'La modification du cours a échoué');
             }
             redirect('lessons');
-
         }
     }
 
     /**
      * @param int $lessonId
      */
-    public function delete(int $lessonId = NULL): void
+    public function delete(int $lessonId): void
     {
-        if ($lessonId == null) {
+        if ($this->resourceAllocation_model->lessonIsBeingTeached($lessonId)) {
+            $this->session->set_flashdata('error', 'Impossible de supprimer ce cours. Il est déjà programmé.');
             redirect('lessons');
         }
 
-        $this->lesson_model->delete('level_lesson', 'lesson_id', $lessonId);
-        $deleted = $this->lesson_model->delete('teacher_lesson', 'lesson_id', $lessonId);
+        try {
+            $this->lesson_model->delete('level_lesson', 'lesson_id', $lessonId);
+            $deleted = $this->lesson_model->delete('teacher_lesson', 'lesson_id', $lessonId);
 
-        if ($deleted) {
-            $deleted = $this->lesson_model->delete('lessons', 'id', $lessonId);
+            if ($deleted) {
+                $deleted = $this->lesson_model->delete('lessons', 'id', $lessonId);
 
-            $process = 'Suprpession de cours';
-            $processFunction = 'Lesson/delete';
-            $this->log($process, $processFunction);
+                $message['text'] = "Cours supprimé avec succès!";
+                $message['code'] = 'success';
 
-            $this->session->set_flashdata('success', 'Cours supprimées avec succès');
-        } else {
-            $this->session->set_flashdata('error', 'Erreur de suppression du cours');
+                $process = 'Suprpession de cours';
+                $processFunction = 'Lesson/delete';
+                $this->log($process, $processFunction);
+            } else {
+                $message['text'] = "Erreur de suppression du cours. Veuillez contacter l'administrateur.";
+                $message['code'] = 'success';
+            }
+
+        } catch (\Exception $exception) {
+            $message['text'] = $exception->getMessage();
+            $message['code'] = 'error';
         }
+        $this->session->set_flashdata($message['code'], $message['text']);
         redirect('lessons');
     }
-
 
     /**
      * @param int $level

@@ -9,6 +9,7 @@ $route['404_override'] = 'login/error';
 /*********** USER DEFINED ROUTES *******************/
 
 $route['dashboard'] = 'home';
+$route['home'] = 'home';
 $route['login'] = 'login/connect';
 $route['logout'] = 'login/logout';
 
@@ -18,7 +19,7 @@ $route['user_list'] = 'admin/userList';
 $route['load_user_ajax/(:num)'] = "admin/userAjax/$1";
 $route['add_user'] = "admin/addUser";
 $route['edit_user/(:num)'] = "admin/editUser/$1";
-$route['delete_user'] = "admin/deleteUser";
+$route['delete_user/(:num)'] = "admin/deleteUser/$1";
 
 /*********** RESOURCE CONTROLLER ROUTES *******************/
 

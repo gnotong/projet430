@@ -64,7 +64,7 @@
 <div class="wrapper">
 
     <header class="main-header">
-        <a href="<?= base_url(); ?>" class="logo">
+        <a href="<?= base_url(); ?>home" class="logo">
             <span class="logo-mini">
               <b>UY</b>1</span>
             <span class="logo-lg">
@@ -156,10 +156,6 @@
                             <span>Ajouter un utilisateur</span>
                         </a>
                     </li>
-                <?php endif; ?>
-
-
-                <?php if ($role == ROLE_ADMIN): ?>
                     <li class="treeview">
                         <a href="#" class="text-bold text-yellow">
                             <i class="fa fa-warning"></i>Gestion des ressources
@@ -177,6 +173,10 @@
                             <span>Ajouter une ressource</span>
                         </a>
                     </li>
+
+                <?php endif; ?>
+
+                <?php if ($role == ROLE_ADMIN || $role == ROLE_TEACHER): ?>
                     <li class="treeview">
                         <a href="<?= base_url(); ?>resource_allocation">
                             <i class="fa fa-arrow-right"></i>
@@ -190,25 +190,25 @@
                     </li>
                     <li class="treeview">
                         <a href="<?= base_url(); ?>lessons">
-                            <i class="fa fa-plus-circle"></i>
+                            <i class="fa fa-list"></i>
                             <span>Liste de cours</span>
-                        </a>
-                    </li>
-                    <li class="treeview">
-                        <a href="<?= base_url(); ?>semesters">
-                            <i class="fa fa-plus-circle"></i>
-                            <span>Liste des semestres</span>
-                        </a>
-                    </li>
-                    <li class="treeview">
-                        <a href="<?= base_url(); ?>levels">
-                            <i class="fa fa-plus-circle"></i>
-                            <span>Les niveaux d'études</span>
                         </a>
                     </li>
                 <?php endif; ?>
 
                 <?php if ($role == ROLE_ADMIN): ?>
+                    <li class="treeview">
+                        <a href="<?= base_url(); ?>semesters">
+                            <i class="fa fa-list"></i>
+                            <span>Liste des semestres</span>
+                        </a>
+                    </li>
+                    <li class="treeview">
+                        <a href="<?= base_url(); ?>levels">
+                            <i class="fa fa-list"></i>
+                            <span>Les niveaux d'études</span>
+                        </a>
+                    </li>
                     <li class="treeview">
                         <a href="#" class="text-bold text-yellow">
                             <i class="fa fa-warning"></i>FAKE DATA

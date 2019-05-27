@@ -64,9 +64,10 @@
                                                    title="Editer">
                                                     <i class="fa fa-pencil"></i>
                                                 </a>
-                                                <a class="btn btn-sm btn-danger deleteLesson"
+                                                <a class="btn btn-sm btn-danger fire-delete-alert"
                                                    href="<?php echo base_url() . 'delete_level/' . $level->id; ?>"
-                                                   data-levelId="<?php echo $level->id; ?>"
+                                                   data-alert-title="Êtes-vous certains de vouloir supprimer ce niveau d'études ?"
+                                                   data-alert-text="Cette action est irréversible !"
                                                    title="Supprimer">
                                                     <i class="fa fa-trash"></i>
                                                 </a>
