@@ -178,6 +178,17 @@
 
                 <?php if ($role == ROLE_ADMIN || $role == ROLE_TEACHER): ?>
                     <li class="treeview">
+                        <a href="#" class="text-bold text-yellow">
+                            <i class="fa fa-warning"></i>Gestion des affectations
+                        </a>
+                    </li>
+                    <li class="treeview">
+                        <a href="<?= base_url(); ?>allocation_list">
+                            <i class="fa fa-list"></i>
+                            <span>Toutes les affectations</span>
+                        </a>
+                    </li>
+                    <li class="treeview">
                         <a href="<?= base_url(); ?>resource_allocation">
                             <i class="fa fa-arrow-right"></i>
                             <span>Affectation de ressources</span>

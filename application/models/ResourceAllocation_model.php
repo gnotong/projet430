@@ -34,6 +34,7 @@ class ResourceAllocation_model extends CI_Model {
 
     function getAll() {
         $qb = $this->getBaseQuery();
+        $qb->order_by("start_date", "asc");
         $query = $qb->get();
 
         if ($query) {
@@ -168,6 +169,20 @@ class ResourceAllocation_model extends CI_Model {
         $this->db->select('ra.*');
         $this->db->from("$this->event as ra");
         $this->db->where('ra.level_id', $levelId);
+        $query = $this->db->get();
+
+        return $query->num_rows() > 0;
+    }
+
+    /**
+     * @param int $resourceId
+     * @return bool
+     */
+    function resourceHasBeenAllocated(int $resourceId): bool
+    {
+        $this->db->select('ra.*');
+        $this->db->from("$this->event as ra");
+        $this->db->where('ra.resource_id', $resourceId);
         $query = $this->db->get();
 
         return $query->num_rows() > 0;

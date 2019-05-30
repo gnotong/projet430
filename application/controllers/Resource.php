@@ -151,11 +151,12 @@ class Resource extends BaseController
 
     /**
      * This function is used to delete resources
-     * @param null $resourceId
+     * @param int $resourceId
      */
-    public function deleteResource($resourceId = NULL)
+    public function deleteResource(int $resourceId)
     {
-        if ($resourceId == null) {
+        if ($this->resourceAllocation_model->resourceHasBeenAllocated($resourceId)) {
+            $this->session->set_flashdata('error', 'Des cours ont déjà été affectés à cette ressource');
             redirect('resources');
         }
 

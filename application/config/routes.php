@@ -58,10 +58,12 @@ $route['user_edit_profile'] = "user/editProfile";
 
 /*********** CALENDAR EVENTS *******************/
 $route['resource_allocation'] = 'resourceAllocation';
+$route['allocation_list'] = 'resourceAllocation/list';
 $route['edit_allocation'] = 'resourceAllocation/edit';
 $route['add_allocation'] = 'resourceAllocation/add';
 $route['days_of_week'] = 'resourceAllocation/getDaysAjax';
 $route['delete_allocation/(:num)'] = 'resourceAllocation/delete/$1';
+$route['delete_allocation'] = 'resourceAllocation/delete';
 
 /*********** FAKER *******************/
 $route['fake_users'] = "fake/seedUser";
