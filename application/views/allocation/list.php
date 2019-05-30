@@ -48,6 +48,7 @@ $success = $this->session->flashdata('success');
                                    id="dataTables-example">
                                 <thead>
                                 <tr>
+                                    <th>Id</th>
                                     <th>Nom</th>
                                     <th>Niveau</th>
                                     <th>Enseignant</th>
@@ -62,6 +63,9 @@ $success = $this->session->flashdata('success');
                                 <?php if (!empty($allocations)): ?>
                                     <?php foreach ($allocations as $allocation): ?>
                                         <tr>
+                                            <td>
+                                                <?php echo $allocation->eventId ?>
+                                            </td>
                                             <td>
                                                 <?php echo $allocation->lessonName ?>
                                             </td>
@@ -110,6 +114,13 @@ $success = $this->session->flashdata('success');
         let $baseUrl = $(".main-footer").data('base-url');
 
         let $table = $('#dataTables-example').DataTable({
+            columnDefs: [
+                {
+                    "targets": [ 0 ],
+                    "visible": false,
+                    "searchable": false
+                }
+            ],
             stateSave: true,
             dom: "<'row'<'col-sm-6'l><'col-sm-6'f>>" +
                 "<'row'<'col-sm-12'tr>>" +
@@ -154,6 +165,7 @@ $success = $this->session->flashdata('success');
             responsive: true
         });
 
+
         $('#dataTables-example tbody').on( 'click', 'tr', function () {
             $(this).toggleClass('selected');
         } );
@@ -161,34 +173,63 @@ $success = $this->session->flashdata('success');
         $(document).on("click", "#delete-allocation", function(e){
             e.preventDefault();
 
+            let $eventIds = [];
+            let $url = $baseUrl + 'delete_allocation';
 
-            alert( $table.rows('.selected').data().length +' row(s) selected' );
+            $.each($table.rows('.selected').data(), function (k, v) {
+                $eventIds.push(parseInt(v[0]));
+            });
 
-            // let $element = $(this);
-            // let $title = $element.data('alert-title');
-            // let $text = $element.data('alert-text');
-            //
-            // fireAlert($element, $title, $text);
+            fireDeleteMultipleAlert($url, $eventIds);
+
         });
+
+
+        function fireDeleteMultipleAlert($url, $eventIds) {
+            Swal.fire({
+                title: 'Êtes vous certains de vouloir supprimer ces enregistrements ?',
+                text: 'Attention cette action est irréversible !',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d60c10',
+                cancelButtonColor: '#879fb5',
+                confirmButtonText: 'Supprimer',
+                cancelButtonText: 'Annuler'
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        url: $url,
+                        method: "POST",
+                        dataType: 'json',
+                        data: {
+                            eventId: $eventIds
+                        }
+                    }).done(function (data) {
+                        if (data.success) {
+                            fireDialog('success', 'Success', data.result);
+                        }
+                    })
+                    .fail(function (xhr) {
+                        fireDialog('error', 'Erreur', xhr.responseText);
+                    }).always(function () {
+                        setTimeout( function() {
+                            window.location = $baseUrl + 'allocation_list'
+                        }, 2000);
+                    });
+                }
+            });
+        }
+
+        /**
+         * POPS UP A DIALOG
+         */
+        function fireDialog($type, $title, $msg) {
+            Swal.fire({
+                type: $type,
+                title: $title,
+                html: '<h4 class="text-danger text-center">'+$msg+'</h4>',
+            });
+        }
     });
-
-
-
-    function fireAlert($element, $title, $text) {
-        Swal.fire({
-            title: $title,
-            text: $text,
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d60c10',
-            cancelButtonColor: '#879fb5',
-            confirmButtonText: 'Supprimer',
-            cancelButtonText: 'Annuler'
-        }).then((result) => {
-            if (result.value) {
-                window.location = $element.attr("href")
-            }
-        });
-    }
 
 </script>

@@ -110,27 +110,41 @@ class ResourceAllocation extends BaseController
      */
     public function delete(int $event = null)
     {
-        $isDeleted = $this->resourceAllocation_model->delete('resource_allocation', 'id', $event);
-
         $isAjaxRequest = $this->input->is_ajax_request();
 
-        if ($isDeleted) {
-            $process = 'Suprpession des affectation';
-            $processFunction = 'RessourceAllocation/delete';
-            $this->log($process, $processFunction);
+        $isDeleted = false;
 
-            if (!$isAjaxRequest) {
+        try
+        {
+            $eventIds = $this->input->post('eventId');
+            if ($eventIds) {
+                foreach ($eventIds as $eventId) {
+                    $isDeleted = $this->resourceAllocation_model->delete('resource_allocation', 'id', $eventId);
+                }
+            } else {
+                $isDeleted = $this->resourceAllocation_model->delete('resource_allocation', 'id', $event);
+            }
+
+            if ($isDeleted) {
+                $process = 'Suprpession des affectation';
+                $processFunction = 'RessourceAllocation/delete';
+                $this->log($process, $processFunction);
+            }
+
+            if ($isDeleted && !$isAjaxRequest) {
                 $this->session->set_flashdata('success', 'Affectation supprimée !');
                 redirect('allocation_list');
             }
 
-            echo json_encode(array('success' => 1, 'result' => 'Affectation supprimée !'));
-        } else {
+            echo json_encode(array('success' => 1, 'result' => 'Affectation(s) supprimée(s) !'));
+        }
+        catch (\Exception $exception)
+        {
             if (!$isAjaxRequest) {
-                $this->session->set_flashdata('error', 'Erreur de suppression de l\'affectation !');
+                $this->session->set_flashdata('error', $exception->getMessage());
                 redirect('allocation_list');
             }
-            echo json_encode(array('success' => 0, 'result' => 'Erreur de suppression de l\'affectation !'));
+            echo json_encode(array('success' => 0, 'result' => $exception->getMessage()));
         }
     }
 
