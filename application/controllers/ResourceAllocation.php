@@ -23,6 +23,14 @@ class ResourceAllocation extends BaseController
         }
     }
 
+    public function list()
+    {
+        $this->global['pageTitle'] = 'Liste des affectations';
+        $data['allocations'] = $this->resourceAllocation_model->getAll();
+
+        $this->loadViews("allocation/list", $this->global, $data, NULL);
+    }
+
     public function index()
     {
         $this->global['pageTitle'] = 'Events';
@@ -38,7 +46,7 @@ class ResourceAllocation extends BaseController
             $data['allocations'] = json_encode($this->resourceAllocation_model->getAll());
         }
 
-        $this->loadViews("resource_allocation", $this->global, $data, NULL);
+        $this->loadViews("allocation/resource_allocation", $this->global, $data, NULL);
     }
 
     /**
@@ -100,17 +108,28 @@ class ResourceAllocation extends BaseController
     /**
      * @param int $event
      */
-    public function delete(int $event)
+    public function delete(int $event = null)
     {
         $isDeleted = $this->resourceAllocation_model->delete('resource_allocation', 'id', $event);
+
+        $isAjaxRequest = $this->input->is_ajax_request();
 
         if ($isDeleted) {
             $process = 'Suprpession des affectation';
             $processFunction = 'RessourceAllocation/delete';
             $this->log($process, $processFunction);
 
+            if (!$isAjaxRequest) {
+                $this->session->set_flashdata('success', 'Affectation supprimée !');
+                redirect('allocation_list');
+            }
+
             echo json_encode(array('success' => 1, 'result' => 'Affectation supprimée !'));
         } else {
+            if (!$isAjaxRequest) {
+                $this->session->set_flashdata('error', 'Erreur de suppression de l\'affectation !');
+                redirect('allocation_list');
+            }
             echo json_encode(array('success' => 0, 'result' => 'Erreur de suppression de l\'affectation !'));
         }
     }
