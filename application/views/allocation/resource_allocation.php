@@ -277,7 +277,6 @@
 
             let $url = baseUrl + "add_allocation";
 
-            console.log(resourceId);
             //TODO: Vérifier que les champs obligatoires sont remplis côté PHP
             if (resourceId == 0 || teacherId == 0 || levelId == 0
                 || lessonId == 0 || hourStart.length < 1 || hourEnd.length < 1
@@ -363,7 +362,6 @@
                     $('#day'),
                     ['.day']
                 );
-                getAvailableRooms();
             })
             .fail(function (xhr) {
                 fireDialog('info', 'Information', xhr.responseText);
@@ -392,7 +390,6 @@
             let $day = parseInt($(this).val());
             if ($day !== 0) {
                 $(".dates").removeClass('hiddenField');
-                getAvailableRooms();
                 return;
             }
             $(".dates").addClass('hiddenField');
@@ -448,8 +445,16 @@
     /**
      * GETS ALL AVAILABLE ROOMS WITHIN A PERIOD and BUILD CLASS SELECT
      * IF and ONLY IF, ALL PARAMETERS ARE CORRECTLY SET
+     * IN EDIT, NO AVAILABLE ROOMS ARE FETCHED
      */
     function getAvailableRooms() {
+
+        let eventId = $('#eventId').val();
+
+        if (eventId) {
+            return;
+        }
+
         let $params = getRoomRequestParameters();
 
         if ($.isEmptyObject($params)) {
