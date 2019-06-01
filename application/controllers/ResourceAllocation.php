@@ -74,18 +74,25 @@ class ResourceAllocation extends BaseController
         try
         {
             if ($eventId) {
-                $this->resourceAllocation_model->update($events, $eventId);
-                $message = 'Affectation mise à jour avec succès';
-            } else {
+                if ($this->room_model->isRoomAvailable($events)) {
+                    $this->resourceAllocation_model->update($events, $eventId);
+                    $message = 'Affectation mise à jour avec succès';
+                } else {
+                    throw new Exception('Mise à jour impossible car la période choisie n\'est pas disponible');
+                }
+            }
+
+            if (!$eventId) {
                 $lastId = $this->resourceAllocation_model->insert($events);
                 $message = 'Affectation ajoutée avec succès';
             }
+
+            if ($lastId or $eventId) {
+                echo json_encode(array('success' => 1, 'result' => $message, 'eventId' => $lastId ?? $eventId));
+            }
+
         } catch (\Exception $exception) {
             echo $exception->getMessage();
-        }
-
-        if ($lastId or $eventId) {
-            echo json_encode(array('success' => 1, 'result' => $message, 'eventId' => $lastId ?? $eventId));
         }
     }
 

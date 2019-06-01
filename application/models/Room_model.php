@@ -38,7 +38,7 @@ class Room_model extends CI_Model
      */
     public function getAvailableRoomsForSemester(array $datesToCheck, int $semester): ?array
     {
-        $unavailableRooms = $this->getUnavailableRoomsFormSemester($datesToCheck, $semester);
+        $unavailableRooms = $this->getUnavailableRoomsForSemester($datesToCheck, $semester);
 
         $roomIds = [];
         array_walk_recursive($unavailableRooms, function($resource) use (&$roomIds) { $roomIds[] = $resource; });
@@ -58,9 +58,9 @@ class Room_model extends CI_Model
      * @param int $semester
      * @return array|null
      */
-    public function getUnavailableRoomsFormSemester(array $datesToCheck, int $semester): ?array
+    public function getUnavailableRoomsForSemester(array $datesToCheck, int $semester): ?array
     {
-        $where_period = '';
+        $where_period = '(';
         $this->db->select("ra.resource_id");
         $this->db->distinct();
         $this->db->from("$this->event as ra");
@@ -73,14 +73,58 @@ class Room_model extends CI_Model
 
             $true = $index < $len - 1;
 
-            $where_period .= "(ra.start_date < '{$min}' AND '{$min}' < ra.end_date) OR ";
-            $where_period .= "('{$min}' < ra.start_date AND ra.start_date < '{$max}') OR ";
-            $where_period .=  "('{$min}' < ra.end_date AND ra.end_date < '{$max}')" . ($true ? " OR " : "");
+            $where_period .= "(ra.start_date <= '{$min}' AND '{$min}' <= ra.end_date) OR ";
+            $where_period .= "('{$min}' <= ra.start_date AND ra.start_date <= '{$max}') OR ";
+            $where_period .=  "('{$min}' <= ra.end_date AND ra.end_date <= '{$max}')" . ($true ? " OR " : "");
 
         }
+        $where_period .= ')';
         $this->db->where($where_period);
         $this->db->where('ra.semester_id', $semester);
         return $this->db->get()->result_array();
     }
+
+    /**
+     * VERIFY IF THE SELECTED ROOM IS AVAILABLE FOR THIS PERIOD
+     * @param array $events
+     * @return array
+     */
+    public function getUnavailableRoomsForWithinAPeriod(array $events)
+    {
+        $this->db->select("ra.resource_id");
+        $this->db->from("$this->event as ra");
+
+        $min = $events['start_date'];
+        $max = $events['end_date'];
+
+        $where_period = "((ra.start_date <= '{$min}' AND '{$min}' <= ra.end_date) OR ";
+        $where_period .= "('{$min}' <= ra.start_date AND ra.start_date <= '{$max}') OR ";
+        $where_period .=  "('{$min}' <= ra.end_date AND ra.end_date <= '{$max}'))";
+
+        $this->db->where('ra.resource_id', $events['resource_id']);
+        $this->db->where('ra.semester_id', $events['semester_id']);
+        $this->db->where($where_period);
+
+        return  $this->db->get()->result_array();
+    }
+
+    /**
+     * IF THE EDITED EVENT IS THE ONLY ONE UNAVAILABLE OR NONE => IT CAN BE MODIFIED
+     * @param array $event
+     * @return bool
+     */
+    public function isRoomAvailable(array $event): bool
+    {
+        $rooms = $this->getUnavailableRoomsForWithinAPeriod($event);
+
+        $nbRooms = count($rooms);
+
+        if ($nbRooms === 0 || ($nbRooms === 1 && $rooms[0]['resource_id'] === $event['resource_id'])) {
+            return true;
+        }
+
+        return false;
+    }
+
 }
 
