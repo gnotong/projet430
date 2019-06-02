@@ -8,7 +8,7 @@
                 </h3>
             </div>
             <div class="col-md-9">
-                <form name="search" id="search" action="<?= base_url()?>resource_allocation" method="post">
+                <form name="search" id="search" action="<?= base_url() ?>resource_allocation" method="post">
                     <div class="form-group">
                         <label for="globalLevel">Choisir la classe à visualiser</label>
                         <select name="globalLevel" id="globalLevel" class="form-control">
@@ -91,8 +91,8 @@
                                         </option>
                                     <?php endforeach; ?>
                                 </select>
-                                <input type='hidden' id="dateStart" name="dateStart" />
-                                <input type='hidden' id="dateEnd" name="dateEnd" />
+                                <input type='hidden' id="dateStart" name="dateStart"/>
+                                <input type='hidden' id="dateEnd" name="dateEnd"/>
                             </div>
 
                             <div class="form-group hiddenField day">
@@ -109,21 +109,21 @@
 
                             <div class="form-group hiddenField dates">
                                 <label for="start">Heure de début</label>
-                                <div class='input-group'>
-                                    <span class="input-group-addon">
-                                        <i class="fa fa-calendar-times-o text-primary"></i>
+                                <div class="datetimepicker input-group input-append">
+                                    <span class="add-on input-group-addon">
+                                       <i class="fa fa-calendar-times-o text-primary"></i>
                                     </span>
-                                    <input type='text' class="form-control datetimepicker" id="start" name="start" />
+                                    <input data-format="hh:mm" type="text"  class="form-control" id="start" name="start"/>
                                 </div>
                             </div>
 
                             <div class="form-group hiddenField dates">
                                 <label for="end">Heure de fin</label>
-                                <div class='input-group'>
-                                    <span class="input-group-addon">
-                                        <i class="fa fa-calendar-times-o text-primary"></i>
+                                <div class="datetimepicker input-group input-append">
+                                    <span class="add-on input-group-addon">
+                                       <i class="fa fa-calendar-times-o text-primary"></i>
                                     </span>
-                                    <input type='text' class="form-control datetimepicker" id="end" name="end" />
+                                    <input data-format="hh:mm" type="text"  class="form-control" id="end" name="end"/>
                                 </div>
                             </div>
 
@@ -135,7 +135,7 @@
                             <hr>
 
                             <div class="input-group-btn hiddenField submitBtn">
-                                <input type='hidden' id="eventId" name="eventId" />
+                                <input type='hidden' id="eventId" name="eventId"/>
                                 <button id="add-new-event" type="button" class="btn btn-primary btn-flat">
                                     Ajouter
                                 </button>
@@ -165,8 +165,8 @@
 
         /** DATETIME PICKER **/
         $('.datetimepicker').datetimepicker({
-            datepicker:false,
-            format:'H:i'
+            pickDate: false,
+            pickSeconds: false
         });
 
         /** FETCHES THE CALENDAR BASE ON STUDY LEVEL **/
@@ -205,7 +205,7 @@
                 ;
                 element.append(eventDetail);
             },
-            eventClick: function(calEvent, jsEvent, view) {
+            eventClick: function (calEvent, jsEvent, view) {
                 swal.fire({
                     title: '<strong><i>Que voulez-vous réaliser comme action ?</i></strong>',
                     type: 'info',
@@ -214,7 +214,7 @@
                     showCloseButton: true,
                     showCancelButton: true,
                     focusConfirm: false,
-                    confirmButtonText:'Supprimer',
+                    confirmButtonText: 'Supprimer',
                     confirmButtonColor: '#d62522',
                     cancelButtonText: 'Editer',
                     cancelButtonColor: '#2b803a',
@@ -235,7 +235,7 @@
                     }
                 });
             },
-            eventDrop: function($calEvent, delta, revertFunc) {
+            eventDrop: function ($calEvent, delta, revertFunc) {
                 let $url = baseUrl + "add_allocation";
                 addUpdateEvents($url, $calEvent, $calEvent.eventId);
             },
@@ -353,24 +353,24 @@
                 method: "POST",
                 dataType: 'json'
             })
-            .done(function (data) {
-                $('#dateStart').val(data.json.start);
-                $('#dateEnd').val(data.json.end);
+                .done(function (data) {
+                    $('#dateStart').val(data.json.start);
+                    $('#dateEnd').val(data.json.end);
 
-                buildSelectOptions(
-                    getUrl('days_of_week'),
-                    $('#day'),
-                    ['.day']
-                );
-            })
-            .fail(function (xhr) {
-                fireDialog('info', 'Information', xhr.responseText);
-            });
+                    buildSelectOptions(
+                        getUrl('days_of_week'),
+                        $('#day'),
+                        ['.day']
+                    );
+                })
+                .fail(function (xhr) {
+                    fireDialog('info', 'Information', xhr.responseText);
+                });
         });
 
         $("#lesson").change(function () {
             let $lesson = $(this).val();
-            let $classes = parseInt($lesson) !== 0 ? ['.teacher', '.semester']: ['.teacher', '.semester', '.room', '.day', '.dates', '.submitBtn'];
+            let $classes = parseInt($lesson) !== 0 ? ['.teacher', '.semester'] : ['.teacher', '.semester', '.room', '.day', '.dates', '.submitBtn'];
 
             buildSelectOptions(
                 getUrl('load_user_ajax', $lesson),
@@ -396,7 +396,7 @@
             showHideFields(['.dates', '.room', '.submitBtn'], 0);
         });
 
-        $("#end, #start").focusout(function() {
+        $("#end, #start").focusout(function () {
             checkHours();
             getAvailableRooms();
         });
@@ -407,16 +407,16 @@
      */
     function getRoomRequestParameters() {
         let params = {
-            dateStart : $('#dateStart').val(),
-            dateEnd : $('#dateEnd').val(),
-            dayOfTheWeekNumber : parseInt($('#day').val()),
-            semesterId : parseInt($('#semester').val()),
-            hourStart : $('#start').val() ? $('#start').val().split(':') : [],
-            hourEnd : $('#end').val() ? $('#end').val().split(':') : []
+            dateStart: $('#dateStart').val(),
+            dateEnd: $('#dateEnd').val(),
+            dayOfTheWeekNumber: parseInt($('#day').val()),
+            semesterId: parseInt($('#semester').val()),
+            hourStart: $('#start').val() ? $('#start').val().split(':') : [],
+            hourEnd: $('#end').val() ? $('#end').val().split(':') : []
         };
 
         if (params.hourStart.length && params.hourEnd.length && params.semesterId !== 0 && params.dayOfTheWeekNumber !== 0 && params.dateStart && params.dateEnd) {
-          return params;
+            return params;
         }
 
         return {};
@@ -428,7 +428,7 @@
     function checkHours() {
 
         let $start = $('#start');
-        let $end =  $('#end');
+        let $end = $('#end');
         let hourStart = $start.val() ? $start.val().split(':') : [];
         let hourEnd = $end.val() ? $end.val().split(':') : [];
 
@@ -469,8 +469,8 @@
             let $rowStart = new Date($date.setHours($params.hourStart[0], $params.hourStart[1]));
             let $rowEnd = new Date($date.setHours($params.hourEnd[0], $params.hourEnd[1]));
             postDates.push({
-                'start' : moment($rowStart).format('YYYY-MM-DD HH:mm'),
-                'end' : moment($rowEnd).format('YYYY-MM-DD HH:mm')
+                'start': moment($rowStart).format('YYYY-MM-DD HH:mm'),
+                'end': moment($rowEnd).format('YYYY-MM-DD HH:mm')
             });
         });
 
@@ -511,25 +511,25 @@
                 semester: $calEvent.semesterId
             }
         })
-        .done(function (data) {
+            .done(function (data) {
 
-            if ($calEvent.eventId) {
-                fireDialog('success', 'Success', data.result);
-            }
+                if ($calEvent.eventId) {
+                    fireDialog('success', 'Success', data.result);
+                }
 
-            $calEvent.eventId = data.eventId;
+                $calEvent.eventId = data.eventId;
 
-            /**
-            * Date needs to be a Moment date in order to be added the the calendar
-            */
-           $calEvent.start = new Date(start);
-           $calEvent.end = new Date(end);
+                /**
+                 * Date needs to be a Moment date in order to be added the the calendar
+                 */
+                $calEvent.start = new Date(start);
+                $calEvent.end = new Date(end);
 
-            $('#calendar').fullCalendar($isEdit ? 'updateEvent' : 'renderEvent', $calEvent, true);
-        })
-        .fail(function (xhr) {
-            fireDialog('error', 'Erreur', xhr.responseText);
-        });
+                $('#calendar').fullCalendar($isEdit ? 'updateEvent' : 'renderEvent', $calEvent, true);
+            })
+            .fail(function (xhr) {
+                fireDialog('error', 'Erreur', xhr.responseText);
+            });
     }
 
     /** DELETE ALLOCATION FROM THE CALENDAR AND FROM THE DATABASE **/
@@ -553,7 +553,7 @@
      */
     function showHideFields($classes, $value = null, $dataFound = null) {
         if ($classes && ($value == 0 || !$dataFound)) {
-            $.each( $classes, function( index, $class ){
+            $.each($classes, function (index, $class) {
                 $($class).each(function () {
                     $(this).addClass('hiddenField');
                     $(this).find('select').empty();
@@ -563,7 +563,7 @@
             return;
         }
 
-        $.each( $classes, function( index, $class ){
+        $.each($classes, function (index, $class) {
             $($class).each(function () {
                 $(this).removeClass('hiddenField');
             });
@@ -599,30 +599,30 @@
             dataType: 'json',
             data: $data
         })
-        .done(function (data) {
+            .done(function (data) {
 
-            $select.empty();
+                $select.empty();
 
-            if (data.placeholder) {
-                $select.append('<option value="0">' + data.placeholder + '</option>');
-            }
+                if (data.placeholder) {
+                    $select.append('<option value="0">' + data.placeholder + '</option>');
+                }
 
-            showHideFields($classes, $selectedValue, data.json);
+                showHideFields($classes, $selectedValue, data.json);
 
-            if (data.json) {
-                $.each(data.json, function (index, table) {
-                    $select.append($("<option></option>").attr("value", table.id).text(table.name));
-                });
-            }
-        })
-        .fail(function (xhr) {
-            // Error dialog shows only if no data found and user have selected a value
-            if ($selectedValue != 0) {
-                fireDialog('info', 'Information', xhr.responseText);
-            }
+                if (data.json) {
+                    $.each(data.json, function (index, table) {
+                        $select.append($("<option></option>").attr("value", table.id).text(table.name));
+                    });
+                }
+            })
+            .fail(function (xhr) {
+                // Error dialog shows only if no data found and user have selected a value
+                if ($selectedValue != 0) {
+                    fireDialog('info', 'Information', xhr.responseText);
+                }
 
-            showHideFields($classes, $selectedValue, false);
-        });
+                showHideFields($classes, $selectedValue, false);
+            });
     }
 
     /**
@@ -632,7 +632,7 @@
         Swal.fire({
             type: $type,
             title: $title,
-            html: '<h4 class="text-danger text-center">'+$msg+'</h4>',
+            html: '<h4 class="text-danger text-center">' + $msg + '</h4>',
         });
     }
 
@@ -665,45 +665,51 @@
             dataType: 'json',
             data: $data
         })
-        .done(function (data) {
+            .done(function (data) {
 
-            let $teacher = $("#teacher");
-            let $data = data.result;
-            let $dayOfTheWeekDigit = (new Date($data.event.start)).getDay();
-            let $hourStart = moment($data.event.start).format('H:mm');
-            let $hourEnd = moment($data.event.end).format('H:mm');
-            let $dateStart = $calEvent.start.format('YYYY-MM-DD HH:mm');
-            let $dateEnd = $calEvent.end.format('YYYY-MM-DD HH:mm');
+                let $teacher = $("#teacher");
+                let $data = data.result;
+                let $dayOfTheWeekDigit = (new Date($data.event.start)).getDay();
+                let $hourStart = moment($data.event.start).format('H:mm');
+                let $hourEnd = moment($data.event.end).format('H:mm');
+                let $dateStart = $calEvent.start.format('YYYY-MM-DD HH:mm');
+                let $dateEnd = $calEvent.end.format('YYYY-MM-DD HH:mm');
 
-            buildEditFormOptions($("#level"), $data.levels, $calEvent.levelId, 'Sélectionnez le niveau d\'études');
+                buildEditFormOptions($("#level"), $data.levels, $calEvent.levelId, 'Sélectionnez le niveau d\'études');
 
-            buildEditFormOptions($("#lesson"), $data.lessons, $calEvent.lessonId, 'Sélectionnez l\'unité d\'enseignement');
+                buildEditFormOptions($("#lesson"), $data.lessons, $calEvent.lessonId, 'Sélectionnez l\'unité d\'enseignement');
 
-            buildEditFormOptions($("#day"), $data.daysOfTheWeek, $dayOfTheWeekDigit, 'Choisir le jour');
+                buildEditFormOptions($("#day"), $data.daysOfTheWeek, $dayOfTheWeekDigit, 'Choisir le jour');
 
-            $("#start").val($hourStart);
-            $("#end").val($hourEnd);
-            $("#eventId").val($calEvent.eventId);
-            $('#dateStart').val($dateStart);
-            $('#dateEnd').val($dateEnd);
-            $('#add-new-event').css({'background-color': $calEvent.backgroundColor, 'border-color': $calEvent.borderColor});
+                $("#start").val($hourStart);
+                $("#end").val($hourEnd);
+                $("#eventId").val($calEvent.eventId);
+                $('#dateStart').val($dateStart);
+                $('#dateEnd').val($dateEnd);
+                $('#add-new-event').css({
+                    'background-color': $calEvent.backgroundColor,
+                    'border-color': $calEvent.borderColor
+                });
 
-            buildEditFormOptions($("#semester"), $data.semesters, $calEvent.semesterId, 'Choisir le semestre');
+                buildEditFormOptions($("#semester"), $data.semesters, $calEvent.semesterId, 'Choisir le semestre');
 
-            $teacher.empty();
-            if ($calEvent.teacherId === $data.teacher.id) {
-                $teacher.append($("<option></option>").attr({"value": $data.teacher.id, 'selected': true}).text($data.teacher.name));
-            } else {
-                $teacher.append($("<option></option>").attr("value", $data.teacher.id).text($data.teacher.name));
-            }
+                $teacher.empty();
+                if ($calEvent.teacherId === $data.teacher.id) {
+                    $teacher.append($("<option></option>").attr({
+                        "value": $data.teacher.id,
+                        'selected': true
+                    }).text($data.teacher.name));
+                } else {
+                    $teacher.append($("<option></option>").attr("value", $data.teacher.id).text($data.teacher.name));
+                }
 
-            buildEditFormOptions($("#room"), $data.rooms, $calEvent.roomId, 'Sélectionnez la salle');
+                buildEditFormOptions($("#room"), $data.rooms, $calEvent.roomId, 'Sélectionnez la salle');
 
-            $.each(['.teacher', '.dates', '.submitBtn', '.room', '.lesson', '.day', '.semester'], function( index, $class ){
-                $($class).removeClass('hiddenField');
+                $.each(['.teacher', '.dates', '.submitBtn', '.room', '.lesson', '.day', '.semester'], function (index, $class) {
+                    $($class).removeClass('hiddenField');
+                });
+
             });
-
-        });
     }
 
     /**
@@ -715,7 +721,7 @@
      */
     function buildEditFormOptions($select, $data, $idToFind, $placeholder) {
         $select.empty();
-        $select.append('<option value="0">'+$placeholder+'</option>');
+        $select.append('<option value="0">' + $placeholder + '</option>');
         $.each($data, function (index, $object) {
             if ($idToFind === $object.id) {
                 $select.append($("<option></option>").attr({"value": $object.id, 'selected': true}).text($object.name));
@@ -727,13 +733,13 @@
 
 
     /** Given a start date, end date and day name, return
-    ** an array of dates between the two dates for the
-    ** given day inclusive
-    ** @param {Date} start - date to start from
-    ** @param {Date} end - date to end on
-    ** @param {number} dayNumber - number of day
+     ** an array of dates between the two dates for the
+     ** given day inclusive
+     ** @param {Date} start - date to start from
+     ** @param {Date} end - date to end on
+     ** @param {number} dayNumber - number of day
      * @returns {Array} array of Dates
-    */
+     */
     function getDaysBetweenDates(start, end, dayNumber) {
         var result = [];
         var day = parseInt(dayNumber);
