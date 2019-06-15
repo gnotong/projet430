@@ -36,9 +36,9 @@ class Room_model extends CI_Model
      * @param int $semester
      * @return array|null
      */
-    public function getAvailableRoomsForSemester(array $datesToCheck, int $semester): ?array
+    public function getAvailableRooms(array $datesToCheck, int $semester = 0): ?array
     {
-        $unavailableRooms = $this->getUnavailableRoomsForSemester($datesToCheck, $semester);
+        $unavailableRooms = $this->getUnavailableRooms($datesToCheck, $semester);
 
         $roomIds = [];
         array_walk_recursive($unavailableRooms, function($resource) use (&$roomIds) { $roomIds[] = $resource; });
@@ -58,7 +58,7 @@ class Room_model extends CI_Model
      * @param int $semester
      * @return array|null
      */
-    public function getUnavailableRoomsForSemester(array $datesToCheck, int $semester): ?array
+    public function getUnavailableRooms(array $datesToCheck, int $semester = 0): ?array
     {
         $where_period = '(';
         $this->db->select("ra.resource_id");
@@ -80,7 +80,9 @@ class Room_model extends CI_Model
         }
         $where_period .= ')';
         $this->db->where($where_period);
-        $this->db->where('ra.semester_id', $semester);
+        if ($semester) {
+            $this->db->where('ra.semester_id', $semester);
+        }
         return $this->db->get()->result_array();
     }
 

@@ -18,6 +18,18 @@ class ResourceAllocation_model extends CI_Model {
 
         return NULL;
     }
+    public function getByLevelWithoutSemester(int $levelId)
+    {
+        $qb = $this->getBaseQueryWithoutSemester();
+        $qb->where('ra.level_id', $levelId);
+        $query = $qb->get();
+
+        if ($query) {
+            return $query->result();
+        }
+
+        return NULL;
+    }
 
     public function getById(int $id)
     {
@@ -32,8 +44,33 @@ class ResourceAllocation_model extends CI_Model {
         return NULL;
     }
 
+    public function getByIdWithoutSemester(int $id)
+    {
+        $qb = $this->getBaseQueryWithoutSemester();
+        $qb->where('ra.id', $id);
+        $query = $qb->get();
+
+        if ($query) {
+            return $query->result();
+        }
+
+        return NULL;
+    }
+
     function getAll() {
         $qb = $this->getBaseQuery();
+        $qb->order_by("start_date", "asc");
+        $query = $qb->get();
+
+        if ($query) {
+            return $query->result();
+        }
+
+        return NULL;
+    }
+
+    function getAllWithoutSemester() {
+        $qb = $this->getBaseQueryWithoutSemester();
         $qb->order_by("start_date", "asc");
         $query = $qb->get();
 
@@ -75,6 +112,36 @@ class ResourceAllocation_model extends CI_Model {
         $this->db->join('levels as le', 'le.id = ra.level_id');
         $this->db->join('lessons as ls', 'ls.id = ra.lesson_id');
         return $this->db->join('semesters as se', 'se.id = ra.semester_id');
+    }
+
+    /**
+     * @return CI_DB_query_builder
+     */
+    private function getBaseQueryWithoutSemester(): CI_DB_query_builder
+    {
+        $this->db->select("
+            ra.id as eventId,
+            re.label as title,
+            re.id as roomId,
+            re.label as name,
+            start_date as start,
+            end_date as end,
+            all_day as allDay,
+            background_color as backgroundColor,
+            border_color as borderColor,
+            ra.resource_id as resourceId,
+            us.userId as teacherId,
+            us.name as teacherName,
+            le.name as levelName,
+            le.id as levelId,
+            ls.label as lessonName,
+            ls.id as lessonId
+        ");
+        $this->db->from("$this->event as ra");
+        $this->db->join('resources as re','re.id = ra.resource_id');
+        $this->db->join('users as us', 'us.userId = ra.teacher_id');
+        $this->db->join('levels as le', 'le.id = ra.level_id');
+        return $this->db->join('lessons as ls', 'ls.id = ra.lesson_id');
     }
 
     function insert($allocation)
