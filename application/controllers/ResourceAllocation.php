@@ -36,14 +36,34 @@ class ResourceAllocation extends BaseController
         $this->global['pageTitle'] = 'Events';
         $data['colors'] = $this->getColors();
         $data['levels'] = $this->level_model->getAll();
+        $data['actions'] = $this->getActions();
         $data['days'] = $this->daysOfTheWeek();
         $data['semesters'] = $this->semester_model->getAll();
+        $levelId = $this->input->post('globalLevel');
+        $action = $this->input->post('action');
 
-        if ($levelId = $this->input->post('globalLevel')) {
-            $data['allocations'] = json_encode($this->resourceAllocation_model->getByLevel($levelId));
+        $isReservation = $action == 2;
+
+        if ($levelId) {
+
+            if ($isReservation) { // Réservation
+                $data['allocations'] = json_encode($this->resourceAllocation_model->getByLevelWithoutSemester($levelId));
+            }
+
+            if (!$isReservation) { //Affectation
+                $data['allocations'] = json_encode($this->resourceAllocation_model->getByLevel($levelId));
+            }
+
             $data['levelId'] = $levelId;
+            $data['action'] = $action;
         } else {
-            $data['allocations'] = json_encode($this->resourceAllocation_model->getAll());
+            if ($isReservation) {
+                $data['allocations'] = json_encode($this->resourceAllocation_model->getAllWithoutSemester());
+            }
+
+            if (!$isReservation) {
+                $data['allocations'] = json_encode($this->resourceAllocation_model->getAll());
+            }
         }
 
         $this->loadViews("allocation/resource_allocation", $this->global, $data, NULL);
@@ -57,13 +77,14 @@ class ResourceAllocation extends BaseController
         $message = null;
         $lastId = null;
         $eventId = $this->input->post('eventId');
+        $isReservation = $this->input->post('isReservation');
 
         $events = [
             'resource_id' => $this->input->post('resource'),
             'level_id' => $this->input->post('level'),
             'lesson_id' => $this->input->post('lesson'),
             'teacher_id' => $this->input->post('teacher'),
-            'semester_id' => $this->input->post('semester'),
+            'semester_id' => !$isReservation? $this->input->post('semester') : null,
             'background_color ' => $this->input->post('backgroundColor'),
             'border_color ' => $this->input->post('borderColor'),
             'start_date' => $this->input->post('start'),
@@ -196,5 +217,13 @@ class ResourceAllocation extends BaseController
     public function getDaysAjax(): void
     {
         echo json_encode(array('success' => 1, 'json' => $this->daysOfTheWeek(), 'placeholder' => 'Choisir le jour'));
+    }
+
+    public function getActions(): array
+    {
+        return [
+            1 => 'Affectations',
+            2 => 'Reservations'
+        ];
     }
 }

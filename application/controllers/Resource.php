@@ -177,10 +177,11 @@ class Resource extends BaseController
     public function check()
     {
         $datesToCheck = $this->input->post('dates');
+        $isReservation = $this->input->post('isReservation');
 
         $semester = $this->input->post('semester');
 
-        $rooms = $this->room_model->getAvailableRoomsForSemester($datesToCheck, $semester);
+        $rooms = $this->room_model->getAvailableRooms($datesToCheck, $isReservation ? 0 : $semester);
 
         try {
             if ($rooms) {

@@ -1,3 +1,6 @@
+<?= $isAffectation = isset($action) && $action == 1; ?>
+<?= $isReservation = isset($action) && $action == 2; ?>
+
 <div class="content-wrapper">
     <section class="content-header">
         <div class="row">
@@ -10,17 +13,35 @@
             <div class="col-md-9">
                 <form name="search" id="search" action="<?= base_url() ?>resource_allocation" method="post">
                     <div class="form-group">
-                        <label for="globalLevel">Choisir la classe à visualiser</label>
-                        <select name="globalLevel" id="globalLevel" class="form-control">
-                            <option value="">Sélectionnez la filière</option>
-                            <?php foreach ($levels as $level): ?>
-                                <option value="<?= $level->id ?>" <?php if (isset($levelId) && $level->id == $levelId) {
-                                    echo 'selected=selected';
-                                } ?>>
-                                    <?= $level->name ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
+                        <div class="col-md-6">
+                            <label for="globalLevel">Choisir la classe à visualiser</label>
+                            <select name="globalLevel" id="globalLevel" class="form-control">
+                                <option value="">Sélectionnez la filière</option>
+                                <?php foreach ($levels as $level): ?>
+                                    <option value="<?= $level->id ?>" <?php if (isset($levelId) && $level->id == $levelId) {
+                                        echo 'selected=selected';
+                                    } ?>>
+                                        <?= $level->name ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="col-md-5">
+                            <label for="action">Choisir l'action à réaliser</label>
+                            <select name="action" id="action" class="form-control">
+                                <option value="">Réservation ou affectation de ressources</option>
+                                <?php foreach ($actions as $key => $actionLabel): ?>
+                                    <option value="<?= $key ?>" <?php if (isset($action) && $key == $action) {
+                                        echo 'selected=selected';
+                                    } ?>>
+                                        <?= $actionLabel ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <button class="btn btn-success" type="submit">Rechercher</button>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -35,7 +56,14 @@
 
                         <div class="row">
                             <div class="col-md-12">
-                                <h3 class="text-yellow text-bold">Effectuer une affectation</h3>
+                                <h3 class="text-yellow text-bold">
+                                    <?php if($isAffectation or !$isReservation): ?>
+                                        Effectuer une affectation
+                                    <?php endif; ?>
+                                    <?php if($isReservation): ?>
+                                        Effectuer une réservation
+                                    <?php endif; ?>
+                                </h3>
                             </div>
                         </div>
 
@@ -81,51 +109,84 @@
                                 <select class="form-control required" id="teacher" name="teacher"></select>
                             </div>
 
-                            <div class="form-group hiddenField semester">
-                                <label for="semester">Semestre</label>
-                                <select class="form-control required" id="semester" name="semester">
-                                    <option value="0">Choisir le semestre</option>
-                                    <?php foreach ($semesters as $key => $semester): ?>
-                                        <option value="<?= $semester->id ?>">
-                                            <?= $semester->name ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
-                                <input type='hidden' id="dateStart" name="dateStart"/>
-                                <input type='hidden' id="dateEnd" name="dateEnd"/>
-                            </div>
-
-                            <div class="form-group hiddenField day">
-                                <label for="day">Jour de la semaine</label>
-                                <select class="form-control required" id="day" name="day">
-                                    <option value="0">Choisir le jour</option>
-                                    <?php foreach ($days as $key => $day): ?>
-                                        <option value="<?= $day['id']; ?>">
-                                            <?= $day['name']; ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-
-                            <div class="form-group hiddenField dates">
-                                <label for="start">Heure de début</label>
-                                <div class="datetimepicker input-group input-append">
-                                    <span class="add-on input-group-addon">
-                                       <i class="fa fa-calendar-times-o text-primary"></i>
-                                    </span>
-                                    <input data-format="hh:mm" type="text"  class="form-control" id="start" name="start"/>
+                            <?php if($isAffectation or !$isReservation): ?>
+                                <div class="form-group hiddenField semester">
+                                    <label for="semester">Semestre</label>
+                                    <select class="form-control required" id="semester" name="semester">
+                                        <option value="0">Choisir le semestre</option>
+                                        <?php foreach ($semesters as $key => $semester): ?>
+                                            <option value="<?= $semester->id ?>">
+                                                <?= $semester->name ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                    <input type='hidden' id="dateStart" name="dateStart"/>
+                                    <input type='hidden' id="dateEnd" name="dateEnd"/>
                                 </div>
-                            </div>
 
-                            <div class="form-group hiddenField dates">
-                                <label for="end">Heure de fin</label>
-                                <div class="datetimepicker input-group input-append">
-                                    <span class="add-on input-group-addon">
-                                       <i class="fa fa-calendar-times-o text-primary"></i>
-                                    </span>
-                                    <input data-format="hh:mm" type="text"  class="form-control" id="end" name="end"/>
+                                <div class="form-group hiddenField day">
+                                    <label for="day">Jour de la semaine</label>
+                                    <select class="form-control required" id="day" name="day">
+                                        <option value="0">Choisir le jour</option>
+                                        <?php foreach ($days as $key => $day): ?>
+                                            <option value="<?= $day['id']; ?>">
+                                                <?= $day['name']; ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
                                 </div>
-                            </div>
+
+                                <div class="form-group hiddenField dates">
+                                    <label for="start">Heure de début</label>
+                                    <div class="datetimepicker input-group input-append">
+                                        <span class="add-on input-group-addon">
+                                           <i class="fa fa-calendar-times-o text-primary"></i>
+                                        </span>
+                                        <input data-format="hh:mm" type="text"  class="form-control" id="start" name="start"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group hiddenField dates">
+                                    <label for="end">Heure de fin</label>
+                                    <div class="datetimepicker input-group input-append">
+                                        <span class="add-on input-group-addon">
+                                           <i class="fa fa-calendar-times-o text-primary"></i>
+                                        </span>
+                                        <input data-format="hh:mm" type="text"  class="form-control" id="end" name="end"/>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
+
+                            <?php if($isReservation): ?>
+                                <div class="form-group">
+                                    <label for="periodDate">Date</label>
+                                    <div class="datepickerDate input-group input-append">
+                                        <span class="add-on input-group-addon">
+                                           <i class="fa fa-calendar-times-o text-primary"></i>
+                                        </span>
+                                        <input type="text"  class="form-control" id="periodDate" name="periodDate"/>
+                                        <input type='hidden' id="isReservation" name="isReservation" value="1"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="startPeriod">Heure de début</label>
+                                    <div class="datepickerHour input-group input-append">
+                                        <span class="add-on input-group-addon">
+                                           <i class="fa fa-calendar-times-o text-primary"></i>
+                                        </span>
+                                        <input data-format="hh:mm" type="text"  class="form-control" id="startPeriod" name="startPeriod"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="endPeriod">Heure de début</label>
+                                    <div class="datepickerHour input-group input-append">
+                                        <span class="add-on input-group-addon">
+                                           <i class="fa fa-calendar-times-o text-primary"></i>
+                                        </span>
+                                        <input data-format="hh:mm" type="text"  class="form-control" id="endPeriod" name="endPeriod"/>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
 
                             <div class="form-group hiddenField room">
                                 <label for="room">Salles</label>
@@ -155,6 +216,9 @@
         </div>
     </section>
 </div>
+
+
+
 <script>
     var $allocations = <?= $allocations ?>;
     var baseUrl = '<?= base_url(); ?>';
@@ -163,15 +227,15 @@
 <script>
     $(function () {
 
-        /** DATETIME PICKER **/
-        $('.datetimepicker').datetimepicker({
+        /** DATETIME PICKER Affectation **/
+        $('.datetimepicker, .datepickerHour').datetimepicker({
             pickDate: false,
             pickSeconds: false
         });
 
-        /** FETCHES THE CALENDAR BASE ON STUDY LEVEL **/
-        $("#globalLevel").change(function () {
-            $('#search').submit();
+        /** Reservation **/
+        $('.datepickerDate').datetimepicker({
+            format: 'yyyy-MM-dd'
         });
 
         /** THE CALENDAR **/
@@ -197,9 +261,13 @@
                 let eventDetail =
                     moment(event.start).format("HH:mm") + '-'
                     + moment(event.end).format("HH:mm") + '<br/>'
-                    + '<strong>' + event.title + '</strong><br/>'
-                    + '<strong>' + event.semesterName + '</strong><br/>'
-                    + '<i>' + event.teacherName + '</i><br/>'
+                    + '<strong>' + event.title + '</strong><br/>';
+
+                if (event.semesterName) {
+                    eventDetail += '<strong>' + event.semesterName + '</strong><br/>';
+                }
+
+                eventDetail += '<i>' + event.teacherName + '</i><br/>'
                     + '<i>' + event.levelName + '</i><br/>'
                     + '<i>' + event.lessonName + '</i><br/>'
                 ;
@@ -237,6 +305,7 @@
             },
             eventDrop: function ($calEvent, delta, revertFunc) {
                 let $url = baseUrl + "add_allocation";
+                $calEvent.isReservation = $('#isReservation').val();
                 addUpdateEvents($url, $calEvent, $calEvent.eventId);
             },
         });
@@ -269,24 +338,44 @@
             let semesterName = $('#semester option:selected').text();
             let eventId = $('#eventId').val();
             let dayOfTheWeekNumber = parseInt($('#day').val());
-            let hourStart = $('#start').val() ? $('#start').val().split(':') : [];
-            let hourEnd = $('#end').val() ? $('#end').val().split(':') : [];
-            let dateStart = $('#dateStart').val();
-            let dateEnd = $('#dateEnd').val();
+            let isReservation = $('#isReservation').val();
+            let hourStart = null;
+            let hourEnd = null;
+            let $dates = [];
             let saveButton = $(this);
 
             let $url = baseUrl + "add_allocation";
 
-            //TODO: Vérifier que les champs obligatoires sont remplis côté PHP
-            if (resourceId == 0 || teacherId == 0 || levelId == 0
-                || lessonId == 0 || hourStart.length < 1 || hourEnd.length < 1
-                || !dayOfTheWeekNumber || !semesterId
-            ) {
-                fireDialog('error', 'Erreur', 'Tous les champs sont obligatoires');
-                return
-            }
+            if (isReservation ){
+                let periodDate = $("#periodDate").val();
+                hourStart = $("#startPeriod").val() ? $('#startPeriod').val().split(':') : [];
+                hourEnd = $("#endPeriod").val() ? $('#endPeriod').val().split(':') : [];
 
-            let $dates = getDaysBetweenDates(new Date(dateStart), new Date(dateEnd), dayOfTheWeekNumber);
+                if (resourceId == 0 || teacherId == 0 || levelId == 0
+                    || lessonId == 0 || hourStart.length < 1 || hourEnd.length < 1
+                ) {
+                    fireDialog('error', 'Erreur', 'Tous les champs sont obligatoires');
+                    return
+                }
+
+                $dates.push(new Date(periodDate));
+
+            } else {
+                let dateStart = $('#dateStart').val();
+                let dateEnd = $('#dateEnd').val();
+                hourStart = $('#start').val() ? $('#start').val().split(':') : [];
+                hourEnd = $('#end').val() ? $('#end').val().split(':') : [];
+
+                if (resourceId == 0 || teacherId == 0 || levelId == 0
+                    || lessonId == 0 || hourStart.length < 1 || hourEnd.length < 1
+                    || !dayOfTheWeekNumber || !semesterId
+                ) {
+                    fireDialog('error', 'Erreur', 'Tous les champs sont obligatoires');
+                    return
+                }
+
+                $dates = getDaysBetweenDates(new Date(dateStart), new Date(dateEnd), dayOfTheWeekNumber);
+            }
 
             $.each($dates, function ($key, $date) {
                 let originalEventObject = {};
@@ -312,6 +401,7 @@
                 originalEventObject.eventId = eventId;
                 originalEventObject.semesterName = semesterName;
                 originalEventObject.semesterId = semesterId;
+                originalEventObject.isReservation = isReservation;
 
                 addUpdateEvents($url, originalEventObject, eventId);
 
@@ -320,6 +410,7 @@
                     return false;
                 }
             });
+
         });
 
         /**
@@ -397,26 +488,43 @@
         });
 
         $("#end, #start").focusout(function () {
-            checkHours();
-            getAvailableRooms();
+            checkHours(false);
+            getAvailableRooms(false);
+        });
+
+        $("#endPeriod, #startPeriod").focusout(function () {
+            checkHours(true);
+            getAvailableRooms(true);
         });
     });
 
     /**
      * CHECKS IF WE CAN GET ROOMS
      */
-    function getRoomRequestParameters() {
-        let params = {
-            dateStart: $('#dateStart').val(),
-            dateEnd: $('#dateEnd').val(),
-            dayOfTheWeekNumber: parseInt($('#day').val()),
-            semesterId: parseInt($('#semester').val()),
-            hourStart: $('#start').val() ? $('#start').val().split(':') : [],
-            hourEnd: $('#end').val() ? $('#end').val().split(':') : []
-        };
+    function getRoomRequestParameters(isReservation) {
 
-        if (params.hourStart.length && params.hourEnd.length && params.semesterId !== 0 && params.dayOfTheWeekNumber !== 0 && params.dateStart && params.dateEnd) {
-            return params;
+        let params = {};
+
+        if (isReservation) {
+            params.dateStart = $("#periodDate").val();
+            params.hourStart = $("#startPeriod").val() ? $('#startPeriod').val().split(':') : [];
+            params.hourEnd = $("#endPeriod").val() ? $('#endPeriod').val().split(':') : [];
+            params.isReservation = 1;
+
+            if (params.hourEnd.length && params.hourStart.length && params.dateStart) {
+                return params;
+            }
+        } else {
+            params.dateStart = $('#dateStart').val();
+            params.dateEnd = $('#dateEnd').val();
+            params.dayOfTheWeekNumber = parseInt($('#day').val());
+            params.semesterId = parseInt($('#semester').val());
+            params.hourStart = $('#start').val() ? $('#start').val().split(':') : [];
+            params.hourEnd = $('#end').val() ? $('#end').val().split(':') : [];
+
+            if (params.hourStart.length && params.hourEnd.length && params.semesterId !== 0 && params.dayOfTheWeekNumber !== 0 && params.dateStart && params.dateEnd) {
+                return params;
+            }
         }
 
         return {};
@@ -425,10 +533,19 @@
     /**
      * CHECKS IF START < END
      */
-    function checkHours() {
+    function checkHours(isReservation) {
 
-        let $start = $('#start');
-        let $end = $('#end');
+        let $start = '';
+        let $end = '';
+
+        if (isReservation) {
+            $start = $('#startPeriod');
+            $end = $('#endPeriod');
+        } else {
+            $start = $('#start');
+            $end = $('#end');
+        }
+
         let hourStart = $start.val() ? $start.val().split(':') : [];
         let hourEnd = $end.val() ? $end.val().split(':') : [];
 
@@ -447,7 +564,7 @@
      * IF and ONLY IF, ALL PARAMETERS ARE CORRECTLY SET
      * IN EDIT, NO AVAILABLE ROOMS ARE FETCHED
      */
-    function getAvailableRooms() {
+    function getAvailableRooms(isReservation) {
 
         let eventId = $('#eventId').val();
 
@@ -455,28 +572,41 @@
             return;
         }
 
-        let $params = getRoomRequestParameters();
+        let $params = getRoomRequestParameters(isReservation);
 
         if ($.isEmptyObject($params)) {
             return;
         }
 
         let $url = baseUrl + 'check_resource';
-        let $dates = getDaysBetweenDates(new Date($params.dateStart), new Date($params.dateEnd), $params.dayOfTheWeekNumber);
         let postDates = [];
 
-        $.each($dates, function ($key, $date) {
-            let $rowStart = new Date($date.setHours($params.hourStart[0], $params.hourStart[1]));
-            let $rowEnd = new Date($date.setHours($params.hourEnd[0], $params.hourEnd[1]));
+        if (isReservation) {
+            let theDate = new Date($params.dateStart);
+            let dateStart = theDate.setHours($params.hourStart[0], $params.hourStart[1]);
+            let dateEnd = theDate.setHours($params.hourEnd[0], $params.hourEnd[1]);
             postDates.push({
-                'start': moment($rowStart).format('YYYY-MM-DD HH:mm'),
-                'end': moment($rowEnd).format('YYYY-MM-DD HH:mm')
+                'start': moment(dateStart).format('YYYY-MM-DD HH:mm'),
+                'end': moment(dateEnd).format('YYYY-MM-DD HH:mm')
             });
-        });
+        } else {
+
+            let $dates = getDaysBetweenDates(new Date($params.dateStart), new Date($params.dateEnd), $params.dayOfTheWeekNumber);
+
+            $.each($dates, function ($key, $date) {
+                let $rowStart = new Date($date.setHours($params.hourStart[0], $params.hourStart[1]));
+                let $rowEnd = new Date($date.setHours($params.hourEnd[0], $params.hourEnd[1]));
+                postDates.push({
+                    'start': moment($rowStart).format('YYYY-MM-DD HH:mm'),
+                    'end': moment($rowEnd).format('YYYY-MM-DD HH:mm')
+                });
+            });
+        }
 
         let $data = {
             dates: postDates,
-            semester: $params.semesterId
+            semester: $params.semesterId,
+            isReservation: isReservation
         };
 
         buildSelectOptions($url, $("#room"), ['.submitBtn', '.room'], 1, $data);
@@ -508,7 +638,8 @@
                 level: $calEvent.levelId,
                 lesson: $calEvent.lessonId,
                 teacher: $calEvent.teacherId,
-                semester: $calEvent.semesterId
+                semester: $calEvent.semesterId,
+                isReservation: $calEvent.isReservation
             }
         })
             .done(function (data) {
