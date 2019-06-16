@@ -27,7 +27,7 @@
                             </select>
                         </div>
                         <div class="col-md-5">
-                            <label for="action">Choisir l'action à réaliser</label>
+                            <label for="action">Que voulez-vous effectuer ?</label>
                             <select name="action" id="action" class="form-control">
                                 <option value="">Réservation ou affectation de ressources</option>
                                 <?php foreach ($actions as $key => $actionLabel): ?>
@@ -39,7 +39,7 @@
                                 <?php endforeach; ?>
                             </select>
                         </div>
-                        <div class="col-md-1">
+                        <div class="col-md-1" style="margin-top: 23px;">
                             <button class="btn btn-success" type="submit">Rechercher</button>
                         </div>
                     </div>
@@ -299,6 +299,7 @@
                             'success'
                         )
                     } else {
+                        calEvent.isReservation = $('#isReservation').val();
                         hydrateEditForm(calEvent);
                     }
                 });
@@ -788,6 +789,7 @@
             level: $calEvent.levelId,
             lesson: $calEvent.lessonId,
             event: $calEvent.eventId,
+            isReservation: $calEvent.isReservation,
         };
 
         $.ajax({
@@ -810,19 +812,27 @@
 
                 buildEditFormOptions($("#lesson"), $data.lessons, $calEvent.lessonId, 'Sélectionnez l\'unité d\'enseignement');
 
-                buildEditFormOptions($("#day"), $data.daysOfTheWeek, $dayOfTheWeekDigit, 'Choisir le jour');
+                if ($calEvent.isReservation) {
+                    $("#periodDate").val($calEvent.start.format('YYYY-MM-DD'));
+                    $("#startPeriod").val($hourStart);
+                    $("#endPeriod").val($hourEnd);
+                    $('#isReservation').val(1);
+                } else {
+                    buildEditFormOptions($("#day"), $data.daysOfTheWeek, $dayOfTheWeekDigit, 'Choisir le jour');
 
-                $("#start").val($hourStart);
-                $("#end").val($hourEnd);
+                    $("#start").val($hourStart);
+                    $("#end").val($hourEnd);
+                    $('#dateStart').val($dateStart);
+                    $('#dateEnd').val($dateEnd);
+                    $('#add-new-event').css({
+                        'background-color': $calEvent.backgroundColor,
+                        'border-color': $calEvent.borderColor
+                    });
+
+                    buildEditFormOptions($("#semester"), $data.semesters, $calEvent.semesterId, 'Choisir le semestre');
+                }
+
                 $("#eventId").val($calEvent.eventId);
-                $('#dateStart').val($dateStart);
-                $('#dateEnd').val($dateEnd);
-                $('#add-new-event').css({
-                    'background-color': $calEvent.backgroundColor,
-                    'border-color': $calEvent.borderColor
-                });
-
-                buildEditFormOptions($("#semester"), $data.semesters, $calEvent.semesterId, 'Choisir le semestre');
 
                 $teacher.empty();
                 if ($calEvent.teacherId === $data.teacher.id) {
