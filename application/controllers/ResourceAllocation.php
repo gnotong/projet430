@@ -119,17 +119,24 @@ class ResourceAllocation extends BaseController
 
     public function edit()
     {
+        $isReservation = $this->input->post('isReservation');
+
+        $result['levels'] = $this->level_model->getAll();
+        $result['lessons'] = $this->lesson_model->getLessonsByLevelId($this->input->post('level'));
+        $result['teacher'] = $this->user_model->getTeacherByLesson($this->input->post('lesson'));
+        $result['rooms'] = $this->room_model->getRooms();
+
+        if ($isReservation) {
+            $result['event'] = $this->resourceAllocation_model->getByIdWithoutSemester($this->input->post('event'))[0];
+        } else {
+            $result['event'] = $this->resourceAllocation_model->getById($this->input->post('event'))[0];
+            $result['semesters'] = $this->semester_model->getAll();
+            $result['daysOfTheWeek'] = $this->daysOfTheWeek();
+        }
+
         echo json_encode([
             'success' => 1,
-            'result' => [
-                'levels' => $this->level_model->getAll(),
-                'lessons' => $this->lesson_model->getLessonsByLevelId($this->input->post('level')),
-                'teacher' => $this->user_model->getTeacherByLesson($this->input->post('lesson')),
-                'rooms' => $this->room_model->getRooms(),
-                'semesters' => $this->semester_model->getAll(),
-                'event' => $this->resourceAllocation_model->getById($this->input->post('event'))[0],
-                'daysOfTheWeek' => $this->daysOfTheWeek(),
-            ]
+            'result' => $result
         ]);
     }
 

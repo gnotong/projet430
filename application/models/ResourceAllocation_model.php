@@ -22,6 +22,7 @@ class ResourceAllocation_model extends CI_Model {
     {
         $qb = $this->getBaseQueryWithoutSemester();
         $qb->where('ra.level_id', $levelId);
+        $qb->where('ra.semester_id', null);
         $query = $qb->get();
 
         if ($query) {
@@ -48,6 +49,7 @@ class ResourceAllocation_model extends CI_Model {
     {
         $qb = $this->getBaseQueryWithoutSemester();
         $qb->where('ra.id', $id);
+        $qb->where('ra.semester_id', null);
         $query = $qb->get();
 
         if ($query) {
@@ -71,6 +73,7 @@ class ResourceAllocation_model extends CI_Model {
 
     function getAllWithoutSemester() {
         $qb = $this->getBaseQueryWithoutSemester();
+        $qb->where('ra.semester_id', null);
         $qb->order_by("start_date", "asc");
         $query = $qb->get();
 
