@@ -51,6 +51,10 @@ class User_model extends CI_Model
         $this->db->where('tl.lesson_id', $lessonId);
         $query = $this->db->get();
 
+        if (!$query->num_rows()) {
+            return null;
+        }
+
         $result = $query->result()[0];
         return $result;
     }
