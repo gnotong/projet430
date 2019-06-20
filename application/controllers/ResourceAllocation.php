@@ -78,10 +78,11 @@ class ResourceAllocation extends BaseController
         $lastId = null;
         $eventId = $this->input->post('eventId');
         $isReservation = $this->input->post('isReservation');
+        $levelId = $this->input->post('level');
 
         $events = [
             'resource_id' => $this->input->post('resource'),
-            'level_id' => $this->input->post('level'),
+            'level_id' => $levelId,
             'lesson_id' => $this->input->post('lesson'),
             'teacher_id' => $this->input->post('teacher'),
             'semester_id' => !$isReservation? $this->input->post('semester') : null,
@@ -92,9 +93,16 @@ class ResourceAllocation extends BaseController
             'all_day ' => $this->input->post('allDay'),
         ];
 
+
         try
         {
-            if ($eventId) {
+            if ($this->level_model->isCollisionDetected($levelId, $events)) {
+                $level = $this->level_model->getLevelById($levelId);
+                throw new Exception("Un des cours de la classe {$level->name} coincide avec la période choisie. Veuillez svp en choisir une autre.");
+            }
+
+            if ($eventId)
+            {
                 if ($this->room_model->isRoomAvailable($events)) {
                     $this->resourceAllocation_model->update($events, $eventId);
                     $message = 'Affectation mise à jour avec succès';

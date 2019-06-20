@@ -177,14 +177,19 @@ class Admin extends BaseController
     function userAjax(int $lesson)
     {
         $teacher = null;
-        if ($lesson) {
-            $teacher = $this->user_model->getTeacherByLesson($lesson);
+        try {
+            if ($lesson) {
+                $teacher = $this->user_model->getTeacherByLesson($lesson);
+            }
+
+            if ($teacher) {
+                echo json_encode(array('success' => 1, 'json' => [$teacher]));
+            } else {
+                throw new Exception("Aucun enseignant n'a été trouvé pour cette lesson.");
+            }
+        } catch (\Exception $exception) {
+            echo $exception->getMessage();
         }
 
-        if ($teacher) {
-            echo json_encode(array('success' => 1, 'json' => [$teacher]));
-        } else {
-            echo(json_encode(array('success' => 0, 'error' => 'Aucun enseignant n\'a été trouvé.')));
-        }
     }
 }

@@ -18,6 +18,7 @@ class ResourceAllocation_model extends CI_Model {
 
         return NULL;
     }
+
     public function getByLevelWithoutSemester(int $levelId)
     {
         $qb = $this->getBaseQueryWithoutSemester();
@@ -257,4 +258,5 @@ class ResourceAllocation_model extends CI_Model {
 
         return $query->num_rows() > 0;
     }
+
 }

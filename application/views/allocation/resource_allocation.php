@@ -645,7 +645,7 @@
         })
             .done(function (data) {
 
-                if ($calEvent.eventId) {
+                if (data.eventId) {
                     fireDialog('success', 'Success', data.result);
                 }
 
@@ -750,7 +750,7 @@
             .fail(function (xhr) {
                 // Error dialog shows only if no data found and user have selected a value
                 if ($selectedValue != 0) {
-                    fireDialog('info', 'Information', xhr.responseText);
+                    fireDialog('error', 'Information', xhr.responseText);
                 }
 
                 showHideFields($classes, $selectedValue, false);
@@ -761,10 +761,16 @@
      * POPS UP A DIALOG
      */
     function fireDialog($type, $title, $msg) {
+        let isError = $type === 'error';
+        let $class = isError ? 'text-danger' : 'text-success';
         Swal.fire({
             type: $type,
             title: $title,
-            html: '<h4 class="text-danger text-center">' + $msg + '</h4>',
+            html: '<h4 class="'+$class+' text-center">' + $msg + '</h4>',
+        }).then((result) => {
+            if (result.value && !isError) {
+               location.reload()
+            }
         });
     }
 
