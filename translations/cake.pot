@@ -1,0 +1,130 @@
+# LANGUAGE translation of CakePHP Application
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: Lib/DateUtil.php:2472
+msgid "%s ago"
+msgstr ""
+
+#: Lib/DateUtil.php:2473
+msgid "on %s"
+msgstr ""
+
+#: Lib/DateUtil.php:2533
+msgid "just now"
+msgstr ""
+
+#: Lib/DateUtil.php:2649
+msgid "about a second ago"
+msgstr ""
+
+#: Lib/DateUtil.php:2650
+msgid "about a minute ago"
+msgstr ""
+
+#: Lib/DateUtil.php:2651
+msgid "about an hour ago"
+msgstr ""
+
+#: Lib/DateUtil.php:2652
+msgid "about a day ago"
+msgstr ""
+
+#: Lib/DateUtil.php:2653
+msgid "about a week ago"
+msgstr ""
+
+#: Lib/DateUtil.php:2654
+msgid "about a year ago"
+msgstr ""
+
+#: Lib/DateUtil.php:2663
+msgid "in about a second"
+msgstr ""
+
+#: Lib/DateUtil.php:2664
+msgid "in about a minute"
+msgstr ""
+
+#: Lib/DateUtil.php:2665
+msgid "in about an hour"
+msgstr ""
+
+#: Lib/DateUtil.php:2666
+msgid "in about a day"
+msgstr ""
+
+#: Lib/DateUtil.php:2667
+msgid "in about a week"
+msgstr ""
+
+#: Lib/DateUtil.php:2668
+msgid "in about a year"
+msgstr ""
+
+#: Lib/DateUtil.php:2622
+msgid "%d year"
+msgid_plural "%d years"
+msgstr[0] ""
+msgstr[1] ""
+
+#: Lib/DateUtil.php:2625
+msgid "%d month"
+msgid_plural "%d months"
+msgstr[0] ""
+msgstr[1] ""
+
+#: Lib/DateUtil.php:2628
+msgid "%d week"
+msgid_plural "%d weeks"
+msgstr[0] ""
+msgstr[1] ""
+
+#: Lib/DateUtil.php:2631
+msgid "%d day"
+msgid_plural "%d days"
+msgstr[0] ""
+msgstr[1] ""
+
+#: Lib/DateUtil.php:2634
+msgid "%d hour"
+msgid_plural "%d hours"
+msgstr[0] ""
+msgstr[1] ""
+
+#: Lib/DateUtil.php:2637
+msgid "%d minute"
+msgid_plural "%d minutes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: Lib/DateUtil.php:2640
+msgid "%d second"
+msgid_plural "%d seconds"
+msgstr[0] ""
+msgstr[1] ""
+
+#: View/Errors/error400.ctp:22
+#: View/Errors/error500.ctp:22
+msgid "Error"
+msgstr ""
+
+#: View/Errors/error400.ctp:24
+msgid "The requested address %s was not found on this server."
+msgstr ""
+
+#: View/Errors/error500.ctp:23
+msgid "An Internal Error Has Occurred."
+msgstr ""
+
